@@ -40,7 +40,7 @@
       labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
     },
     localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
-    path: '',
+    path: 'search.xml',
     motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
     sidebarPadding: 40
   };
@@ -172,7 +172,7 @@
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/11/%E8%AE%BA%E6%B3%95%E7%9A%84%E7%B2%BE%E7%A5%9E%EF%BC%88%E8%8A%82%E9%80%89%EF%BC%89/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/tb.jpg">
       <meta itemprop="name" content="bool_tbb">
       <meta itemprop="description" content="Never done">
     </span>
@@ -200,7 +200,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2019-11-17 21:21:25" itemprop="dateModified" datetime="2019-11-17T21:21:25+08:00">2019-11-17</time>
+                <time title="Modified: 2019-11-17 23:08:47" itemprop="dateModified" datetime="2019-11-17T23:08:47+08:00">2019-11-17</time>
               </span>
 
           
@@ -259,7 +259,7 @@
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/11/hello-world/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/tb.jpg">
       <meta itemprop="name" content="bool_tbb">
       <meta itemprop="description" content="Never done">
     </span>
@@ -359,6 +359,8 @@
 
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bool_tbb"
+      src="/images/tb.jpg">
   <p class="site-author-name" itemprop="name">bool_tbb</p>
   <div class="site-description" itemprop="description">Never done</div>
 </div>
@@ -370,6 +372,11 @@
           <span class="site-state-item-count">2</span>
           <span class="site-state-item-name">posts</span>
         </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
 </div>

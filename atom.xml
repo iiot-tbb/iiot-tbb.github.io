@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="https://www.w3.org/2005/Atom">
+  <title>Bool_tbb</title>
+  
+  <subtitle>hi,this is my blog</subtitle>
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://yoursite.com/"/>
+  <updated>2019-11-17T15:08:47.742Z</updated>
+  <id>http://yoursite.com/</id>
+  
+  <author>
+    <name>bool_tbb</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>论法的精神（节选）</title>
+    <link href="http://yoursite.com/2019/11/11/%E8%AE%BA%E6%B3%95%E7%9A%84%E7%B2%BE%E7%A5%9E%EF%BC%88%E8%8A%82%E9%80%89%EF%BC%89/"/>
+    <id>http://yoursite.com/2019/11/11/%E8%AE%BA%E6%B3%95%E7%9A%84%E7%B2%BE%E7%A5%9E%EF%BC%88%E8%8A%82%E9%80%89%EF%BC%89/</id>
+    <published>2019-11-11T08:21:35.000Z</published>
+    <updated>2019-11-17T15:08:47.742Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;法与一切存在物的关系&quot;&gt;&lt;a href=&quot;#法与一切存在物的关系&quot; class=&quot;headerlink&quot; title=&quot;法与一切存在物的关系&quot;&gt;&lt;/a&gt;法与一切存在物的关系&lt;/h3&gt;&lt;p&gt;从最大限度的广义上说，法是源于客观事物性质的必然关系。从这个意义上推断，所有的&lt;/p&gt;
+&lt;p&gt;存在物都有属于自己的法；上帝有他的法；物质世界也有它的法；高于人类的“先知&lt;/p&gt;
+&lt;p&gt;圣人们”有着他们的法；畜类也有自己的法；人类拥有他们的法。&lt;/p&gt;
+&lt;p&gt;有些人说，世间我们看到的万物都是由一个盲目的命运所创造的，这种说法荒谬绝伦。因&lt;/p&gt;
+&lt;p&gt;为盲目的命运竟然创造“具有智能的创造物”，岂不是一件更为荒谬的事吗?&lt;/p&gt;
+&lt;p&gt;于是便有了一个最浅显的理性的存在。法就是这个浅显理性与各种存在物之间关系的总&lt;/p&gt;
+&lt;p&gt;和，同时也体现着所有客观存在物彼此之间的关系。&lt;/p&gt;
+&lt;p&gt;上帝与宇宙的关系体现在，它既是宇宙的创造者又是它的保管者：以此产生的规律，便是&lt;/p&gt;
+&lt;p&gt;保管时参照的规律。上帝遵循这些规律行事，因为他熟知这些规范；之所以他熟知这些规&lt;/p&gt;
+&lt;p&gt;范，因为正是他制定了这些规范；他之所以制定这些规范，因为这些规律与他的才智和能&lt;br&gt;量有着密不可分的关系。&lt;/p&gt;
+&lt;p&gt;如同我们看到的一样，我们所在的世界是由物质的运动而构成的，它在一个非智能的状态&lt;/p&gt;
+&lt;p&gt;中永恒地生存着。它的物质运动必然具有某种固定的规律。如果人们能够在自己所处的世&lt;/p&gt;
+&lt;p&gt;界之外再臆想出另一个世界的话，那个世界要么具有恒定的规律可循，要么便是毁灭。&lt;/p&gt;
+&lt;p&gt;创造本身似乎是某种随意的行为，然而其中必定蕴涵着恒定的规律，就如同无神论者的命&lt;/p&gt;
+&lt;p&gt;运一般。如果造世主没有这些规范就能统管世界的话，那么，这显然是荒谬的说法，因为&lt;/p&gt;
+&lt;p&gt;没有这些规范，世界将无法生存。&lt;/p&gt;
+    
+    </summary>
+    
+    
+    
+      <category term="人文" scheme="http://yoursite.com/tags/%E4%BA%BA%E6%96%87/"/>
+    
+      <category term="法律" scheme="http://yoursite.com/tags/%E6%B3%95%E5%BE%8B/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Hello World</title>
+    <link href="http://yoursite.com/2019/11/11/hello-world/"/>
+    <id>http://yoursite.com/2019/11/11/hello-world/</id>
+    <published>2019-11-11T04:49:28.637Z</published>
+    <updated>2019-11-11T04:49:28.637Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a
+        
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+</feed>
