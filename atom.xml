@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-11-29T13:26:44.075Z</updated>
+  <updated>2019-11-29T13:28:10.647Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -21,17 +21,12 @@
     <link href="http://yoursite.com/2019/11/29/python-BinarySearchTree/"/>
     <id>http://yoursite.com/2019/11/29/python-BinarySearchTree/</id>
     <published>2019-11-29T13:04:20.000Z</published>
-    <updated>2019-11-29T13:26:44.075Z</updated>
+    <updated>2019-11-29T13:28:10.647Z</updated>
     
     <summary type="html">
     
-      
-      
-        
-        
-          &lt;h2 id=&quot;python&quot;&gt;&lt;a href=&quot;#python&quot; class=&quot;headerlink&quot;
-        
-      
+      &lt;h2 id=&quot;python&quot;&gt;&lt;a href=&quot;#python&quot; class=&quot;headerlink&quot; title=&quot;python&quot;&gt;&lt;/a&gt;python&lt;/h2&gt;&lt;p&gt;&amp;emsp;&amp;emsp;最近在学python，断断续续的，感觉学的慢，就顺便写写代码，加强对python的感觉。&lt;br&gt;虽然学了半天还是啥都不会，但是还是要写写博客啥的，激励自己不老懒惰，不能因为眼前的&lt;br&gt;困难而放弃进步。所以，下面我要贴代码了….&lt;/p&gt;
+&lt;hr&gt;
     
     </summary>
     
