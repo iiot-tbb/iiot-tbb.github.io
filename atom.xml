@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2019-11-17T15:08:47.742Z</updated>
+  <updated>2019-11-29T11:37:29.550Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="http://yoursite.com/2019/11/11/%E8%AE%BA%E6%B3%95%E7%9A%84%E7%B2%BE%E7%A5%9E%EF%BC%88%E8%8A%82%E9%80%89%EF%BC%89/"/>
     <id>http://yoursite.com/2019/11/11/%E8%AE%BA%E6%B3%95%E7%9A%84%E7%B2%BE%E7%A5%9E%EF%BC%88%E8%8A%82%E9%80%89%EF%BC%89/</id>
     <published>2019-11-11T08:21:35.000Z</published>
-    <updated>2019-11-17T15:08:47.742Z</updated>
+    <updated>2019-11-29T11:37:29.550Z</updated>
     
     <summary type="html">
     
@@ -49,6 +49,8 @@
       <category term="人文" scheme="http://yoursite.com/tags/%E4%BA%BA%E6%96%87/"/>
     
       <category term="法律" scheme="http://yoursite.com/tags/%E6%B3%95%E5%BE%8B/"/>
+    
+      <category term="随笔" scheme="http://yoursite.com/tags/%E9%9A%8F%E7%AC%94/"/>
     
   </entry>
   
