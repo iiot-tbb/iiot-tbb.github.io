@@ -82,6 +82,7 @@
     <title>Hello World ~</title>
     <url>/2019/11/11/hello-world/</url>
     <content><![CDATA[<p>Welcome to  my own web,you can find me on github <a href="https://github.com/iiot-tbb" target="_blank" rel="noopener">iiot-tbb</a>! This is my very first post.</p>
+<a id="more"></a>
 ]]></content>
       <tags>
         <tag>myBorn</tag>
