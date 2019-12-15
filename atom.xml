@@ -79,11 +79,11 @@
   </entry>
   
   <entry>
-    <title>Hello World</title>
+    <title>Hello World ~</title>
     <link href="http://yoursite.com/2019/11/11/hello-world/"/>
     <id>http://yoursite.com/2019/11/11/hello-world/</id>
     <published>2019-11-11T04:49:28.637Z</published>
-    <updated>2019-11-11T04:49:28.637Z</updated>
+    <updated>2019-12-15T12:55:35.618Z</updated>
     
     <summary type="html">
     
@@ -91,13 +91,17 @@
       
         
         
-          &lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a
+          &lt;p&gt;Welcome to  my own web,you can find me on github &lt;a href=&quot;https://github.com/iiot-tbb&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;iiot-tbb&lt;/a&gt;! This
         
       
     
     </summary>
     
     
+    
+      <category term="myBorn" scheme="http://yoursite.com/tags/myBorn/"/>
+    
+      <category term="hexo" scheme="http://yoursite.com/tags/hexo/"/>
     
   </entry>
   
