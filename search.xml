@@ -20,7 +20,9 @@
 
 
 
-<pre><code>&apos;蓝色的好看的小小的好看的小小的蓝色的&apos;</code></pre><h1 id="but-the-question-is"><a href="#but-the-question-is" class="headerlink" title="but the question is ?"></a>but the question is ?</h1><p>如果我们更换了语法，会发现所有写过的过程都需要重写</p>
+<pre><code>&apos;蓝色的好看的小小的好看的小小的蓝色的&apos;</code></pre><a id="more"></a>
+
+<h1 id="but-the-question-is"><a href="#but-the-question-is" class="headerlink" title="but the question is ?"></a>but the question is ?</h1><p>如果我们更换了语法，会发现所有写过的过程都需要重写</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">adj_grammar =<span class="string">"""</span></span><br><span class="line"><span class="string">Adj* =&gt; null | Adj Adj*</span></span><br><span class="line"><span class="string">Adj =&gt; 蓝色的 | 好看的 | 小小的 </span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
 
 
