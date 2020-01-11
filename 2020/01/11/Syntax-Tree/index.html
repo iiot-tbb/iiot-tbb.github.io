@@ -48,30 +48,35 @@
   };
 </script>
 
-  <meta name="description" content="十三月">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Bool_tbb">
-<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;index.html">
+  <meta name="description" content="12345678910simple_grammar =&quot;&quot;&quot;sentence =&amp;gt; noun_phrase verb_phrasenoun_phrase =&amp;gt; Article Adj* nounAdj* =&amp;gt; null | Adj Adj*verb_phrase =&amp;gt; verb noun_phraseArticle =&amp;gt; 一个 | 这个noun =&amp;gt; 女人 |">
+<meta name="keywords" content="NLP,Syntax-Tree,Language Model">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Syntax-Tree">
+<meta property="og:url" content="http:&#x2F;&#x2F;yoursite.com&#x2F;2020&#x2F;01&#x2F;11&#x2F;Syntax-Tree&#x2F;index.html">
 <meta property="og:site_name" content="Bool_tbb">
-<meta property="og:description" content="十三月">
+<meta property="og:description" content="12345678910simple_grammar =&quot;&quot;&quot;sentence =&amp;gt; noun_phrase verb_phrasenoun_phrase =&amp;gt; Article Adj* nounAdj* =&amp;gt; null | Adj Adj*verb_phrase =&amp;gt; verb noun_phraseArticle =&amp;gt; 一个 | 这个noun =&amp;gt; 女人 |">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;output_58_1.png">
+<meta property="og:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;output_61_1.png">
+<meta property="og:updated_time" content="2020-01-11T11:53:09.761Z">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http:&#x2F;&#x2F;yoursite.com&#x2F;images&#x2F;output_58_1.png">
 
-<link rel="canonical" href="http://yoursite.com/">
+<link rel="canonical" href="http://yoursite.com/2020/01/11/Syntax-Tree/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome: true,
-    isPost: false,
+    isHome: false,
+    isPost: true,
     isPage: false,
     isArchive: false
   };
 </script>
 
-  <title>Bool_tbb</title>
+  <title>Syntax-Tree | Bool_tbb</title>
   
 
 
@@ -195,10 +200,10 @@
             
 
   <div class="posts-expand">
-        
+      
   
   
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/11/Syntax-Tree/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -212,8 +217,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/01/11/Syntax-Tree/" class="post-title-link" itemprop="url">Syntax-Tree</a>
+          Syntax-Tree
         </h1>
 
         <div class="post-meta">
@@ -228,6 +232,13 @@
             </span>
 
           
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
 
         </div>
       </header>
@@ -238,7 +249,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">simple_grammar =<span class="string">"""</span></span><br><span class="line"><span class="string">sentence =&gt; noun_phrase verb_phrase</span></span><br><span class="line"><span class="string">noun_phrase =&gt; Article Adj* noun</span></span><br><span class="line"><span class="string">Adj* =&gt; null | Adj Adj*</span></span><br><span class="line"><span class="string">verb_phrase =&gt; verb noun_phrase</span></span><br><span class="line"><span class="string">Article =&gt; 一个 | 这个</span></span><br><span class="line"><span class="string">noun =&gt; 女人 | 篮球 | 桌子 | 小猫</span></span><br><span class="line"><span class="string">verb =&gt; 看着 | 坐着 | 听见 | 看着</span></span><br><span class="line"><span class="string">Adj =&gt; 蓝色的 | 好看的 | 小小的</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+        <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">simple_grammar =<span class="string">"""</span></span><br><span class="line"><span class="string">sentence =&gt; noun_phrase verb_phrase</span></span><br><span class="line"><span class="string">noun_phrase =&gt; Article Adj* noun</span></span><br><span class="line"><span class="string">Adj* =&gt; null | Adj Adj*</span></span><br><span class="line"><span class="string">verb_phrase =&gt; verb noun_phrase</span></span><br><span class="line"><span class="string">Article =&gt; 一个 | 这个</span></span><br><span class="line"><span class="string">noun =&gt; 女人 | 篮球 | 桌子 | 小猫</span></span><br><span class="line"><span class="string">verb =&gt; 看着 | 坐着 | 听见 | 看着</span></span><br><span class="line"><span class="string">Adj =&gt; 蓝色的 | 好看的 | 小小的</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
 
 
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">another_grammar = <span class="string">"""</span></span><br><span class="line"><span class="string">#</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
@@ -1804,250 +1815,61 @@ sentence: 这个女人听见这个好看的篮球 with Prb: 2.948877435423709e-4
 ---- 洋葱奶昔来一杯 with probablity 1.1160363145085983e-25
 ---- 养乐多绿来一杯 with probablity 1.9662609030163744e-18</code></pre><h1 id="Data-Driven-1"><a href="#Data-Driven-1" class="headerlink" title="Data Driven"></a>Data Driven</h1><h2 id="假如你做了很久的数据预处理"><a href="#假如你做了很久的数据预处理" class="headerlink" title="假如你做了很久的数据预处理"></a>假如你做了很久的数据预处理</h2><h2 id="AI的问题里边，65-都在做数据预处理"><a href="#AI的问题里边，65-都在做数据预处理" class="headerlink" title="AI的问题里边，65%都在做数据预处理"></a>AI的问题里边，65%都在做数据预处理</h2><h2 id="我们养成一个习惯，把数据存到硬盘里"><a href="#我们养成一个习惯，把数据存到硬盘里" class="headerlink" title="我们养成一个习惯，把数据存到硬盘里"></a>我们养成一个习惯，把数据存到硬盘里</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-      
     </div>
 
     
     
     
+        <div class="reward-container">
+  <div>O(∩_∩)O哈哈~</div>
+  <button disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="bool_tbb 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="bool_tbb 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
+          <div class="post-tags">
+              <a href="/tags/NLP/" rel="tag"># NLP</a>
+              <a href="/tags/Syntax-Tree/" rel="tag"># Syntax-Tree</a>
+              <a href="/tags/Language-Model/" rel="tag"># Language Model</a>
+          </div>
 
         
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/29/python-BinarySearchTree/">
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/tb.jpg">
-      <meta itemprop="name" content="bool_tbb">
-      <meta itemprop="description" content="十三月">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Bool_tbb">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/11/29/python-BinarySearchTree/" class="post-title-link" itemprop="url">python BinarySearchTree</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2019-11-29 21:04:20 / 修改时间：21:28:10" itemprop="dateCreated datePublished" datetime="2019-11-29T21:04:20+08:00">2019-11-29</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="python"><a href="#python" class="headerlink" title="python"></a>python</h2><p>&emsp;&emsp;最近在学python，断断续续的，感觉学的慢，就顺便写写代码，加强对python的感觉。<br>虽然学了半天还是啥都不会，但是还是要写写博客啥的，激励自己不老懒惰，不能因为眼前的<br>困难而放弃进步。所以，下面我要贴代码了….</p>
-<hr>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2019/11/29/python-BinarySearchTree/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019/11/29/python-BinarySearchTree/" rel="next" title="python BinarySearchTree">
+                  <i class="fa fa-chevron-left"></i> python BinarySearchTree
+                </a>
             </div>
-          <!--/noindex-->
-        
-      
-    </div>
 
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
+            <span class="post-nav-divider"></span>
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/11/%E8%AE%BA%E6%B3%95%E7%9A%84%E7%B2%BE%E7%A5%9E%EF%BC%88%E8%8A%82%E9%80%89%EF%BC%89/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/tb.jpg">
-      <meta itemprop="name" content="bool_tbb">
-      <meta itemprop="description" content="十三月">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Bool_tbb">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/11/11/%E8%AE%BA%E6%B3%95%E7%9A%84%E7%B2%BE%E7%A5%9E%EF%BC%88%E8%8A%82%E9%80%89%EF%BC%89/" class="post-title-link" itemprop="url">论法的精神（节选）</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-11-11 16:21:35" itemprop="dateCreated datePublished" datetime="2019-11-11T16:21:35+08:00">2019-11-11</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-11-29 19:37:29" itemprop="dateModified" datetime="2019-11-29T19:37:29+08:00">2019-11-29</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h3 id="法与一切存在物的关系"><a href="#法与一切存在物的关系" class="headerlink" title="法与一切存在物的关系"></a>法与一切存在物的关系</h3><p>从最大限度的广义上说，法是源于客观事物性质的必然关系。从这个意义上推断，所有的</p>
-<p>存在物都有属于自己的法；上帝有他的法；物质世界也有它的法；高于人类的“先知</p>
-<p>圣人们”有着他们的法；畜类也有自己的法；人类拥有他们的法。</p>
-<p>有些人说，世间我们看到的万物都是由一个盲目的命运所创造的，这种说法荒谬绝伦。因</p>
-<p>为盲目的命运竟然创造“具有智能的创造物”，岂不是一件更为荒谬的事吗?</p>
-<p>于是便有了一个最浅显的理性的存在。法就是这个浅显理性与各种存在物之间关系的总</p>
-<p>和，同时也体现着所有客观存在物彼此之间的关系。</p>
-<p>上帝与宇宙的关系体现在，它既是宇宙的创造者又是它的保管者：以此产生的规律，便是</p>
-<p>保管时参照的规律。上帝遵循这些规律行事，因为他熟知这些规范；之所以他熟知这些规</p>
-<p>范，因为正是他制定了这些规范；他之所以制定这些规范，因为这些规律与他的才智和能<br>量有着密不可分的关系。</p>
-<p>如同我们看到的一样，我们所在的世界是由物质的运动而构成的，它在一个非智能的状态</p>
-<p>中永恒地生存着。它的物质运动必然具有某种固定的规律。如果人们能够在自己所处的世</p>
-<p>界之外再臆想出另一个世界的话，那个世界要么具有恒定的规律可循，要么便是毁灭。</p>
-<p>创造本身似乎是某种随意的行为，然而其中必定蕴涵着恒定的规律，就如同无神论者的命</p>
-<p>运一般。如果造世主没有这些规范就能统管世界的话，那么，这显然是荒谬的说法，因为</p>
-<p>没有这些规范，世界将无法生存。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2019/11/11/%E8%AE%BA%E6%B3%95%E7%9A%84%E7%B2%BE%E7%A5%9E%EF%BC%88%E8%8A%82%E9%80%89%EF%BC%89/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
+            <div class="post-nav-prev post-nav-item">
             </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
+          </div>
       </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/11/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/tb.jpg">
-      <meta itemprop="name" content="bool_tbb">
-      <meta itemprop="description" content="十三月">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Bool_tbb">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/11/11/hello-world/" class="post-title-link" itemprop="url">Hello World ~</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-11-11 12:49:28" itemprop="dateCreated datePublished" datetime="2019-11-11T12:49:28+08:00">2019-11-11</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2019-12-15 21:59:43" itemprop="dateModified" datetime="2019-12-15T21:59:43+08:00">2019-12-15</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
     
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Welcome to  my own web,you can find me on github <a href="https://github.com/iiot-tbb" target="_blank" rel="noopener">iiot-tbb</a>! This is my very first post.</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2019/11/11/hello-world/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
   </article>
   
   
   
 
   </div>
-
-  
-
 
 
           </div>
@@ -2076,6 +1898,7 @@ sentence: 这个女人听见这个好看的篮球 with Prb: 2.948877435423709e-4
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#but-the-question-is"><span class="nav-number">1.</span> <span class="nav-text">but the question is ?</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#希望能够生成最合理的一句话？"><span class="nav-number">2.</span> <span class="nav-text">希望能够生成最合理的一句话？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Data-Driven"><span class="nav-number">2.1.</span> <span class="nav-text">Data Driven</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Language-Model"><span class="nav-number">3.</span> <span class="nav-text">Language Model</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Data-Driven-1"><span class="nav-number">4.</span> <span class="nav-text">Data Driven</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#假如你做了很久的数据预处理"><span class="nav-number">4.1.</span> <span class="nav-text">假如你做了很久的数据预处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AI的问题里边，65-都在做数据预处理"><span class="nav-number">4.2.</span> <span class="nav-text">AI的问题里边，65%都在做数据预处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#我们养成一个习惯，把数据存到硬盘里"><span class="nav-number">4.3.</span> <span class="nav-text">我们养成一个习惯，把数据存到硬盘里</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
