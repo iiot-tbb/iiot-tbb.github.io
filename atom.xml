@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2020-06-30T11:42:55.442Z</updated>
+  <updated>2020-07-29T08:17:04.166Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Transformer</title>
+    <link href="http://yoursite.com/2020/07/29/Transformer/"/>
+    <id>http://yoursite.com/2020/07/29/Transformer/</id>
+    <published>2020-07-29T08:13:35.000Z</published>
+    <updated>2020-07-29T08:17:04.166Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span
+        
+      
+    
+    </summary>
+    
+    
+    
+      <category term="Language Model" scheme="http://yoursite.com/tags/Language-Model/"/>
+    
+      <category term="Deep Learning" scheme="http://yoursite.com/tags/Deep-Learning/"/>
+    
+  </entry>
   
   <entry>
     <title>NLP学习笔记</title>
@@ -71,9 +98,9 @@
     
     
     
-      <category term="AI" scheme="http://yoursite.com/tags/AI/"/>
-    
       <category term="Deep Learning" scheme="http://yoursite.com/tags/Deep-Learning/"/>
+    
+      <category term="AI" scheme="http://yoursite.com/tags/AI/"/>
     
   </entry>
   
@@ -146,9 +173,9 @@
     
       <category term="NLP" scheme="http://yoursite.com/tags/NLP/"/>
     
-      <category term="Syntax-Tree" scheme="http://yoursite.com/tags/Syntax-Tree/"/>
-    
       <category term="Language Model" scheme="http://yoursite.com/tags/Language-Model/"/>
+    
+      <category term="Syntax-Tree" scheme="http://yoursite.com/tags/Syntax-Tree/"/>
     
   </entry>
   
