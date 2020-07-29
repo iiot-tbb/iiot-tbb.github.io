@@ -4,7 +4,8 @@
     <title>Transformer</title>
     <url>/2020/07/29/Transformer/</url>
     <content><![CDATA[<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> torch.autograd <span class="keyword">import</span> Variable</span><br><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> F</span><br></pre></td></tr></table></figure>
-<h4 id="注意力计算公式"><a href="#注意力计算公式" class="headerlink" title="注意力计算公式"></a>注意力计算公式</h4><script type="math/tex; mode=display">A = Softmax(Q*K^T/\sqrt{d})*V</script><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">x=torch.randn(<span class="number">2</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="注意力计算公式"><a href="#注意力计算公式" class="headerlink" title="注意力计算公式"></a>注意力计算公式</h4><script type="math/tex; mode=display">A = Softmax(Q*K^T/\sqrt{d})*V</script><a id="more"></a>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">x=torch.randn(<span class="number">2</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">3</span>)</span><br></pre></td></tr></table></figure>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">x</span><br></pre></td></tr></table></figure>
 <pre><code>tensor([[[[-1.6685, -1.7979,  0.0747]],
 
@@ -3064,8 +3065,8 @@ sentence: 这个女人听见这个好看的篮球 with Prb: 2.948877435423709e-4
 ]]></content>
       <tags>
         <tag>NLP</tag>
-        <tag>Language Model</tag>
         <tag>Syntax-Tree</tag>
+        <tag>Language Model</tag>
       </tags>
   </entry>
   <entry>
