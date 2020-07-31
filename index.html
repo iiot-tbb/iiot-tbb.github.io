@@ -225,7 +225,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2020-07-31 18:59:27 / 修改时间：19:20:20" itemprop="dateCreated datePublished" datetime="2020-07-31T18:59:27+08:00">2020-07-31</time>
+              <time title="创建时间：2020-07-31 18:59:27 / 修改时间：19:24:12" itemprop="dateCreated datePublished" datetime="2020-07-31T18:59:27+08:00">2020-07-31</time>
             </span>
 
           
@@ -243,8 +243,6 @@
 <h1 id="Sequence-to-Sequence-Modeling-with-nn-Transformer-and-TorchText"><a href="#Sequence-to-Sequence-Modeling-with-nn-Transformer-and-TorchText" class="headerlink" title="Sequence-to-Sequence Modeling with nn.Transformer and TorchText"></a>Sequence-to-Sequence Modeling with nn.Transformer and TorchText</h1><p>This is a tutorial on how to train a sequence-to-sequence model<br>that uses the<br><code>nn.Transformer &lt;https://pytorch.org/docs/master/nn.html?highlight=nn%20transformer#torch.nn.Transformer&gt;</code>__ module.</p>
 <p>PyTorch 1.2 release includes a standard transformer module based on the<br>paper <code>Attention is All You
 Need &lt;https://arxiv.org/pdf/1706.03762.pdf&gt;</code><strong>. The transformer model<br>has been proved to be superior in quality for many sequence-to-sequence<br>problems while being more parallelizable. The <code>nn.Transformer</code> module<br>relies entirely on an attention mechanism (another module recently<br>implemented as <code>nn.MultiheadAttention &lt;https://pytorch.org/docs/master/nn.html?highlight=multiheadattention#torch.nn.MultiheadAttention&gt;</code></strong>) to draw global dependencies<br>between input and output. The <code>nn.Transformer</code> module is now highly<br>modularized such that a single component (like <code>nn.TransformerEncoder &lt;https://pytorch.org/docs/master/nn.html?highlight=nn%20transformerencoder#torch.nn.TransformerEncoder&gt;</code>__<br>in this tutorial) can be easily adapted/composed.</p>
-<p><img src="transformer_architecture.jpg" alt="avatar"></p>
-<h2 id="Define-the-model"><a href="#Define-the-model" class="headerlink" title="Define the model"></a>Define the model</h2><p>In this tutorial, we train <code>nn.TransformerEncoder</code> model on a<br>language modeling task. The language modeling task is to assign a<br>probability for the likelihood of a given word (or a sequence of words)<br>to follow a sequence of words. A sequence of tokens are passed to the embedding<br>layer first, followed by a positional encoding layer to account for the order<br>of the word (see the next paragraph for more details). The<br><code>nn.TransformerEncoder</code> consists of multiple layers of<br><code>nn.TransformerEncoderLayer &lt;https://pytorch.org/docs/master/nn.html?highlight=transformerencoderlayer#torch.nn.TransformerEncoderLayer&gt;</code>__. Along with the input sequence, a square<br>attention mask is required because the self-attention layers in<br><code>nn.TransformerEncoder</code> are only allowed to attend the earlier positions in<br>the sequence. For the language modeling task, any tokens on the future<br>positions should be masked. To have the actual words, the output<br>of <code>nn.TransformerEncoder</code> model is sent to the final Linear<br>layer, which is followed by a log-Softmax function.</p>
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2020/07/31/transformer%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83/#more" rel="contents">
