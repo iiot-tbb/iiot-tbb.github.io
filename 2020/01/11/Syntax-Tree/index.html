@@ -1,0 +1,2043 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="Bool_tbb" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":true,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="12345678910simple_grammar &#x3D;&quot;&quot;&quot;sentence &#x3D;&gt; noun_phrase verb_phrasenoun_phrase &#x3D;&gt; Article Adj* nounAdj* &#x3D;&gt; null | Adj Adj*verb_phrase &#x3D;&gt; verb noun_phraseArticle &#x3D;&gt; 一个 | 这个noun &#x3D;&gt; 女人 |">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Syntax-Tree">
+<meta property="og:url" content="http://yoursite.com/2020/01/11/Syntax-Tree/index.html">
+<meta property="og:site_name" content="Bool_tbb">
+<meta property="og:description" content="12345678910simple_grammar &#x3D;&quot;&quot;&quot;sentence &#x3D;&gt; noun_phrase verb_phrasenoun_phrase &#x3D;&gt; Article Adj* nounAdj* &#x3D;&gt; null | Adj Adj*verb_phrase &#x3D;&gt; verb noun_phraseArticle &#x3D;&gt; 一个 | 这个noun &#x3D;&gt; 女人 |">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/images/output_58_1.png">
+<meta property="og:image" content="http://yoursite.com/images/output_61_1.png">
+<meta property="article:published_time" content="2020-01-11T11:46:35.000Z">
+<meta property="article:modified_time" content="2022-03-28T09:04:28.987Z">
+<meta property="article:author" content="bool_tbb">
+<meta property="article:tag" content="NLP">
+<meta property="article:tag" content="Syntax-Tree">
+<meta property="article:tag" content="Language Model">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/images/output_58_1.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/01/11/Syntax-Tree/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Syntax-Tree | Bool_tbb</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+
+<body itemscope itemtype="http://schema.org/WebPage">
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Bool_tbb</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">留下点啥，证明活过</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/11/Syntax-Tree/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/tb.jpg">
+      <meta itemprop="name" content="bool_tbb">
+      <meta itemprop="description" content="十三月">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Bool_tbb">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Syntax-Tree
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-01-11 19:46:35" itemprop="dateCreated datePublished" datetime="2020-01-11T19:46:35+08:00">2020-01-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-03-28 17:04:28" itemprop="dateModified" datetime="2022-03-28T17:04:28+08:00">2022-03-28</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">simple_grammar =<span class="string">"""</span></span><br><span class="line"><span class="string">sentence =&gt; noun_phrase verb_phrase</span></span><br><span class="line"><span class="string">noun_phrase =&gt; Article Adj* noun</span></span><br><span class="line"><span class="string">Adj* =&gt; null | Adj Adj*</span></span><br><span class="line"><span class="string">verb_phrase =&gt; verb noun_phrase</span></span><br><span class="line"><span class="string">Article =&gt; 一个 | 这个</span></span><br><span class="line"><span class="string">noun =&gt; 女人 | 篮球 | 桌子 | 小猫</span></span><br><span class="line"><span class="string">verb =&gt; 看着 | 坐着 | 听见 | 看着</span></span><br><span class="line"><span class="string">Adj =&gt; 蓝色的 | 好看的 | 小小的</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">another_grammar = <span class="string">"""</span></span><br><span class="line"><span class="string">#</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> random</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">adj</span><span class="params">()</span>:</span><span class="keyword">return</span> random.choice(<span class="string">'蓝色的|好看的|小小的'</span>.split(<span class="string">'|'</span>))</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">adj_star</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">return</span> random.choice([<span class="keyword">lambda</span> : <span class="string">''</span>,<span class="keyword">lambda</span> : adj()+adj_star()])()</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adj_star()</span><br></pre></td></tr></table></figure>
+<pre><code>&#39;蓝色的好看的小小的好看的小小的蓝色的&#39;
+</code></pre><a id="more"></a>
+<h1 id="but-the-question-is"><a href="#but-the-question-is" class="headerlink" title="but the question is ?"></a>but the question is ?</h1><p>如果我们更换了语法，会发现所有写过的过程都需要重写</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">adj_grammar =<span class="string">"""</span></span><br><span class="line"><span class="string">Adj* =&gt; null | Adj Adj*</span></span><br><span class="line"><span class="string">Adj =&gt; 蓝色的 | 好看的 | 小小的 </span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">create_grammar</span><span class="params">(grammar_str,split = <span class="string">'=&gt;'</span>,line_split=<span class="string">'\n'</span>)</span>:</span></span><br><span class="line">    grammar = &#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> grammar_str.split(line_split):</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> line.strip(): <span class="keyword">continue</span></span><br><span class="line">        exp,stmt = line.split(split)</span><br><span class="line">        grammar[exp.strip()]=[s.split() <span class="keyword">for</span> s <span class="keyword">in</span> stmt.split(<span class="string">'|'</span>)]</span><br><span class="line">    <span class="keyword">return</span> grammar</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grammar=create_grammar(adj_grammar)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">grammar[<span class="string">'Adj*'</span>]</span><br></pre></td></tr></table></figure>
+<pre><code>[[&#39;null&#39;], [&#39;Adj&#39;, &#39;Adj*&#39;]]
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">choice = random.choice</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">generate</span><span class="params">(gram,target)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> target <span class="keyword">not</span> <span class="keyword">in</span> gram: <span class="keyword">return</span> target <span class="comment">#means target is terminal expression</span></span><br><span class="line">    </span><br><span class="line">    expand = [generate(gram,t) <span class="keyword">for</span> t <span class="keyword">in</span> choice(gram[target])]</span><br><span class="line">    <span class="keyword">return</span> <span class="string">''</span>.join([e <span class="keyword">if</span> e != <span class="string">'/n'</span> <span class="keyword">else</span> <span class="string">'\n'</span> <span class="keyword">for</span> e <span class="keyword">in</span> expand <span class="keyword">if</span> e != <span class="string">'null'</span>])</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">example_grammar =create_grammar(simple_grammar)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">example_grammar</span><br></pre></td></tr></table></figure>
+<pre><code>{&#39;sentence&#39;: [[&#39;noun_phrase&#39;, &#39;verb_phrase&#39;]],
+ &#39;noun_phrase&#39;: [[&#39;Article&#39;, &#39;Adj*&#39;, &#39;noun&#39;]],
+ &#39;Adj*&#39;: [[&#39;null&#39;], [&#39;Adj&#39;, &#39;Adj*&#39;]],
+ &#39;verb_phrase&#39;: [[&#39;verb&#39;, &#39;noun_phrase&#39;]],
+ &#39;Article&#39;: [[&#39;一个&#39;], [&#39;这个&#39;]],
+ &#39;noun&#39;: [[&#39;女人&#39;], [&#39;篮球&#39;], [&#39;桌子&#39;], [&#39;小猫&#39;]],
+ &#39;verb&#39;: [[&#39;看着&#39;], [&#39;坐着&#39;], [&#39;听见&#39;], [&#39;看着&#39;]],
+ &#39;Adj&#39;: [[&#39;蓝色的&#39;], [&#39;好看的&#39;], [&#39;小小的&#39;]]}
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">generate(gram=example_grammar,target=<span class="string">'sentence'</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>&#39;这个女人看着一个蓝色的蓝色的好看的桌子&#39;
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#在西部世界里，一个 “人类”的语言可以定义为：</span></span><br><span class="line"></span><br><span class="line">human = <span class="string">"""</span></span><br><span class="line"><span class="string">human = 自己 寻找 活动</span></span><br><span class="line"><span class="string">自己 = 我 | 俺 | 我们</span></span><br><span class="line"><span class="string">寻找 = 找找 | 想找点</span></span><br><span class="line"><span class="string">活动 = 乐子 | 玩的</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="comment">#一个接待员的语言可以定义为</span></span><br><span class="line"></span><br><span class="line">host = <span class="string">"""</span></span><br><span class="line"><span class="string">host = 寒暄 报数 询问 业务相关 结尾</span></span><br><span class="line"><span class="string">报数 = 我是 数字 号 ,</span></span><br><span class="line"><span class="string">数字 = 单个数字 | 数字 单个数字</span></span><br><span class="line"><span class="string">单个数字 = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9</span></span><br><span class="line"><span class="string">寒暄 = 称谓 打招呼 | 打招呼</span></span><br><span class="line"><span class="string">称谓 = 人称 ，</span></span><br><span class="line"><span class="string">人称 = tb | 神仙 | 傻狗</span></span><br><span class="line"><span class="string">打招呼 = 你好 | 您好</span></span><br><span class="line"><span class="string">询问 = 请问你要 | 您需要</span></span><br><span class="line"><span class="string">业务相关 = 玩玩 具体业务</span></span><br><span class="line"><span class="string">玩玩 = null</span></span><br><span class="line"><span class="string">具体业务 = 喝酒 | 打牌 | 打猎 | 赌博 | 踢球 | 飞翔</span></span><br><span class="line"><span class="string">结尾 = 吗？</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">20</span>):</span><br><span class="line">    print(generate(create_grammar(human,<span class="string">'='</span>),<span class="string">'human'</span>))</span><br><span class="line">    print(generate(create_grammar(host,<span class="string">'='</span>),<span class="string">'host'</span>))</span><br></pre></td></tr></table></figure>
+<pre><code>我想找点玩的
+神仙，您好我是5号,您需要打牌吗？
+我们想找点玩的
+傻狗，你好我是4号,请问你要踢球吗？
+俺想找点玩的
+你好我是6号,请问你要打猎吗？
+俺找找玩的
+你好我是7723号,请问你要打猎吗？
+我们想找点玩的
+神仙，你好我是2号,您需要打牌吗？
+俺找找玩的
+神仙，你好我是66号,您需要打牌吗？
+我找找玩的
+傻狗，您好我是21号,您需要打牌吗？
+我们想找点玩的
+你好我是6号,您需要飞翔吗？
+我们找找玩的
+您好我是5号,请问你要打牌吗？
+我找找玩的
+您好我是9号,请问你要喝酒吗？
+俺想找点乐子
+你好我是6号,请问你要飞翔吗？
+我们想找点玩的
+你好我是8号,请问你要飞翔吗？
+我找找乐子
+您好我是99号,您需要踢球吗？
+我想找点乐子
+神仙，你好我是95号,您需要飞翔吗？
+俺找找玩的
+您好我是8号,请问你要飞翔吗？
+俺找找乐子
+傻狗，你好我是45号,请问你要喝酒吗？
+俺找找乐子
+您好我是68号,您需要赌博吗？
+我们想找点乐子
+神仙，你好我是3号,您需要打猎吗？
+我们想找点乐子
+佟博，您好我是521号,请问你要打猎吗？
+我找找乐子
+神仙，您好我是2189号,您需要赌博吗？
+</code></pre><h1 id="希望能够生成最合理的一句话？"><a href="#希望能够生成最合理的一句话？" class="headerlink" title="希望能够生成最合理的一句话？"></a>希望能够生成最合理的一句话？</h1><h2 id="Data-Driven"><a href="#Data-Driven" class="headerlink" title="Data Driven"></a>Data Driven</h2><p>我们的目标是，希望能够在做一个程序，然后，当输入的数据变化的时候，我们的程序不用重写。Generalizatoin.<br>AI? 如何能够自动化解决巨额问题，我们找到一个方法后，输入变了，我们这个方法，不用变。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">simple_programming = <span class="string">"""</span></span><br><span class="line"><span class="string">programming =&gt; if_stmt | assign | while_loop</span></span><br><span class="line"><span class="string">while_loop =&gt; while ( cond ) &#123; change_line stmt change_line &#125;</span></span><br><span class="line"><span class="string">if_stmt =&gt; if ( cond ) &#123; change_line stmt change_line &#125; | if ( cond ) &#123; change_line stmt change_line &#125; else &#123; change_line stmt change_line &#125;</span></span><br><span class="line"><span class="string">change_line =&gt; /n</span></span><br><span class="line"><span class="string">cond =&gt; var op var</span></span><br><span class="line"><span class="string">op =&gt; | == | &lt; | &gt;= | &lt;=</span></span><br><span class="line"><span class="string">stmt =&gt; assign | if_stmt</span></span><br><span class="line"><span class="string">assign =&gt; var = var</span></span><br><span class="line"><span class="string">var =&gt; var _ num | words</span></span><br><span class="line"><span class="string">words =&gt; words _ word | word</span></span><br><span class="line"><span class="string">word =&gt; name | info | student | lib | database</span></span><br><span class="line"><span class="string">nums =&gt; nums num | num</span></span><br><span class="line"><span class="string">num =&gt; 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 0</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(generate(gram=create_grammar(simple_programming,split=<span class="string">'=&gt;'</span>),target=<span class="string">'programming'</span>))</span><br></pre></td></tr></table></figure>
+<pre><code>if(lib_name_info&gt;=lib_student){
+if(name_2&lt;=name_database){
+if(lib&lt;info_lib_database_7){
+database=lib_lib
+}else{
+info_6=info
+}
+}
+}else{
+info_0=name_5
+}
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">pretty_print</span><span class="params">(line)</span>:</span></span><br><span class="line">    <span class="comment">#utility ttool function</span></span><br><span class="line">    lines = line.split(<span class="string">'\n'</span>)</span><br><span class="line">    </span><br><span class="line">    code_lines = []</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> i , sen <span class="keyword">in</span> enumerate(lines):</span><br><span class="line">        <span class="keyword">if</span> i &lt; len(lines) /<span class="number">2</span>:</span><br><span class="line">            <span class="comment">#print()</span></span><br><span class="line">            code_lines.append(i * <span class="string">"  "</span> + sen)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            code_lines.append((len(lines) -i )* <span class="string">" "</span> +sen)</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">return</span> code_lines</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">generated_programming = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">20</span>):</span><br><span class="line">    generated_programming += pretty_print(generate(gram=create_grammar(simple_programming,split=<span class="string">'=&gt;'</span>),target=<span class="string">'programming'</span>))</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> generated_programming:</span><br><span class="line">    print(line)</span><br></pre></td></tr></table></figure>
+<pre><code>if(student==name){
+  if(database_student&lt;=lib){
+    if(student_student_lib_databasename_name){
+      info=info
+        }else{
+          if(info==name){
+            if(lib&lt;info_3){
+              if(student_lib_lib_9&gt;=database){
+       info_6=student_database_lib_lib
+      }
+     }
+    }
+   }
+  }
+ }
+while(lib_0&lt;name_name_name_info){
+  info_lib_database_name=info
+ }
+database_info_database_3=lib_7_5_0_8_5_7_3
+database_0=info
+while(lib_1_9&lt;=student_lib_student_lib){
+  if(student_name&lt;info_database_0){
+    if(database&lt;=student_database){
+      if(name&gt;=name){
+        info_info=student_info_lib_name_0
+          }
+            }else{
+              if(lib_database_5_0==name_2){
+       lib_database_database_4=lib_5
+      }
+     }
+    }else{
+   info=database_database_database_0
+  }
+ }
+while(lib_database_lib&lt;=student_6){
+  if(studentstudent_2){
+    name_database_7=lib_name_name_7
+      }else{
+        if(info_1&gt;=database_4_8){
+          info=info_1_3_7
+            }else{
+              if(name_9_8_9&lt;database){
+                if(database_info_lib_3_8database_7){
+                  if(name_7&gt;=lib_name_student){
+                    if(student_lib_info_info_2_4_8&lt;lib_6_2_2){
+                      student_lib_database=student_info_3
+           }else{
+          info_lib=student_database
+         }
+        }
+       }
+      }else{
+     database=lib_student_info_name_student_3_1_7_3
+    }
+   }
+  }
+ }
+if(student&gt;=name_student_database_lib_lib){
+  name_database_3_4=lib_name_info_info_name_student_info_name
+    }else{
+  lib_database=info_lib_student
+ }
+name=name_5_2_3_2_4_5_3_2_0_3_7
+info_6=info_student_1
+info=lib_9
+if(student&gt;=database_2){
+  name_4_5=student
+ }
+if(student_3_3_6&lt;=name_info_database_8){
+  if(student_6&gt;=database_student_4){
+    if(info_2_2_7==info_6_4){
+      name_8_1=info_student_lib
+        }else{
+          database_5=database_1
+            }
+              }
+                }else{
+                  if(lib==database_lib){
+                    lib_0_9_1=lib_0
+          }else{
+         if(lib_database&gt;=info_student_0){
+        student_name_8=name
+       }else{
+      if(info_name_lib_name_student_database_lib_name&lt;=student_2){
+     student_info_0_9_9_1=database
+    }
+   }
+  }
+ }
+while(lib_3_8&lt;=database_0){
+  if(name_9==lib){
+    if(lib_name_lib_5info){
+      if(lib_name_database_3lib_2){
+        database_info_info=student_1
+          }
+            }
+              }else{
+       if(name&lt;database_5_1_5_8){
+      student_student=info
+     }else{
+    info_info_7=student_database_database_info_name_1_6
+   }
+  }
+ }
+database_database=info_student_database_lib_student
+lib=database
+student_database_database=name_6
+while(student_database&lt;info){
+  if(info_student_database_student_lib_name_info&lt;=info){
+    lib_4_5_2=name_info
+      }else{
+   lib_2=database_info_name
+  }
+ }
+while(name_3name_lib){
+  info=lib
+ }
+while(info_libinfo_4_4_3){
+  info_name_info_lib_9_9=database_0_4_3
+ }
+if(lib_database_name&lt;student_name_0){
+  if(name_9_4_4_6student_info_student){
+    if(name_0lib_1){
+      lib_lib=database_student_student
+        }
+          }else{
+            if(infostudent){
+              lib_0=student
+                }
+                  }
+                    }else{
+                      if(student_name_info_0_9info_lib_9){
+                        database_name_student=name
+                          }else{
+                            if(student&lt;=name){
+                              database=info_info_lib_name_lib_8_7
+                                }else{
+                                  if(name_namedatabase_lib_name_8_6){
+                 if(info==name){
+                info_7_9_5_1_6=info_database
+               }else{
+              if(name_student_info_8&lt;=student_database){
+             info_name_database_database_database=lib_1
+            }else{
+           if(name&lt;=info_info_student_student_database_info_lib_lib_info){
+          student_lib=name_student
+         }
+        }
+       }
+      }else{
+     info_6_8_3=info_9_3_7
+    }
+   }
+  }
+ }
+</code></pre><h1 id="Language-Model"><a href="#Language-Model" class="headerlink" title="Language Model"></a>Language Model</h1><script type="math/tex; mode=display">language\_model(string) = Probality(String)\in(0,1)</script><script type="math/tex; mode=display">Pro(w_1 w_2 w_3 w_4) = Pr(w_1 | w_2 w_3 w_4) * Pr(w_2 | w_3 w_4) *Pr(w_3 | w_4)*Pr(w_4)</script><p>how to get $ Pr(w_1 |w_2 w_3 w_4)$?</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> random</span><br><span class="line">random.choice(range(<span class="number">100</span>))</span><br></pre></td></tr></table></figure>
+<pre><code>86
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">filename=<span class="string">'/Users/24768/sqlResult_1558435.csv'</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">content =pd.read_csv(filename,encoding=<span class="string">'gb18030'</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">content.head()</span><br></pre></td></tr></table></figure>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>author</th>
+      <th>source</th>
+      <th>content</th>
+      <th>feature</th>
+      <th>title</th>
+      <th>url</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>89617</td>
+      <td>NaN</td>
+      <td>快科技@http://www.kkj.cn/</td>
+      <td>此外，自本周（6月12日）起，除小米手机6等15款机型外，其余机型已暂停更新发布（含开发版/...</td>
+      <td>{"type":"科技","site":"cnbeta","commentNum":"37"...</td>
+      <td>小米MIUI 9首批机型曝光：共计15款</td>
+      <td>http://www.cnbeta.com/articles/tech/623597.htm</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>89616</td>
+      <td>NaN</td>
+      <td>快科技@http://www.kkj.cn/</td>
+      <td>骁龙835作为唯一通过Windows 10桌面平台认证的ARM处理器，高通强调，不会因为只考...</td>
+      <td>{"type":"科技","site":"cnbeta","commentNum":"15"...</td>
+      <td>骁龙835在Windows 10上的性能表现有望改善</td>
+      <td>http://www.cnbeta.com/articles/tech/623599.htm</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>89615</td>
+      <td>NaN</td>
+      <td>快科技@http://www.kkj.cn/</td>
+      <td>此前的一加3T搭载的是3400mAh电池，DashCharge快充规格为5V/4A。\r\n...</td>
+      <td>{"type":"科技","site":"cnbeta","commentNum":"18"...</td>
+      <td>一加手机5细节曝光：3300mAh、充半小时用1天</td>
+      <td>http://www.cnbeta.com/articles/tech/623601.htm</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>89614</td>
+      <td>NaN</td>
+      <td>新华社</td>
+      <td>这是6月18日在葡萄牙中部大佩德罗冈地区拍摄的被森林大火烧毁的汽车。新华社记者张立云摄\r\n</td>
+      <td>{"type":"国际新闻","site":"环球","commentNum":"0","j...</td>
+      <td>葡森林火灾造成至少62人死亡 政府宣布进入紧急状态（组图）</td>
+      <td>http://world.huanqiu.com/hot/2017-06/10866126....</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>89613</td>
+      <td>胡淑丽_MN7479</td>
+      <td>深圳大件事</td>
+      <td>（原标题：44岁女子跑深圳约会网友被拒，暴雨中裸身奔走……）\r\n@深圳交警微博称：昨日清...</td>
+      <td>{"type":"新闻","site":"网易热门","commentNum":"978",...</td>
+      <td>44岁女子约网友被拒暴雨中裸奔 交警为其披衣相随</td>
+      <td>http://news.163.com/17/0618/00/CN617P3Q0001875...</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">articles =content[<span class="string">'content'</span>].tolist()</span><br><span class="line">print(articles[:<span class="number">2</span>])</span><br></pre></td></tr></table></figure>
+<pre><code>[&#39;此外，自本周（6月12日）起，除小米手机6等15款机型外，其余机型已暂停更新发布（含开发版/体验版内测，稳定版暂不受影响），以确保工程师可以集中全部精力进行系统优化工作。有人猜测这也是将精力主要用到MIUI 9的研发之中。\r\nMIUI 8去年5月发布，距今已有一年有余，也是时候更新换代了。\r\n当然，关于MIUI 9的确切信息，我们还是等待官方消息。\r\n&#39;, &#39;骁龙835作为唯一通过Windows 10桌面平台认证的ARM处理器，高通强调，不会因为只考虑性能而去屏蔽掉小核心。相反，他们正联手微软，找到一种适合桌面平台的、兼顾性能和功耗的完美方案。\r\n报道称，微软已经拿到了一些新的源码，以便Windows 10更好地理解big.little架构。\r\n资料显示，骁龙835作为一款集成了CPU、GPU、基带、蓝牙/Wi-Fi的SoC，比传统的Wintel方案可以节省至少30%的PCB空间。\r\n按计划，今年Q4，华硕、惠普、联想将首发骁龙835 Win10电脑，预计均是二合一形态的产品。\r\n当然，高通骁龙只是个开始，未来也许还能见到三星Exynos、联发科、华为麒麟、小米澎湃等进入Windows 10桌面平台。\r\n&#39;]
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">len(articles)</span><br></pre></td></tr></table></figure>
+<pre><code>89611
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> jieba</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">token</span><span class="params">(string)</span>:</span></span><br><span class="line">    <span class="comment"># we will learn the regular expression next course</span></span><br><span class="line">    <span class="keyword">return</span> re.findall(<span class="string">'\w+'</span>,string)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> Counter</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">with_jieba_cut = Counter(jieba.cut(articles[<span class="number">110</span>]))</span><br></pre></td></tr></table></figure>
+<pre><code>Building prefix dict from the default dictionary ...
+Dumping model to file cache C:\Users\24768\AppData\Local\Temp\jieba.cache
+Loading model cost 0.957 seconds.
+Prefix dict has been built succesfully.
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">with_jieba_cut.most_common()[:<span class="number">10</span>]</span><br></pre></td></tr></table></figure>
+<pre><code>[(&#39;，&#39;, 88),
+ (&#39;的&#39;, 73),
+ (&#39;。&#39;, 39),
+ (&#39;\r\n&#39;, 27),
+ (&#39;了&#39;, 20),
+ (&#39;们&#39;, 18),
+ (&#39;工作队&#39;, 16),
+ (&#39;村民&#39;, 15),
+ (&#39;收割&#39;, 14),
+ (&#39;、&#39;, 12)]
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">''</span>.join(token(articles[<span class="number">110</span>]))</span><br></pre></td></tr></table></figure>
+<pre><code>&#39;在外国名著麦田里的守望者中作者想要守护麦田里如自己内心一般纯真的孩子们而驻村干部们也在这个炎热的夏天里撸袖子上阵真正做起了村民们的麦田守望者三夏时节不等人你看到了吗不停翻涌起伏仿若铺陈至天边的金黄麦浪中那若隐若现的人影是自治区新闻出版广电局驻和田市肖尔巴格乡合尼村工作队的队员与工作队组织的青年志愿者在这个炎热的夏季他们深入田间地头帮助村民们收割小麦扛起收麦机麦田中的每个人都显得兴致勃勃一天下来就近22亩小麦收割完毕志愿者麦麦提亚森擦去满脸的汗水高兴地告诉驻村队员我们青年志愿者应该多做贡献为村里的脱贫致富出把力工作队带着我们为村里的老人服务看到那些像我爷爷奶奶一样的老人赞许感谢的目光我体会到了帮助他人的快乐自治区新闻出版广电局驻村工作队孙敏艾力依布拉音麦收时节我们在一起6月中旬的和田墨玉麦田金黄静待收割6月14日15日两天自治区高级人民法院驻和田地区墨玉县吐外特乡罕勒克艾日克村工作队与48名村民志愿者一道帮助村里29户有需要的村民进行小麦收割工作田间地头罕勒克艾日克村志愿队的红旗迎风飘扬格外醒目10余台割麦机一起轰鸣男人们在用机器收割小麦的同时几名妇女也加入到志愿队构成了一道美丽的麦收风景休息空闲工作队员和村民们坐在树荫下田埂上互相问好聊天语言交流有困难就用手势动作比划着聊天有趣地交流方式不时引来阵阵欢笑大家在一同享受丰收和喜悦也一同增进着彼此的情感和友谊自治区高级人民法院驻村工作队周春梅艾地艾木阿不拉细看稻菽千重浪6月15日自治区煤田灭火工程局的干部职工们再一次跋涉1000多公里来到了叶城县萨依巴格乡阿亚格欧尔达贝格村见到了自己的亲戚现场处处都透出掩盖不住的喜悦一声声亲切的谢谢一个个结实的拥抱都透露出浓浓的亲情没坐一会儿在嘘寒问暖中大家了解到在麦收的关键时刻部分村民家中却存在收割难的问题小麦成熟期短收获的时间集中天气的变化对小麦最终产量的影响极大如果不能及时收割会有不小损失的于是大家几乎立刻就决定要帮助亲戚们收割麦子在茂密的麦地里干部们每人手持一把镰刀一字排开挽起衣袖卷起裤腿挥舞着镰刀进行着无声的竞赛骄阳似火汗如雨下但这都挡不住大家的热情随着此起彼伏的镰刀割倒麦子的刷刷声响不一会一束束沉甸甸的麦穗就被整齐地堆放了起来当看到自己亲手收割的金黄色麦穗被一簇簇地打成捆运送到晒场每个人的脸上都露出了灿烂的笑容自治区煤田灭火工程局驻村工作队马浩南这是一个收获多多的季节6月13日清晨6时许和田地区民丰县若雅乡特开墩村的麦田里已经传来马达轰鸣声原来是自治区质监局驻村工作队趁着天气尚且凉爽开始了麦田的收割工作忙碌间隙志愿者队伍搬来清凉的水村民们拎来鲜甜的西瓜抹一把汗水吃一牙西瓜甜蜜的汁水似乎流进了每一个人的心里说起割麦子对于生活在这片土地上的村民来说是再平常不过的事但是对于工作队队员们来说却是陌生的自治区质监局驻民丰县若克雅乡博斯坦村工作队队员们一开始觉得十几个人一起收割二亩地应该会挺快的结果却一点不简单镰刀拿到自己手里割起来考验才真正的开始大家弓着腰弯着腿亦步亦趋手上挥舞着镰刀时刻注意不要让镰刀割到自己脚下还要留心不要把套种的玉米苗踩伤不一会儿就已经汗流浃背了抬头看看身边的村民早就远远地割到前面去了只有今年已经56岁的工作队队长李树刚有割麦经验多少给队员们挽回了些面子赶不上村民们割麦子的速度更不要说搞定收割机这台大家伙了现代化的机械收割能成倍提升小麦的收割速度李树刚说不过能有这样的体验拉近和村民的距离也是很难得的体验自治区质监局驻村工作队王辉马君刚我们是麦田的守护者为了应对麦收新疆银监局驻和田县塔瓦库勒乡也先巴扎村工作队一早就从经济支援和人力支援两方面做好了准备一方面工作队帮村里购入了5台小麦收割机另一边还组织村干部青年团员等组成了6支近百人的收割先锋突击队帮助村民们抢收麦子看着及时归仓的麦子村民们喜得合不拢嘴纷纷摘下自家杏树上的杏子送给工作队金黄的麦穗温暖了村民们的心香甜的杏子温暖了工作队员的心麦子加杏子拉近了村民和队员们的心新疆银监局驻村工作队王继发免责声明本文仅代表作者个人观点与环球网无关其原创性以及文中陈述文字和内容未经本站证实对本文以及其中全部或者部分内容文字的真实性完整性及时性本站不作任何保证或承诺请读者仅作参考并请自行核实相关内容&#39;
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">articles_clean = [<span class="string">''</span>.join(token(str(a))) <span class="keyword">for</span> a <span class="keyword">in</span> articles]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">len(articles_clean)</span><br></pre></td></tr></table></figure>
+<pre><code>89611
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> open(<span class="string">'article_tb.txt'</span>,<span class="string">'w'</span>) <span class="keyword">as</span> f:</span><br><span class="line">    <span class="keyword">for</span> a <span class="keyword">in</span> articles_clean:</span><br><span class="line">        f.write(a + <span class="string">'\n'</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cut</span><span class="params">(string)</span>:</span> <span class="keyword">return</span> list(jieba.cut(string))</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TOKEN = []</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i, line <span class="keyword">in</span> enumerate((open(<span class="string">'article_tb.txt'</span>))):</span><br><span class="line">    <span class="keyword">if</span> i%<span class="number">100</span> ==<span class="number">0</span>: print(i)</span><br><span class="line">    <span class="keyword">if</span> i &gt;<span class="number">100000</span>:<span class="keyword">break</span></span><br><span class="line">    TOKEN.extend(cut(line))</span><br></pre></td></tr></table></figure>
+<pre><code>0
+100
+200
+300
+400
+500
+600
+700
+800
+900
+1000
+1100
+1200
+1300
+1400
+1500
+1600
+1700
+1800
+1900
+2000
+2100
+2200
+2300
+2400
+2500
+2600
+2700
+2800
+2900
+3000
+3100
+3200
+3300
+3400
+3500
+3600
+3700
+3800
+3900
+4000
+4100
+4200
+4300
+4400
+4500
+4600
+4700
+4800
+4900
+5000
+5100
+5200
+5300
+5400
+5500
+5600
+5700
+5800
+5900
+6000
+6100
+6200
+6300
+6400
+6500
+6600
+6700
+6800
+6900
+7000
+7100
+7200
+7300
+7400
+7500
+7600
+7700
+7800
+7900
+8000
+8100
+8200
+8300
+8400
+8500
+8600
+8700
+8800
+8900
+9000
+9100
+9200
+9300
+9400
+9500
+9600
+9700
+9800
+9900
+10000
+10100
+10200
+10300
+10400
+10500
+10600
+10700
+10800
+10900
+11000
+11100
+11200
+11300
+11400
+11500
+11600
+11700
+11800
+11900
+12000
+12100
+12200
+12300
+12400
+12500
+12600
+12700
+12800
+12900
+13000
+13100
+13200
+13300
+13400
+13500
+13600
+13700
+13800
+13900
+14000
+14100
+14200
+14300
+14400
+14500
+14600
+14700
+14800
+14900
+15000
+15100
+15200
+15300
+15400
+15500
+15600
+15700
+15800
+15900
+16000
+16100
+16200
+16300
+16400
+16500
+16600
+16700
+16800
+16900
+17000
+17100
+17200
+17300
+17400
+17500
+17600
+17700
+17800
+17900
+18000
+18100
+18200
+18300
+18400
+18500
+18600
+18700
+18800
+18900
+19000
+19100
+19200
+19300
+19400
+19500
+19600
+19700
+19800
+19900
+20000
+20100
+20200
+20300
+20400
+20500
+20600
+20700
+20800
+20900
+21000
+21100
+21200
+21300
+21400
+21500
+21600
+21700
+21800
+21900
+22000
+22100
+22200
+22300
+22400
+22500
+22600
+22700
+22800
+22900
+23000
+23100
+23200
+23300
+23400
+23500
+23600
+23700
+23800
+23900
+24000
+24100
+24200
+24300
+24400
+24500
+24600
+24700
+24800
+24900
+25000
+25100
+25200
+25300
+25400
+25500
+25600
+25700
+25800
+25900
+26000
+26100
+26200
+26300
+26400
+26500
+26600
+26700
+26800
+26900
+27000
+27100
+27200
+27300
+27400
+27500
+27600
+27700
+27800
+27900
+28000
+28100
+28200
+28300
+28400
+28500
+28600
+28700
+28800
+28900
+29000
+29100
+29200
+29300
+29400
+29500
+29600
+29700
+29800
+29900
+30000
+30100
+30200
+30300
+30400
+30500
+30600
+30700
+30800
+30900
+31000
+31100
+31200
+31300
+31400
+31500
+31600
+31700
+31800
+31900
+32000
+32100
+32200
+32300
+32400
+32500
+32600
+32700
+32800
+32900
+33000
+33100
+33200
+33300
+33400
+33500
+33600
+33700
+33800
+33900
+34000
+34100
+34200
+34300
+34400
+34500
+34600
+34700
+34800
+34900
+35000
+35100
+35200
+35300
+35400
+35500
+35600
+35700
+35800
+35900
+36000
+36100
+36200
+36300
+36400
+36500
+36600
+36700
+36800
+36900
+37000
+37100
+37200
+37300
+37400
+37500
+37600
+37700
+37800
+37900
+38000
+38100
+38200
+38300
+38400
+38500
+38600
+38700
+38800
+38900
+39000
+39100
+39200
+39300
+39400
+39500
+39600
+39700
+39800
+39900
+40000
+40100
+40200
+40300
+40400
+40500
+40600
+40700
+40800
+40900
+41000
+41100
+41200
+41300
+41400
+41500
+41600
+41700
+41800
+41900
+42000
+42100
+42200
+42300
+42400
+42500
+42600
+42700
+42800
+42900
+43000
+43100
+43200
+43300
+43400
+43500
+43600
+43700
+43800
+43900
+44000
+44100
+44200
+44300
+44400
+44500
+44600
+44700
+44800
+44900
+45000
+45100
+45200
+45300
+45400
+45500
+45600
+45700
+45800
+45900
+46000
+46100
+46200
+46300
+46400
+46500
+46600
+46700
+46800
+46900
+47000
+47100
+47200
+47300
+47400
+47500
+47600
+47700
+47800
+47900
+48000
+48100
+48200
+48300
+48400
+48500
+48600
+48700
+48800
+48900
+49000
+49100
+49200
+49300
+49400
+49500
+49600
+49700
+49800
+49900
+50000
+50100
+50200
+50300
+50400
+50500
+50600
+50700
+50800
+50900
+51000
+51100
+51200
+51300
+51400
+51500
+51600
+51700
+51800
+51900
+52000
+52100
+52200
+52300
+52400
+52500
+52600
+52700
+52800
+52900
+53000
+53100
+53200
+53300
+53400
+53500
+53600
+53700
+53800
+53900
+54000
+54100
+54200
+54300
+54400
+54500
+54600
+54700
+54800
+54900
+55000
+55100
+55200
+55300
+55400
+55500
+55600
+55700
+55800
+55900
+56000
+56100
+56200
+56300
+56400
+56500
+56600
+56700
+56800
+56900
+57000
+57100
+57200
+57300
+57400
+57500
+57600
+57700
+57800
+57900
+58000
+58100
+58200
+58300
+58400
+58500
+58600
+58700
+58800
+58900
+59000
+59100
+59200
+59300
+59400
+59500
+59600
+59700
+59800
+59900
+60000
+60100
+60200
+60300
+60400
+60500
+60600
+60700
+60800
+60900
+61000
+61100
+61200
+61300
+61400
+61500
+61600
+61700
+61800
+61900
+62000
+62100
+62200
+62300
+62400
+62500
+62600
+62700
+62800
+62900
+63000
+63100
+63200
+63300
+63400
+63500
+63600
+63700
+63800
+63900
+64000
+64100
+64200
+64300
+64400
+64500
+64600
+64700
+64800
+64900
+65000
+65100
+65200
+65300
+65400
+65500
+65600
+65700
+65800
+65900
+66000
+66100
+66200
+66300
+66400
+66500
+66600
+66700
+66800
+66900
+67000
+67100
+67200
+67300
+67400
+67500
+67600
+67700
+67800
+67900
+68000
+68100
+68200
+68300
+68400
+68500
+68600
+68700
+68800
+68900
+69000
+69100
+69200
+69300
+69400
+69500
+69600
+69700
+69800
+69900
+70000
+70100
+70200
+70300
+70400
+70500
+70600
+70700
+70800
+70900
+71000
+71100
+71200
+71300
+71400
+71500
+71600
+71700
+71800
+71900
+72000
+72100
+72200
+72300
+72400
+72500
+72600
+72700
+72800
+72900
+73000
+73100
+73200
+73300
+73400
+73500
+73600
+73700
+73800
+73900
+74000
+74100
+74200
+74300
+74400
+74500
+74600
+74700
+74800
+74900
+75000
+75100
+75200
+75300
+75400
+75500
+75600
+75700
+75800
+75900
+76000
+76100
+76200
+76300
+76400
+76500
+76600
+76700
+76800
+76900
+77000
+77100
+77200
+77300
+77400
+77500
+77600
+77700
+77800
+77900
+78000
+78100
+78200
+78300
+78400
+78500
+78600
+78700
+78800
+78900
+79000
+79100
+79200
+79300
+79400
+79500
+79600
+79700
+79800
+79900
+80000
+80100
+80200
+80300
+80400
+80500
+80600
+80700
+80800
+80900
+81000
+81100
+81200
+81300
+81400
+81500
+81600
+81700
+81800
+81900
+82000
+82100
+82200
+82300
+82400
+82500
+82600
+82700
+82800
+82900
+83000
+83100
+83200
+83300
+83400
+83500
+83600
+83700
+83800
+83900
+84000
+84100
+84200
+84300
+84400
+84500
+84600
+84700
+84800
+84900
+85000
+85100
+85200
+85300
+85400
+85500
+85600
+85700
+85800
+85900
+86000
+86100
+86200
+86300
+86400
+86500
+86600
+86700
+86800
+86900
+87000
+87100
+87200
+87300
+87400
+87500
+87600
+87700
+87800
+87900
+88000
+88100
+88200
+88300
+88400
+88500
+88600
+88700
+88800
+88900
+89000
+89100
+89200
+89300
+89400
+89500
+89600
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> functools <span class="keyword">import</span> reduce</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> operator <span class="keyword">import</span> add,mul</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reduce(add,[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">8</span>])</span><br></pre></td></tr></table></figure>
+<pre><code>23
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">words_count =Counter(TOKEN)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">words_count.most_common(<span class="number">100</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>[(&#39;的&#39;, 703716),
+ (&#39;n&#39;, 382020),
+ (&#39;在&#39;, 263597),
+ (&#39;月&#39;, 189330),
+ (&#39;日&#39;, 166300),
+ (&#39;新华社&#39;, 142462),
+ (&#39;和&#39;, 134061),
+ (&#39;年&#39;, 123106),
+ (&#39;了&#39;, 121938),
+ (&#39;是&#39;, 100909),
+ (&#39;\n&#39;, 89611),
+ (&#39;１&#39;, 88187),
+ (&#39;０&#39;, 84945),
+ (&#39;外代&#39;, 83268),
+ (&#39;中&#39;, 73926),
+ (&#39;中国&#39;, 71179),
+ (&#39;２&#39;, 70521),
+ (&#39;2017&#39;, 69894),
+ (&#39;记者&#39;, 62147),
+ (&#39;二线&#39;, 61998),
+ (&#39;将&#39;, 61420),
+ (&#39;与&#39;, 58309),
+ (&#39;等&#39;, 58162),
+ (&#39;为&#39;, 57019),
+ (&#39;5&#39;, 54578),
+ (&#39;照片&#39;, 52271),
+ (&#39;4&#39;, 51626),
+ (&#39;对&#39;, 50317),
+ (&#39;上&#39;, 47452),
+ (&#39;也&#39;, 47401),
+ (&#39;有&#39;, 45767),
+ (&#39;５&#39;, 40857),
+ (&#39;说&#39;, 39017),
+ (&#39;发展&#39;, 37632),
+ (&#39;他&#39;, 37194),
+ (&#39;３&#39;, 36906),
+ (&#39;以&#39;, 36867),
+ (&#39;国际&#39;, 35842),
+ (&#39;nn&#39;, 35330),
+ (&#39;４&#39;, 34659),
+ (&#39;比赛&#39;, 32232),
+ (&#39;６&#39;, 30575),
+ (&#39;到&#39;, 30109),
+ (&#39;人&#39;, 29572),
+ (&#39;从&#39;, 29489),
+ (&#39;6&#39;, 29002),
+ (&#39;都&#39;, 28027),
+ (&#39;不&#39;, 27963),
+ (&#39;后&#39;, 27393),
+ (&#39;当日&#39;, 27186),
+ (&#39;就&#39;, 26684),
+ (&#39;并&#39;, 26568),
+ (&#39;国家&#39;, 26439),
+ (&#39;７&#39;, 26386),
+ (&#39;企业&#39;, 26147),
+ (&#39;进行&#39;, 25987),
+ (&#39;3&#39;, 25491),
+ (&#39;美国&#39;, 25485),
+ (&#39;举行&#39;, 25389),
+ (&#39;被&#39;, 25277),
+ (&#39;北京&#39;, 25245),
+ (&#39;体育&#39;, 24873),
+ (&#39;2&#39;, 24376),
+ (&#39;1&#39;, 24182),
+ (&#39;这&#39;, 24118),
+ (&#39;新&#39;, 23828),
+ (&#39;但&#39;, 23385),
+ (&#39;比&#39;, 23229),
+ (&#39;个&#39;, 23081),
+ (&#39;足球&#39;, 22554),
+ (&#39;表示&#39;, 22134),
+ (&#39;经济&#39;, 22006),
+ (&#39;我&#39;, 21940),
+ (&#39;一个&#39;, 21932),
+ (&#39;９&#39;, 21920),
+ (&#39;还&#39;, 21861),
+ (&#39;合作&#39;, 21567),
+ (&#39;要&#39;, 21045),
+ (&#39;n5&#39;, 20946),
+ (&#39;已&#39;, 20882),
+ (&#39;摄&#39;, 20837),
+ (&#39;８&#39;, 20701),
+ (&#39;工作&#39;, 20700),
+ (&#39;n4&#39;, 20658),
+ (&#39;选手&#39;, 19986),
+ (&#39;我们&#39;, 19982),
+ (&#39;市场&#39;, 19001),
+ (&#39;一路&#39;, 18978),
+ (&#39;一带&#39;, 18907),
+ (&#39;建设&#39;, 18634),
+ (&#39;让&#39;, 18609),
+ (&#39;日电&#39;, 18384),
+ (&#39;通过&#39;, 18159),
+ (&#39;多&#39;, 17760),
+ (&#39;时&#39;, 17750),
+ (&#39;完&#39;, 17424),
+ (&#39;于&#39;, 17421),
+ (&#39;问题&#39;, 17338),
+ (&#39;更&#39;, 17275),
+ (&#39;项目&#39;, 17260)]
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">frequiences = [f <span class="keyword">for</span> w,f <span class="keyword">in</span> words_count.most_common(<span class="number">100</span>)]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x =[ i <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">100</span>)]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">%matplotlib inline</span><br><span class="line"><span class="comment">#内嵌画图</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">plt.plot(x,frequiences)</span><br></pre></td></tr></table></figure>
+<pre><code>[&lt;matplotlib.lines.Line2D at 0x16f678b8b48&gt;]
+</code></pre><p><img src="/images/output_58_1.png" alt="png"></p>
+<p>NLP比较重要的规律，在很大的一个 text corpus, 文字集合中，出现频率第二多的单词，是出现频率第一多单词频率的1/2，出现频率滴N多的的单词是第一多的1/N</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">plt.plot(x,np.log(frequiences))</span><br></pre></td></tr></table></figure>
+<pre><code>[&lt;matplotlib.lines.Line2D at 0x16efa34bf08&gt;]
+</code></pre><p><img src="/images/output_61_1.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">prob_1</span><span class="params">(word)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> words_count[word] / len(TOKEN)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">prob_1(<span class="string">'我们'</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>0.0011341645999654677
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">TOKEN[:<span class="number">10</span>]</span><br><span class="line">len(TOKEN[:<span class="number">-1</span>])</span><br></pre></td></tr></table></figure>
+<pre><code>17618253
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TOKEN = [str(t) <span class="keyword">for</span> t <span class="keyword">in</span> TOKEN]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">TOKEN_2_GRAM = [<span class="string">''</span>.join(TOKEN[i:i+<span class="number">2</span>]) <span class="keyword">for</span> i <span class="keyword">in</span> range(len(TOKEN[:<span class="number">-2</span>]))]</span><br><span class="line">len(TOKEN[:<span class="number">-2</span>])</span><br></pre></td></tr></table></figure>
+<pre><code>17618252
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TOKEN_2_GRAM[:<span class="number">10</span>]</span><br></pre></td></tr></table></figure>
+<pre><code>[&#39;此外自&#39;, &#39;自本周&#39;, &#39;本周6&#39;, &#39;6月&#39;, &#39;月12&#39;, &#39;12日起&#39;, &#39;日起除&#39;, &#39;除小米&#39;, &#39;小米手机&#39;, &#39;手机6&#39;]
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">words_count_2 =Counter(TOKEN_2_GRAM)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">prob_2</span><span class="params">(word1,word2)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> word1+word2 <span class="keyword">in</span> words_count_2: <span class="keyword">return</span> words_count_2[word1+word2] / len(TOKEN_2_GRAM)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span> / len(TOKEN_2_GRAM)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">prob_2(<span class="string">'我们'</span>,<span class="string">'在'</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>3.0536514065072974e-05
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">prob_2(<span class="string">'去'</span>,<span class="string">'吃饭'</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>7.946304775297799e-07
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_probablity</span><span class="params">(sentence)</span>:</span></span><br><span class="line">    words = cut(sentence)</span><br><span class="line">    sentence_prob =<span class="number">1</span></span><br><span class="line">    <span class="keyword">for</span> i , word <span class="keyword">in</span>  enumerate(words[:<span class="number">-1</span>]):</span><br><span class="line">        next_ =words[i+<span class="number">1</span>]</span><br><span class="line">        probablity =prob_2(word,next_)</span><br><span class="line">        sentence_prob *= probablity</span><br><span class="line">    sentence_prob*=prob_1(word[<span class="number">-1</span>])</span><br><span class="line">    <span class="keyword">return</span> sentence_prob</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">get_probablity(<span class="string">'fd是一个小可爱'</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>5.193529218987722e-22
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">get_probablity(<span class="string">'小敏今天抽到了一个iphone'</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>9.08660601226132e-36
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> sen <span class="keyword">in</span> [generate(gram=example_grammar,target=<span class="string">'sentence'</span>) <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10</span>)]:</span><br><span class="line">    print(<span class="string">'sentence: &#123;&#125; with Prb: &#123;&#125;'</span>.format(sen,get_probablity(sen)))</span><br></pre></td></tr></table></figure>
+<pre><code>sentence: 一个好看的小猫坐着一个小猫 with Prb: 3.288492351824868e-47
+sentence: 这个蓝色的小小的好看的女人看着一个好看的蓝色的好看的小猫 with Prb: 1.4336960791945416e-97
+sentence: 一个桌子看着这个篮球 with Prb: 1.6316301805544588e-31
+sentence: 一个小小的蓝色的好看的小猫听见一个小猫 with Prb: 5.413402114895177e-62
+sentence: 这个女人听见一个女人 with Prb: 4.894890541663377e-31
+sentence: 这个好看的小小的女人看着这个好看的篮球 with Prb: 7.764808720237364e-62
+sentence: 这个桌子看着一个好看的篮球 with Prb: 2.948877435423709e-42
+sentence: 这个小小的好看的篮球看着这个小小的小小的小小的小猫 with Prb: 1.4874477576323182e-68
+sentence: 这个篮球坐着一个好看的好看的桌子 with Prb: 4.8451281079684025e-59
+sentence: 这个女人听见这个好看的篮球 with Prb: 2.948877435423709e-42
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">need_compared = [</span><br><span class="line">    <span class="string">"今天晚上请你吃饭，我们一起吃火锅 明天晚上请你吃饭，我们一起吃烧烤"</span>,</span><br><span class="line">    <span class="string">"真实一只可爱的小猫 真是一只可爱的小猫"</span>,</span><br><span class="line">    <span class="string">"今天晚上去飞翔 今天晚上飞翔去我"</span>,</span><br><span class="line">    <span class="string">"洋葱奶昔来一杯 养乐多绿来一杯"</span></span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> s <span class="keyword">in</span> need_compared:</span><br><span class="line">    s1,s2 =s.split()</span><br><span class="line">    p1,p2 = get_probablity(s1),get_probablity(s2)</span><br><span class="line">    </span><br><span class="line">    better = s1 <span class="keyword">if</span> p1 &gt; p2 <span class="keyword">else</span> s2</span><br><span class="line">    </span><br><span class="line">    print(<span class="string">'&#123;&#125; is more possible'</span>.format(better))</span><br><span class="line">    print(<span class="string">'-'</span>*<span class="number">4</span> + <span class="string">' &#123;&#125; with probablity &#123;&#125;'</span>.format(s1,p1))</span><br><span class="line">    print(<span class="string">'-'</span>*<span class="number">4</span> + <span class="string">' &#123;&#125; with probablity &#123;&#125;'</span>.format(s2,p2))</span><br></pre></td></tr></table></figure>
+<pre><code>今天晚上请你吃饭，我们一起吃火锅 is more possible
+---- 今天晚上请你吃饭，我们一起吃火锅 with probablity 6.195089781185323e-58
+---- 明天晚上请你吃饭，我们一起吃烧烤 with probablity 4.512004197519248e-64
+真是一只可爱的小猫 is more possible
+---- 真实一只可爱的小猫 with probablity 5.014470336000062e-27
+---- 真是一只可爱的小猫 with probablity 5.014470336000062e-27
+今天晚上去飞翔 is more possible
+---- 今天晚上去飞翔 with probablity 1.1061245254231737e-24
+---- 今天晚上飞翔去我 with probablity 2.3020387757829988e-31
+养乐多绿来一杯 is more possible
+---- 洋葱奶昔来一杯 with probablity 1.1160363145085983e-25
+---- 养乐多绿来一杯 with probablity 1.9662609030163744e-18
+</code></pre><h1 id="Data-Driven-1"><a href="#Data-Driven-1" class="headerlink" title="Data Driven"></a>Data Driven</h1><h2 id="假如你做了很久的数据预处理"><a href="#假如你做了很久的数据预处理" class="headerlink" title="假如你做了很久的数据预处理"></a>假如你做了很久的数据预处理</h2><h2 id="AI的问题里边，65-都在做数据预处理"><a href="#AI的问题里边，65-都在做数据预处理" class="headerlink" title="AI的问题里边，65%都在做数据预处理"></a>AI的问题里边，65%都在做数据预处理</h2><h2 id="我们养成一个习惯，把数据存到硬盘里"><a href="#我们养成一个习惯，把数据存到硬盘里" class="headerlink" title="我们养成一个习惯，把数据存到硬盘里"></a>我们养成一个习惯，把数据存到硬盘里</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>O(∩_∩)O哈哈~</div>
+  <button disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="bool_tbb 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="bool_tbb 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/NLP/" rel="tag"># NLP</a>
+              <a href="/tags/Syntax-Tree/" rel="tag"># Syntax-Tree</a>
+              <a href="/tags/Language-Model/" rel="tag"># Language Model</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2019/11/29/python-BinarySearchTree/" rel="next" title="python BinarySearchTree">
+                  <i class="fa fa-chevron-left"></i> python BinarySearchTree
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2020/01/16/AI%20for%20NLP/" rel="prev" title="AI for NLP">
+                  AI for NLP <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#but-the-question-is"><span class="nav-number">1.</span> <span class="nav-text">but the question is ?</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#希望能够生成最合理的一句话？"><span class="nav-number">2.</span> <span class="nav-text">希望能够生成最合理的一句话？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Data-Driven"><span class="nav-number">2.1.</span> <span class="nav-text">Data Driven</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Language-Model"><span class="nav-number">3.</span> <span class="nav-text">Language Model</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Data-Driven-1"><span class="nav-number">4.</span> <span class="nav-text">Data Driven</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#假如你做了很久的数据预处理"><span class="nav-number">4.1.</span> <span class="nav-text">假如你做了很久的数据预处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AI的问题里边，65-都在做数据预处理"><span class="nav-number">4.2.</span> <span class="nav-text">AI的问题里边，65%都在做数据预处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#我们养成一个习惯，把数据存到硬盘里"><span class="nav-number">4.3.</span> <span class="nav-text">我们养成一个习惯，把数据存到硬盘里</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bool_tbb"
+      src="/images/tb.jpg">
+  <p class="site-author-name" itemprop="name">bool_tbb</p>
+  <div class="site-description" itemprop="description">十三月</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/iiot-tbb" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;iiot-tbb" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/bool_tbb@sjtu.edu.cn" title="E-Mail → bool_tbb@sjtu.edu.cn"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/5313762851" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;5313762851" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/16817976/bool-tbb" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;16817976&#x2F;bool-tbb" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>StackOverflow</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      推荐阅读
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://developer.apple.com/swift/" title="https:&#x2F;&#x2F;developer.apple.com&#x2F;swift&#x2F;" rel="noopener" target="_blank">Swift 4</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://developer.apple.com/documentation/objectivec" title="https:&#x2F;&#x2F;developer.apple.com&#x2F;documentation&#x2F;objectivec" rel="noopener" target="_blank">Objective -C</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+      
+      <script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+      <script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+      <div class="widget-wrap">
+          <h3 class="widget-title">Tag Cloud</h3>
+          <div id="myCanvasContainer" class="widget tagcloud">
+              <canvas width="250" height="250" id="resCanvas" style="width=100%">
+                  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI/" rel="tag">AI</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Deep-Learning/" rel="tag">Deep Learning</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Languaage-Model/" rel="tag">Languaage Model</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Language-Model/" rel="tag">Language Model</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Machine-Learning/" rel="tag">Machine Learning</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NLP/" rel="tag">NLP</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PDF%E8%A7%A3%E6%9E%90/" rel="tag">PDF解析</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Syntax-Tree/" rel="tag">Syntax-Tree</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Transformer/" rel="tag">Transformer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/myBorn/" rel="tag">myBorn</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytorch/" rel="tag">pytorch</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" rel="tag">二叉树</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%BA%E6%96%87/" rel="tag">人文</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B3%95%E5%BE%8B/" rel="tag">法律</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9A%8F%E7%AC%94/" rel="tag">随笔</a><span class="tag-list-count">1</span></li></ul>
+              </canvas>
+          </div>
+      </div>
+      
+      
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">bool_tbb</span>
+</div>
+  <div class="powered-by">由 <a href="https://github.com/iiot-tbb" class="theme-link" rel="noopener" target="_blank">Tbb</a> 强力驱动 v1.0.0
+  </div>
+  <span class="post-meta-divider">|</span>
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共25.5k字</span>
+</div>
+
+
+<span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+<script>
+    var now = new Date(); 
+    function createtime() { 
+        var grt= new Date("11/11/2019 12:49:25");//在此处修改你的建站时间
+        now.setTime(now.getTime()+250); 
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days); 
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours); 
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum); 
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;} 
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum); 
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;} 
+        document.getElementById("timeDate").innerHTML = " 运行了 "+dnum+" 天 "; 
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒"; 
+    } 
+setInterval("createtime()",250);
+</script>
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+  
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>

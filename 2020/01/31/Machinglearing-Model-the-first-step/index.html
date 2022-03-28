@@ -1,0 +1,1414 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="Bool_tbb" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":true,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="1%matplotlib inline 1import numpy as np 1random_data &#x3D; np.random.random((20,2)) 1random_data">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Machinglearing Model,the first step">
+<meta property="og:url" content="http://yoursite.com/2020/01/31/Machinglearing-Model-the-first-step/index.html">
+<meta property="og:site_name" content="Bool_tbb">
+<meta property="og:description" content="1%matplotlib inline 1import numpy as np 1random_data &#x3D; np.random.random((20,2)) 1random_data">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/2020/01/31/Machinglearing-Model-the-first-step/output_11_1.png">
+<meta property="og:image" content="http://yoursite.com/2020/01/31/Machinglearing-Model-the-first-step/output_22_1.png">
+<meta property="og:image" content="http://yoursite.com/2020/01/31/Machinglearing-Model-the-first-step/output_87_1.png">
+<meta property="og:image" content="http://yoursite.com/2020/01/31/Machinglearing-Model-the-first-step/output_96_0.png">
+<meta property="article:published_time" content="2020-01-31T13:01:01.000Z">
+<meta property="article:modified_time" content="2022-03-28T09:04:28.979Z">
+<meta property="article:author" content="bool_tbb">
+<meta property="article:tag" content="Machine Learning">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2020/01/31/Machinglearing-Model-the-first-step/output_11_1.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/01/31/Machinglearing-Model-the-first-step/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Machinglearing Model,the first step | Bool_tbb</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+
+<body itemscope itemtype="http://schema.org/WebPage">
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Bool_tbb</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">留下点啥，证明活过</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/31/Machinglearing-Model-the-first-step/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/tb.jpg">
+      <meta itemprop="name" content="bool_tbb">
+      <meta itemprop="description" content="十三月">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Bool_tbb">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Machinglearing Model,the first step
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-01-31 21:01:01" itemprop="dateCreated datePublished" datetime="2020-01-31T21:01:01+08:00">2020-01-31</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-03-28 17:04:28" itemprop="dateModified" datetime="2022-03-28T17:04:28+08:00">2022-03-28</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%matplotlib inline</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">random_data = np.random.random((<span class="number">20</span>,<span class="number">2</span>))</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">random_data</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<pre><code>array([[0.50296664, 0.62445093],
+       [0.19994622, 0.19373156],
+       [0.14250226, 0.61334931],
+       [0.70048398, 0.75160392],
+       [0.74448897, 0.7320275 ],
+       [0.85976709, 0.84319014],
+       [0.73253413, 0.12288743],
+       [0.88371578, 0.84136921],
+       [0.97180754, 0.79078425],
+       [0.05776667, 0.92731363],
+       [0.03322522, 0.36021126],
+       [0.30821425, 0.57943347],
+       [0.16970345, 0.72740845],
+       [0.5127129 , 0.44245729],
+       [0.37546157, 0.477542  ],
+       [0.96229987, 0.98167783],
+       [0.79974288, 0.20093964],
+       [0.65953995, 0.83289056],
+       [0.83061176, 0.10022954],
+       [0.57372662, 0.74422547]])
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">X = random_data[:,<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Y = random_data[:,<span class="number">1</span>]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> random</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">assuming_function</span><span class="params">(x)</span>:</span></span><br><span class="line">    <span class="comment"># 在我们的日常生活中是常见的</span></span><br><span class="line">    <span class="comment"># 体重-&gt; 高血压的概率</span></span><br><span class="line">    <span class="comment"># 收入-&gt; 买阿玛尼的概率</span></span><br><span class="line">    <span class="comment"># 其实都是一种潜在的函数关系 + 一个随机变化</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">13.4</span> *x + <span class="number">5</span> + random.randint(<span class="number">-5</span>,<span class="number">5</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">y = [assuming_function(x) <span class="keyword">for</span> x <span class="keyword">in</span> X]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">plt.scatter(X,y)</span><br></pre></td></tr></table></figure>
+<pre><code>&lt;matplotlib.collections.PathCollection at 0x21e39725708&gt;
+</code></pre><p><img src="output_11_1.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">y = np.array(y)</span><br></pre></td></tr></table></figure>
+<h3 id="Regression-gt-Real-Number"><a href="#Regression-gt-Real-Number" class="headerlink" title="Regression -&gt; Real Number"></a>Regression -&gt; Real Number</h3><h3 id="Classification-gt-0-0-0-1-0-1-0-0"><a href="#Classification-gt-0-0-0-1-0-1-0-0" class="headerlink" title="Classification -&gt; [0,0,0,1],[0,1,0,0]"></a>Classification -&gt; [0,0,0,1],[0,1,0,0]</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">y</span><br></pre></td></tr></table></figure>
+<pre><code>array([ 9.73975302,  6.67927941,  3.90953023, 10.38648538, 13.97615214,
+       20.520879  , 10.81595738, 14.84179151, 19.02222101,  8.77407336,
+        0.44521789, 13.13007093,  4.27402617,  7.87035283,  9.03118504,
+       13.89481826, 18.71655464, 15.83783527, 16.1301976 , 10.68793665])
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> py</span><br><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LinearRegression</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reg = LinearRegression().fit(X.reshape(<span class="number">-1</span>,<span class="number">1</span>),y)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reg.score(X.reshape(<span class="number">-1</span>,<span class="number">1</span>),y)</span><br></pre></td></tr></table></figure>
+<pre><code>0.7115853500059341
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reg.coef_</span><br></pre></td></tr></table></figure>
+<pre><code>array([14.50455278])
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">reg.intercept_</span><br></pre></td></tr></table></figure>
+<pre><code>3.441324165071637
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">f</span><span class="params">(x)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> reg.coef_ * x + reg.intercept_</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">plt.scatter(X,y)</span><br><span class="line">plt.plot(X,f(X),color=<span class="string">'red'</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>[&lt;matplotlib.lines.Line2D at 0x21e3cf5c8c8&gt;]
+</code></pre><p><img src="output_22_1.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">X</span><br></pre></td></tr></table></figure>
+<pre><code>array([0.50296664, 0.19994622, 0.14250226, 0.70048398, 0.74448897,
+       0.85976709, 0.73253413, 0.88371578, 0.97180754, 0.05776667,
+       0.03322522, 0.30821425, 0.16970345, 0.5127129 , 0.37546157,
+       0.96229987, 0.79974288, 0.65953995, 0.83061176, 0.57372662])
+</code></pre><h3 id="How-to-implement-a-KNN-model"><a href="#How-to-implement-a-KNN-model" class="headerlink" title="How to implement a KNN model"></a>How to implement a KNN model</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">model</span><span class="params">(X,y)</span>:</span></span><br><span class="line">    <span class="comment"># 直接存储X,y即可</span></span><br><span class="line">    <span class="keyword">return</span> [(Xi,yi) <span class="keyword">for</span> Xi, yi <span class="keyword">in</span> zip(X,y)]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> scipy.spatial.distance <span class="keyword">import</span> cosine</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">distance</span><span class="params">(x1,x2)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> cosine(x1,x2)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">prdict</span><span class="params">(x,k=<span class="number">5</span>)</span>:</span></span><br><span class="line">    <span class="comment">#在predicate 的时候，需要做大量的计算</span></span><br><span class="line">    most_similars =sorted(model(X,y),key = <span class="keyword">lambda</span> xi:distance(xi[<span class="number">0</span>],x))[:k]</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># -&gt; regression:numerical -&gt; most_similars(y)</span></span><br><span class="line">    <span class="comment"># -&gt;classification:categorical -&gt; most_similar(y)</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 已经获得了最相似的数据集</span></span><br><span class="line">    <span class="comment"># 然后呢，Counter()-&gt; most_common()-&gt;就可以获得出现最多的这个y了</span></span><br></pre></td></tr></table></figure>
+<h3 id="不是简简单单的学一个算法，看到背后的思维方式："><a href="#不是简简单单的学一个算法，看到背后的思维方式：" class="headerlink" title="不是简简单单的学一个算法，看到背后的思维方式："></a>不是简简单单的学一个算法，看到背后的思维方式：</h3><blockquote>
+<p>贝叶斯，线性回归，决策树，KNN</p>
+</blockquote>
+<h3 id="新的问题，是不存在现成的解决方案的，但是，我们可以依据前人比较成熟的思维方法，我们发明新的方法。"><a href="#新的问题，是不存在现成的解决方案的，但是，我们可以依据前人比较成熟的思维方法，我们发明新的方法。" class="headerlink" title="新的问题，是不存在现成的解决方案的，但是，我们可以依据前人比较成熟的思维方法，我们发明新的方法。"></a>新的问题，是不存在现成的解决方案的，但是，我们可以依据前人比较成熟的思维方法，我们发明新的方法。</h3><h3 id="How-to-implement-a-Decision-Tree"><a href="#How-to-implement-a-Decision-Tree" class="headerlink" title="How to implement a Decision Tree"></a>How to implement a Decision Tree</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> Counter</span><br></pre></td></tr></table></figure>
+<h3 id="信息熵"><a href="#信息熵" class="headerlink" title="信息熵"></a>信息熵</h3><script type="math/tex; mode=display">Entropy = -\sum_i^n Pr(x_i) log(Pr(x_i))</script><h3 id="Gini-纯度"><a href="#Gini-纯度" class="headerlink" title="Gini 纯度"></a>Gini 纯度</h3><script type="math/tex; mode=display">Gini= 1 - \sum_{i=1}^J P_i^2</script><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">! pip install icecream</span><br></pre></td></tr></table></figure>
+<pre><code>Collecting icecream
+  Downloading https://files.pythonhosted.org/packages/8c/ec/821ef939e8e4f4306e7263afa7e2ce0b4c5da9e6e53d1cc97b01606035f8/icecream-2.0.0-py2.py3-none-any.whl
+Requirement already satisfied: colorama&gt;=0.3.9 in d:\anaconda\lib\site-packages (from icecream) (0.4.1)
+Collecting asttokens&gt;=2.0.1 (from icecream)
+  Downloading https://files.pythonhosted.org/packages/e8/18/41e95b4a6b4fd3ae704e672da5d070272518995f580be79d772be312c4af/asttokens-2.0.3-py2.py3-none-any.whl
+Requirement already satisfied: pygments&gt;=2.2.0 in d:\anaconda\lib\site-packages (from icecream) (2.4.2)
+Collecting executing&gt;=0.3.1 (from icecream)
+  Downloading https://files.pythonhosted.org/packages/79/a1/f85482473b12b2b0e1fa10da84d4280930dbd6e4e149cedf7ae91f894138/executing-0.4.1.tar.gz
+Requirement already satisfied: six in d:\anaconda\lib\site-packages (from asttokens&gt;=2.0.1-&gt;icecream) (1.12.0)
+Building wheels for collected packages: executing
+  Building wheel for executing (setup.py): started
+  Building wheel for executing (setup.py): finished with status &#39;done&#39;
+  Created wheel for executing: filename=executing-0.4.1-cp37-none-any.whl size=8302 sha256=2fce6277eb7197756482de660a24f6d2c80bb965838cbbb515106f385e4ccad3
+  Stored in directory: C:\Users\tb\AppData\Local\pip\Cache\wheels\b0\71\dc\c1bdcd4b384c4458b639dfa905bc093979b8779f2e0df78792
+Successfully built executing
+Installing collected packages: asttokens, executing, icecream
+Successfully installed asttokens-2.0.3 executing-0.4.1 icecream-2.0.0
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> icecream <span class="keyword">import</span> ic</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">entropy</span><span class="params">(elements)</span>:</span></span><br><span class="line">    <span class="string">'''群体混乱程度'''</span></span><br><span class="line">    counter = Counter(elements)</span><br><span class="line">    probs = [counter[c] / len(elements) <span class="keyword">for</span> c <span class="keyword">in</span> set(elements)]</span><br><span class="line">    ic(probs)</span><br><span class="line">    <span class="keyword">return</span> - sum(p * np.log(p) <span class="keyword">for</span> p <span class="keyword">in</span> probs)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">entropy([<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>])</span><br></pre></td></tr></table></figure>
+<pre><code>ic| probs: [1.0]
+
+
+
+
+
+-0.0
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">entropy([<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">0</span>])</span><br></pre></td></tr></table></figure>
+<pre><code>ic| probs: [0.25, 0.75]
+
+
+
+
+
+0.5623351446188083
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">entropy([<span class="number">2</span>,<span class="number">3</span>,<span class="number">3</span>,<span class="number">3</span>])</span><br></pre></td></tr></table></figure>
+<pre><code>ic| probs: [0.25, 0.75]
+
+
+
+
+
+0.5623351446188083
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">entropy([<span class="number">2</span>,<span class="number">3</span>,<span class="number">3</span>,<span class="number">4</span>])</span><br></pre></td></tr></table></figure>
+<pre><code>ic| probs: [0.25, 0.5, 0.25]
+
+
+
+
+
+1.0397207708399179
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">entropy([<span class="number">1</span>,<span class="number">2</span>,<span class="number">2</span>,<span class="number">3</span>])</span><br></pre></td></tr></table></figure>
+<pre><code>ic| probs: [0.25, 0.5, 0.25]
+
+
+
+
+
+1.0397207708399179
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">entropy([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>])</span><br></pre></td></tr></table></figure>
+<pre><code>ic| probs: [0.25, 0.25, 0.25, 0.25]
+
+
+
+
+
+1.3862943611198906
+</code></pre><h3 id="决策树怎么来决定，哪一个特征来进行分割呢？"><a href="#决策树怎么来决定，哪一个特征来进行分割呢？" class="headerlink" title="决策树怎么来决定，哪一个特征来进行分割呢？"></a>决策树怎么来决定，哪一个特征来进行分割呢？</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mock_data = &#123;</span><br><span class="line">    <span class="string">'gender'</span>:[<span class="string">'F'</span>,<span class="string">'F'</span>,<span class="string">'F'</span>,<span class="string">'F'</span>,<span class="string">'M'</span>,<span class="string">'M'</span>,<span class="string">'M'</span>],</span><br><span class="line">    <span class="string">'income'</span>:[<span class="string">'+10'</span>,<span class="string">'-10'</span>,<span class="string">'+10'</span>,<span class="string">'+10'</span>,<span class="string">'+10'</span>,<span class="string">'+10'</span>,<span class="string">'-10'</span>],</span><br><span class="line">    <span class="string">'family_number'</span>:[<span class="number">1</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">2</span>],</span><br><span class="line">    <span class="comment">#'pet':[1,1,1,0,0,0,1],</span></span><br><span class="line">    <span class="string">'bought'</span>:[<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">1</span>],</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dataset = pd.DataFrame.from_dict(mock_data)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dataset</span><br></pre></td></tr></table></figure>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>gender</th>
+      <th>income</th>
+      <th>family_number</th>
+      <th>bought</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>F</td>
+      <td>+10</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>F</td>
+      <td>-10</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>F</td>
+      <td>+10</td>
+      <td>2</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>F</td>
+      <td>+10</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>M</td>
+      <td>+10</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>M</td>
+      <td>+10</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>M</td>
+      <td>-10</td>
+      <td>2</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+<p>如果我们来了一个新的case:::[F,-10,2,1]-&gt;?</p>
+<p>:::[F,+10,2,0]-&gt;?</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># split_bt_gender:</span></span><br><span class="line">print(entropy([<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">0</span>]) + entropy([<span class="number">0</span>,<span class="number">0</span>,<span class="number">1</span>]))</span><br><span class="line"></span><br><span class="line"><span class="comment"># split_by_income:</span></span><br><span class="line">print(entropy([<span class="number">1</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>]) + entropy([<span class="number">1</span>,<span class="number">1</span>]))</span><br><span class="line"></span><br><span class="line"><span class="comment">#split_by_family_number</span></span><br><span class="line">print(entropy([<span class="number">1</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>])+entropy([<span class="number">1</span>,<span class="number">1</span>]))</span><br><span class="line"></span><br><span class="line"><span class="comment"># split_by_some_feature:</span></span><br><span class="line">print(entropy([<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>])+entropy([<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>]))</span><br></pre></td></tr></table></figure>
+<pre><code>ic| probs: [0.25, 0.75]
+ic| probs: [0.6666666666666666, 0.3333333333333333]
+ic| probs: [0.6, 0.4]
+ic| probs: [1.0]
+ic| probs: [0.6, 0.4]
+ic| probs: [1.0]
+ic| probs: [1.0]
+ic| probs: [1.0]
+
+
+1.198849312913621
+0.6730116670092565
+0.6730116670092565
+-0.0
+</code></pre><h3 id="决策树在选择决策过程，决策顺序的时候，其实是按照，根据这个特征，进行分割之后，数据的熵最少原则进行的。"><a href="#决策树在选择决策过程，决策顺序的时候，其实是按照，根据这个特征，进行分割之后，数据的熵最少原则进行的。" class="headerlink" title="决策树在选择决策过程，决策顺序的时候，其实是按照，根据这个特征，进行分割之后，数据的熵最少原则进行的。"></a>决策树在选择决策过程，决策顺序的时候，其实是按照，根据这个特征，进行分割之后，数据的熵最少原则进行的。</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set(mock_data[<span class="string">'family_number'</span>])</span><br></pre></td></tr></table></figure>
+<pre><code>{1, 2}
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set(mock_data[<span class="string">'gender'</span>])</span><br></pre></td></tr></table></figure>
+<pre><code>{&#39;F&#39;, &#39;M&#39;}
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sub_split_1 = dataset[dataset[<span class="string">'family_number'</span>]==<span class="number">1</span>][<span class="string">'bought'</span>].tolist()</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sub_split_1</span><br></pre></td></tr></table></figure>
+<pre><code>[1, 1, 0, 0, 0]
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sub_split_2 =dataset[dataset[<span class="string">'family_number'</span>]!=<span class="number">1</span>][<span class="string">'bought'</span>].tolist()</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sub_split_2</span><br></pre></td></tr></table></figure>
+<pre><code>[1, 1]
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">splited_data =dataset[dataset[<span class="string">'family_number'</span>]==<span class="number">1</span>]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">splited_data</span><br></pre></td></tr></table></figure>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>gender</th>
+      <th>income</th>
+      <th>family_number</th>
+      <th>pet</th>
+      <th>bought</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>F</td>
+      <td>+10</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>F</td>
+      <td>-10</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>F</td>
+      <td>+10</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>M</td>
+      <td>+10</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>M</td>
+      <td>+10</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">splited_data[splited_data[<span class="string">'income'</span>] == <span class="string">'+10'</span>]</span><br></pre></td></tr></table></figure>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>gender</th>
+      <th>income</th>
+      <th>family_number</th>
+      <th>pet</th>
+      <th>bought</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>F</td>
+      <td>+10</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>F</td>
+      <td>+10</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>M</td>
+      <td>+10</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>M</td>
+      <td>+10</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+<h3 id="gt-根据信息熵，我们得到了一个决策过程："><a href="#gt-根据信息熵，我们得到了一个决策过程：" class="headerlink" title="===&gt; 根据信息熵，我们得到了一个决策过程："></a>===&gt; 根据信息熵，我们得到了一个决策过程：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">第一步：我们观察他的家庭成员：</span><br><span class="line">         如果他的家庭成员是2人，那么就会购买，如果不是2人，我们继续决策，进入下一步</span><br><span class="line">第二部：我们观察他的收入情况：</span><br><span class="line">         如果他的收入是&#39;+10&#39;,那么他有 3&#x2F;4 的概率会购买，如果是&#39;-10&#39;，那么，他肯定不买</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">entropy(sub_split_1)</span><br></pre></td></tr></table></figure>
+<pre><code>ic| probs: [0.6, 0.4]
+
+
+
+
+
+0.6730116670092565
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">entropy(sub_split_2)</span><br></pre></td></tr></table></figure>
+<pre><code>ic| probs: [1.0]
+
+
+
+
+
+-0.0
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">set(dataset.columns.to_list()) - &#123;<span class="string">'bought'</span>&#125;</span><br></pre></td></tr></table></figure>
+<pre><code>{&#39;family_number&#39;, &#39;gender&#39;, &#39;income&#39;, &#39;pet&#39;}
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">find_the_optimal_spilter</span><span class="params">(training_data:pd.DataFrame,target:str)</span> -&gt; str:</span></span><br><span class="line">    x_fields = set(training_data.columns.tolist()) - &#123;target&#125;</span><br><span class="line">    </span><br><span class="line">    spliter = <span class="literal">None</span></span><br><span class="line">    min_entropy = float(<span class="string">'inf'</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> f <span class="keyword">in</span> x_fields:</span><br><span class="line">        ic(f)</span><br><span class="line">        values = set(training_data[f])</span><br><span class="line">        ic(values)</span><br><span class="line">        <span class="keyword">for</span> v <span class="keyword">in</span> values:</span><br><span class="line">            sub_spliter_1 = training_data[training_data[f] == v][target].tolist()</span><br><span class="line">            ic(sub_spliter_1)</span><br><span class="line">            <span class="comment"># split by the current feature and one value</span></span><br><span class="line">            </span><br><span class="line">            entropy_1 =entropy(sub_spliter_1)</span><br><span class="line">            ic(entropy_1)</span><br><span class="line">            </span><br><span class="line">            sub_spliter_2 = training_data[training_data[f] !=v][target].tolist()</span><br><span class="line">            ic(sub_spliter_2)</span><br><span class="line">            </span><br><span class="line">            entropy_2 = entropy(sub_spliter_2)</span><br><span class="line">            ic(entropy_2)</span><br><span class="line">            </span><br><span class="line">            entropy_v =entropy_1 +entropy_2</span><br><span class="line">            </span><br><span class="line">            ic(entropy_v)</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">if</span> entropy_v &lt;= min_entropy:</span><br><span class="line">                min_entropy = entropy_v</span><br><span class="line">                spliter =(f,v)</span><br><span class="line">    print(<span class="string">' spliter is: &#123;&#125;'</span>.format(spliter))</span><br><span class="line">    print(<span class="string">' the min entropy is: &#123;&#125;'</span>.format(min_entropy))</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> spliter</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find_the_optimal_spilter(training_data=dataset,target=<span class="string">'bought'</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>ic| f: &#39;pet&#39;
+ic| values: {0, 1}
+ic| sub_spliter_1: [0, 0, 0]
+ic| probs: [1.0]
+ic| entropy_1: -0.0
+ic| sub_spliter_2: [1, 1, 1, 1]
+ic| probs: [1.0]
+ic| entropy_2: -0.0
+ic| entropy_v: -0.0
+ic| sub_spliter_1: [1, 1, 1, 1]
+ic| probs: [1.0]
+ic| entropy_1: -0.0
+ic| sub_spliter_2: [0, 0, 0]
+ic| probs: [1.0]
+ic| entropy_2: -0.0
+ic| entropy_v: -0.0
+ic| f: &#39;family_number&#39;
+ic| values: {1, 2}
+ic| sub_spliter_1: [1, 1, 0, 0, 0]
+ic| probs: [0.6, 0.4]
+ic| entropy_1: 0.6730116670092565
+ic| sub_spliter_2: [1, 1]
+ic| probs: [1.0]
+ic| entropy_2: -0.0
+ic| entropy_v: 0.6730116670092565
+ic| sub_spliter_1: [1, 1]
+ic| probs: [1.0]
+ic| entropy_1: -0.0
+ic| sub_spliter_2: [1, 1, 0, 0, 0]
+ic| probs: [0.6, 0.4]
+ic| entropy_2: 0.6730116670092565
+ic| entropy_v: 0.6730116670092565
+ic| f: &#39;income&#39;
+ic| values: {&#39;-10&#39;, &#39;+10&#39;}
+ic| sub_spliter_1: [1, 1]
+ic| probs: [1.0]
+ic| entropy_1: -0.0
+ic| sub_spliter_2: [1, 1, 0, 0, 0]
+ic| probs: [0.6, 0.4]
+ic| entropy_2: 0.6730116670092565
+ic| entropy_v: 0.6730116670092565
+ic| sub_spliter_1: [1, 1, 0, 0, 0]
+ic| probs: [0.6, 0.4]
+ic| entropy_1: 0.6730116670092565
+ic| sub_spliter_2: [1, 1]
+ic| probs: [1.0]
+ic| entropy_2: -0.0
+ic| entropy_v: 0.6730116670092565
+ic| f: &#39;gender&#39;
+ic| values: {&#39;F&#39;, &#39;M&#39;}
+ic| sub_spliter_1: [1, 1, 1, 0]
+ic| probs: [0.25, 0.75]
+ic| entropy_1: 0.5623351446188083
+ic| sub_spliter_2: [0, 0, 1]
+ic| probs: [0.6666666666666666, 0.3333333333333333]
+ic| entropy_2: 0.6365141682948128
+ic| entropy_v: 1.198849312913621
+ic| sub_spliter_1: [0, 0, 1]
+ic| probs: [0.6666666666666666, 0.3333333333333333]
+ic| entropy_1: 0.6365141682948128
+ic| sub_spliter_2: [1, 1, 1, 0]
+ic| probs: [0.25, 0.75]
+ic| entropy_2: 0.5623351446188083
+ic| entropy_v: 1.198849312913621
+
+
+ spliter is: (&#39;pet&#39;, 1)
+ the min entropy is: -0.0
+
+
+
+
+
+(&#39;pet&#39;, 1)
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dataset[dataset[<span class="string">'family_number'</span>] ==<span class="number">2</span>]</span><br></pre></td></tr></table></figure>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>gender</th>
+      <th>income</th>
+      <th>family_number</th>
+      <th>pet</th>
+      <th>bought</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>2</td>
+      <td>F</td>
+      <td>+10</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>M</td>
+      <td>-10</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dataset[dataset[<span class="string">'family_number'</span>] ==<span class="number">1</span>]</span><br></pre></td></tr></table></figure>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>gender</th>
+      <th>income</th>
+      <th>family_number</th>
+      <th>pet</th>
+      <th>bought</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>F</td>
+      <td>+10</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>F</td>
+      <td>-10</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>F</td>
+      <td>+10</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>M</td>
+      <td>+10</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>M</td>
+      <td>+10</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find_the_optimal_spilter(dataset[dataset[<span class="string">'family_number'</span>] ==<span class="number">1</span> ],<span class="string">'bought'</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>ic| f: &#39;family_number&#39;
+ic| values: {1}
+ic| sub_spliter_1: [1, 1, 0, 0, 0]
+ic| probs: [0.6, 0.4]
+ic| entropy_1: 0.6730116670092565
+ic| sub_spliter_2: []
+ic| probs: []
+ic| entropy_2: 0
+ic| entropy_v: 0.6730116670092565
+ic| f: &#39;income&#39;
+ic| values: {&#39;-10&#39;, &#39;+10&#39;}
+ic| sub_spliter_1: [1]
+ic| probs: [1.0]
+ic| entropy_1: -0.0
+ic| sub_spliter_2: [1, 0, 0, 0]
+ic| probs: [0.75, 0.25]
+ic| entropy_2: 0.5623351446188083
+ic| entropy_v: 0.5623351446188083
+ic| sub_spliter_1: [1, 0, 0, 0]
+ic| probs: [0.75, 0.25]
+ic| entropy_1: 0.5623351446188083
+ic| sub_spliter_2: [1]
+ic| probs: [1.0]
+ic| entropy_2: -0.0
+ic| entropy_v: 0.5623351446188083
+ic| f: &#39;gender&#39;
+ic| values: {&#39;F&#39;, &#39;M&#39;}
+ic| sub_spliter_1: [1, 1, 0]
+ic| probs: [0.3333333333333333, 0.6666666666666666]
+ic| entropy_1: 0.6365141682948128
+ic| sub_spliter_2: [0, 0]
+ic| probs: [1.0]
+ic| entropy_2: -0.0
+ic| entropy_v: 0.6365141682948128
+ic| sub_spliter_1: [0, 0]
+ic| probs: [1.0]
+ic| entropy_1: -0.0
+ic| sub_spliter_2: [1, 1, 0]
+ic| probs: [0.3333333333333333, 0.6666666666666666]
+ic| entropy_2: 0.6365141682948128
+ic| entropy_v: 0.6365141682948128
+
+
+ spliter is: (&#39;income&#39;, &#39;+10&#39;)
+ the min entropy is: 0.5623351446188083
+
+
+
+
+
+(&#39;income&#39;, &#39;+10&#39;)
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fm_n_1 = dataset[dataset[<span class="string">'family_number'</span>] == <span class="number">1</span>]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fm_n_1[fm_n_1[<span class="string">'income'</span>]==<span class="string">'+10'</span>]</span><br></pre></td></tr></table></figure>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>gender</th>
+      <th>income</th>
+      <th>family_number</th>
+      <th>bought</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>F</td>
+      <td>+10</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>F</td>
+      <td>+10</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>M</td>
+      <td>+10</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>M</td>
+      <td>+10</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find_the_optimal_spilter(fm_n_1[fm_n_1[<span class="string">'income'</span>] == <span class="string">'+10'</span>],<span class="string">'bought'</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>ic| f: &#39;family_number&#39;
+ic| values: {1}
+ic| sub_spliter_1: [1, 0, 0, 0]
+ic| probs: [0.75, 0.25]
+ic| entropy_1: 0.5623351446188083
+ic| sub_spliter_2: []
+ic| probs: []
+ic| entropy_2: 0
+ic| entropy_v: 0.5623351446188083
+ic| f: &#39;income&#39;
+ic| values: {&#39;+10&#39;}
+ic| sub_spliter_1: [1, 0, 0, 0]
+ic| probs: [0.75, 0.25]
+ic| entropy_1: 0.5623351446188083
+ic| sub_spliter_2: []
+ic| probs: []
+ic| entropy_2: 0
+ic| entropy_v: 0.5623351446188083
+ic| f: &#39;gender&#39;
+ic| values: {&#39;F&#39;, &#39;M&#39;}
+ic| sub_spliter_1: [1, 0]
+ic| probs: [0.5, 0.5]
+ic| entropy_1: 0.6931471805599453
+ic| sub_spliter_2: [0, 0]
+ic| probs: [1.0]
+ic| entropy_2: -0.0
+ic| entropy_v: 0.6931471805599453
+ic| sub_spliter_1: [0, 0]
+ic| probs: [1.0]
+ic| entropy_1: -0.0
+ic| sub_spliter_2: [1, 0]
+ic| probs: [0.5, 0.5]
+ic| entropy_2: 0.6931471805599453
+ic| entropy_v: 0.6931471805599453
+
+
+ spliter is: (&#39;income&#39;, &#39;+10&#39;)
+ the min entropy is: 0.5623351446188083
+
+
+
+
+
+(&#39;income&#39;, &#39;+10&#39;)
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="Evaluation-Methods"><a href="#Evaluation-Methods" class="headerlink" title="Evaluation Methods"></a>Evaluation Methods</h3><h4 id="1-Accuracy"><a href="#1-Accuracy" class="headerlink" title="1.Accuracy"></a>1.Accuracy</h4><h4 id="2-Precision"><a href="#2-Precision" class="headerlink" title="2. Precision"></a>2. Precision</h4><h4 id="3-Recall"><a href="#3-Recall" class="headerlink" title="3.Recall"></a>3.Recall</h4><h4 id="3-5-F1-Score-F2-Score"><a href="#3-5-F1-Score-F2-Score" class="headerlink" title="3.5 F1 Score, F2 Score"></a>3.5 F1 Score, F2 Score</h4><h4 id="4-AUC"><a href="#4-AUC" class="headerlink" title="4. AUC"></a>4. AUC</h4><h3 id="判断是不是垃圾邮件，是的话程序输出1，不是输出0"><a href="#判断是不是垃圾邮件，是的话程序输出1，不是输出0" class="headerlink" title="判断是不是垃圾邮件，是的话程序输出1，不是输出0"></a>判断是不是垃圾邮件，是的话程序输出1，不是输出0</h3><h3 id="给了十个数据，这10个数据的真实情况是："><a href="#给了十个数据，这10个数据的真实情况是：" class="headerlink" title="给了十个数据，这10个数据的真实情况是："></a>给了十个数据，这10个数据的真实情况是：</h3><h3 id="gt-1-1-1-1-0-1-0-0-1-1"><a href="#gt-1-1-1-1-0-1-0-0-1-1" class="headerlink" title="-&gt;[1,1,1,1,0,1,0,0,1,1]"></a>-&gt;[1,1,1,1,0,1,0,0,1,1]</h3><h3 id="F-x"><a href="#F-x" class="headerlink" title="F(x)"></a>F(x)</h3><h3 id="gt-1-1-1-1-1-1-1-1-0-1"><a href="#gt-1-1-1-1-1-1-1-1-0-1" class="headerlink" title="-&gt;[1,1,1,1,1,1,1,1,0,1]"></a>-&gt;[1,1,1,1,1,1,1,1,0,1]</h3><h3 id="Accuracy-预测的标签中预测正确的值的个数-总的预测的个数"><a href="#Accuracy-预测的标签中预测正确的值的个数-总的预测的个数" class="headerlink" title="Accuracy:预测的标签中预测正确的值的个数/总的预测的个数"></a>Accuracy:预测的标签中预测正确的值的个数/总的预测的个数</h3><p>—&gt; 6/10</p>
+<h3 id="Precision-所有说“是”的预测而且预测正确-所有说“是”的预测个数"><a href="#Precision-所有说“是”的预测而且预测正确-所有说“是”的预测个数" class="headerlink" title="Precision: 所有说“是”的预测而且预测正确/所有说“是”的预测个数"></a>Precision: 所有说“是”的预测而且预测正确/所有说“是”的预测个数</h3><p>—&gt; 6/9</p>
+<h3 id="Recall-所有说“是”的预测而且预测正确-所有真正标签是“是”"><a href="#Recall-所有说“是”的预测而且预测正确-所有真正标签是“是”" class="headerlink" title="Recall:所有说“是”的预测而且预测正确 / 所有真正标签是“是”"></a>Recall:所有说“是”的预测而且预测正确 / 所有真正标签是“是”</h3><p>—&gt; 6/7</p>
+<h3 id="Recall-和-Precision-其实往往是互相-tradeoff"><a href="#Recall-和-Precision-其实往往是互相-tradeoff" class="headerlink" title="Recall 和 Precision 其实往往是互相 tradeoff"></a>Recall 和 Precision 其实往往是互相 tradeoff</h3><h3 id="F1-Score-frac-2precisionrecall-precision-recall"><a href="#F1-Score-frac-2precisionrecall-precision-recall" class="headerlink" title="F1 Score = $ \frac{2precisionrecall}{precision + recall} $"></a>F1 Score = $ \frac{2<em>precision</em>recall}{precision + recall} $</h3><h3 id="—-gt-AOC-AUC"><a href="#—-gt-AOC-AUC" class="headerlink" title="—&gt;AOC / AUC"></a>—&gt;AOC / AUC</h3><h3 id="到这一步就无法分割了"><a href="#到这一步就无法分割了" class="headerlink" title="到这一步就无法分割了"></a>到这一步就无法分割了</h3><h3 id="A-simple-example-of-kmeans"><a href="#A-simple-example-of-kmeans" class="headerlink" title="A simple example of kmeans"></a>A simple example of kmeans</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.cluster <span class="keyword">import</span> KMeans</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">X1 = [random.randint(<span class="number">0</span>,<span class="number">100</span>) <span class="keyword">for</span> _ <span class="keyword">in</span> range(<span class="number">100</span>)]</span><br><span class="line">X2 = [random.randint(<span class="number">0</span>,<span class="number">100</span>) <span class="keyword">for</span> _ <span class="keyword">in</span> range(<span class="number">100</span>)]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">plt.scatter(X1,X2)</span><br></pre></td></tr></table></figure>
+<pre><code>&lt;matplotlib.collections.PathCollection at 0x21e43481048&gt;
+</code></pre><p><img src="output_87_1.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">training_data = [[x1,x2] <span class="keyword">for</span> x1,x2 <span class="keyword">in</span> zip(X1,X2)]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cluster = KMeans(n_clusters=<span class="number">6</span>,max_iter=<span class="number">500</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cluster.fit(training_data)</span><br></pre></td></tr></table></figure>
+<pre><code>KMeans(algorithm=&#39;auto&#39;, copy_x=True, init=&#39;k-means++&#39;, max_iter=500,
+       n_clusters=6, n_init=10, n_jobs=None, precompute_distances=&#39;auto&#39;,
+       random_state=None, tol=0.0001, verbose=0)
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cluster.cluster_centers_</span><br></pre></td></tr></table></figure>
+<pre><code>array([[85.5       , 41.78571429],
+       [27.57894737, 18.89473684],
+       [79.90909091, 84.22727273],
+       [14.6       , 76.6       ],
+       [51.06666667, 65.33333333],
+       [62.73333333, 22.13333333]])
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cluster.labels_</span><br></pre></td></tr></table></figure>
+<pre><code>array([1, 3, 2, 5, 0, 1, 5, 0, 1, 2, 4, 3, 3, 4, 4, 0, 1, 0, 5, 0, 1, 4,
+       1, 3, 4, 3, 5, 1, 1, 4, 2, 2, 3, 4, 2, 2, 5, 3, 2, 1, 4, 0, 3, 5,
+       2, 4, 3, 2, 1, 3, 4, 1, 2, 5, 0, 5, 5, 0, 0, 2, 2, 1, 2, 2, 0, 0,
+       4, 1, 5, 3, 5, 0, 2, 5, 3, 3, 5, 5, 5, 2, 1, 2, 2, 4, 1, 2, 4, 4,
+       2, 1, 0, 1, 2, 3, 1, 2, 0, 1, 3, 4])
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">centers = defaultdict(list)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> label, location <span class="keyword">in</span> zip(cluster.labels_,training_data):</span><br><span class="line">    centers[label].append(location)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">color = [<span class="string">'red'</span>,<span class="string">'green'</span>,<span class="string">'grey'</span>,<span class="string">'black'</span>,<span class="string">'yellow'</span>,<span class="string">'orange'</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i,c <span class="keyword">in</span> enumerate(centers):</span><br><span class="line">    <span class="keyword">for</span> location <span class="keyword">in</span> centers[c]:</span><br><span class="line">        plt.scatter(*location,c=color[i])</span><br><span class="line">        </span><br><span class="line"><span class="keyword">for</span> center <span class="keyword">in</span> cluster.cluster_centers_:</span><br><span class="line">    plt.scatter(*center,s=<span class="number">100</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="output_96_0.png" alt="png"></p>
+<h3 id="Kmeans-的计算复杂度"><a href="#Kmeans-的计算复杂度" class="headerlink" title="Kmeans 的计算复杂度"></a>Kmeans 的计算复杂度</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">distance</span><span class="params">()</span>:</span> <span class="keyword">return</span> np.sqrt((x1 - x2)**<span class="number">2</span> +(y1 - y2)**<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+<script type="math/tex; mode=display">O(I*N*k*d)</script><p>N:10000 k:100 d:500 I:500 -&gt;10**(5+2+2+2)=&gt;10^11 ==&gt;100亿</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>O(∩_∩)O哈哈~</div>
+  <button disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="bool_tbb 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="bool_tbb 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Machine-Learning/" rel="tag"># Machine Learning</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2020/01/16/AI%20for%20NLP/" rel="next" title="AI for NLP">
+                  <i class="fa fa-chevron-left"></i> AI for NLP
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2020/02/27/%E5%85%A8%E8%BF%9E%E6%8E%A5%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-FNN/" rel="prev" title="全连接神经网络-FNN">
+                  全连接神经网络-FNN <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Regression-gt-Real-Number"><span class="nav-number">1.</span> <span class="nav-text">Regression -&gt; Real Number</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Classification-gt-0-0-0-1-0-1-0-0"><span class="nav-number">2.</span> <span class="nav-text">Classification -&gt; [0,0,0,1],[0,1,0,0]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#How-to-implement-a-KNN-model"><span class="nav-number">3.</span> <span class="nav-text">How to implement a KNN model</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#不是简简单单的学一个算法，看到背后的思维方式："><span class="nav-number">4.</span> <span class="nav-text">不是简简单单的学一个算法，看到背后的思维方式：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#新的问题，是不存在现成的解决方案的，但是，我们可以依据前人比较成熟的思维方法，我们发明新的方法。"><span class="nav-number">5.</span> <span class="nav-text">新的问题，是不存在现成的解决方案的，但是，我们可以依据前人比较成熟的思维方法，我们发明新的方法。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#How-to-implement-a-Decision-Tree"><span class="nav-number">6.</span> <span class="nav-text">How to implement a Decision Tree</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#信息熵"><span class="nav-number">7.</span> <span class="nav-text">信息熵</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Gini-纯度"><span class="nav-number">8.</span> <span class="nav-text">Gini 纯度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#决策树怎么来决定，哪一个特征来进行分割呢？"><span class="nav-number">9.</span> <span class="nav-text">决策树怎么来决定，哪一个特征来进行分割呢？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#决策树在选择决策过程，决策顺序的时候，其实是按照，根据这个特征，进行分割之后，数据的熵最少原则进行的。"><span class="nav-number">10.</span> <span class="nav-text">决策树在选择决策过程，决策顺序的时候，其实是按照，根据这个特征，进行分割之后，数据的熵最少原则进行的。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gt-根据信息熵，我们得到了一个决策过程："><span class="nav-number">11.</span> <span class="nav-text">&#x3D;&#x3D;&#x3D;&gt; 根据信息熵，我们得到了一个决策过程：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Evaluation-Methods"><span class="nav-number">12.</span> <span class="nav-text">Evaluation Methods</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-Accuracy"><span class="nav-number">12.1.</span> <span class="nav-text">1.Accuracy</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Precision"><span class="nav-number">12.2.</span> <span class="nav-text">2. Precision</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-Recall"><span class="nav-number">12.3.</span> <span class="nav-text">3.Recall</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-5-F1-Score-F2-Score"><span class="nav-number">12.4.</span> <span class="nav-text">3.5 F1 Score, F2 Score</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-AUC"><span class="nav-number">12.5.</span> <span class="nav-text">4. AUC</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#判断是不是垃圾邮件，是的话程序输出1，不是输出0"><span class="nav-number">13.</span> <span class="nav-text">判断是不是垃圾邮件，是的话程序输出1，不是输出0</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#给了十个数据，这10个数据的真实情况是："><span class="nav-number">14.</span> <span class="nav-text">给了十个数据，这10个数据的真实情况是：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gt-1-1-1-1-0-1-0-0-1-1"><span class="nav-number">15.</span> <span class="nav-text">-&gt;[1,1,1,1,0,1,0,0,1,1]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#F-x"><span class="nav-number">16.</span> <span class="nav-text">F(x)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#gt-1-1-1-1-1-1-1-1-0-1"><span class="nav-number">17.</span> <span class="nav-text">-&gt;[1,1,1,1,1,1,1,1,0,1]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Accuracy-预测的标签中预测正确的值的个数-总的预测的个数"><span class="nav-number">18.</span> <span class="nav-text">Accuracy:预测的标签中预测正确的值的个数&#x2F;总的预测的个数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Precision-所有说“是”的预测而且预测正确-所有说“是”的预测个数"><span class="nav-number">19.</span> <span class="nav-text">Precision: 所有说“是”的预测而且预测正确&#x2F;所有说“是”的预测个数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Recall-所有说“是”的预测而且预测正确-所有真正标签是“是”"><span class="nav-number">20.</span> <span class="nav-text">Recall:所有说“是”的预测而且预测正确 &#x2F; 所有真正标签是“是”</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Recall-和-Precision-其实往往是互相-tradeoff"><span class="nav-number">21.</span> <span class="nav-text">Recall 和 Precision 其实往往是互相 tradeoff</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#F1-Score-frac-2precisionrecall-precision-recall"><span class="nav-number">22.</span> <span class="nav-text">F1 Score &#x3D; $ \frac{2precisionrecall}{precision + recall} $</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#—-gt-AOC-AUC"><span class="nav-number">23.</span> <span class="nav-text">—&gt;AOC &#x2F; AUC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#到这一步就无法分割了"><span class="nav-number">24.</span> <span class="nav-text">到这一步就无法分割了</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#A-simple-example-of-kmeans"><span class="nav-number">25.</span> <span class="nav-text">A simple example of kmeans</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Kmeans-的计算复杂度"><span class="nav-number">26.</span> <span class="nav-text">Kmeans 的计算复杂度</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bool_tbb"
+      src="/images/tb.jpg">
+  <p class="site-author-name" itemprop="name">bool_tbb</p>
+  <div class="site-description" itemprop="description">十三月</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/iiot-tbb" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;iiot-tbb" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/bool_tbb@sjtu.edu.cn" title="E-Mail → bool_tbb@sjtu.edu.cn"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/5313762851" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;5313762851" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/16817976/bool-tbb" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;16817976&#x2F;bool-tbb" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>StackOverflow</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      推荐阅读
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://developer.apple.com/swift/" title="https:&#x2F;&#x2F;developer.apple.com&#x2F;swift&#x2F;" rel="noopener" target="_blank">Swift 4</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://developer.apple.com/documentation/objectivec" title="https:&#x2F;&#x2F;developer.apple.com&#x2F;documentation&#x2F;objectivec" rel="noopener" target="_blank">Objective -C</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+      
+      <script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+      <script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+      <div class="widget-wrap">
+          <h3 class="widget-title">Tag Cloud</h3>
+          <div id="myCanvasContainer" class="widget tagcloud">
+              <canvas width="250" height="250" id="resCanvas" style="width=100%">
+                  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI/" rel="tag">AI</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Deep-Learning/" rel="tag">Deep Learning</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Languaage-Model/" rel="tag">Languaage Model</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Language-Model/" rel="tag">Language Model</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Machine-Learning/" rel="tag">Machine Learning</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NLP/" rel="tag">NLP</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PDF%E8%A7%A3%E6%9E%90/" rel="tag">PDF解析</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Syntax-Tree/" rel="tag">Syntax-Tree</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Transformer/" rel="tag">Transformer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/myBorn/" rel="tag">myBorn</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytorch/" rel="tag">pytorch</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" rel="tag">二叉树</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%BA%E6%96%87/" rel="tag">人文</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B3%95%E5%BE%8B/" rel="tag">法律</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9A%8F%E7%AC%94/" rel="tag">随笔</a><span class="tag-list-count">1</span></li></ul>
+              </canvas>
+          </div>
+      </div>
+      
+      
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">bool_tbb</span>
+</div>
+  <div class="powered-by">由 <a href="https://github.com/iiot-tbb" class="theme-link" rel="noopener" target="_blank">Tbb</a> 强力驱动 v1.0.0
+  </div>
+  <span class="post-meta-divider">|</span>
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共25.5k字</span>
+</div>
+
+
+<span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+<script>
+    var now = new Date(); 
+    function createtime() { 
+        var grt= new Date("11/11/2019 12:49:25");//在此处修改你的建站时间
+        now.setTime(now.getTime()+250); 
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days); 
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours); 
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum); 
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;} 
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum); 
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;} 
+        document.getElementById("timeDate").innerHTML = " 运行了 "+dnum+" 天 "; 
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒"; 
+    } 
+setInterval("createtime()",250);
+</script>
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+  
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>

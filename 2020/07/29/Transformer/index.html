@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="Bool_tbb" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":true,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="123456import torch.nn as nnimport torchimport numpy as npfrom torch.autograd import Variableimport mathimport torch.nn.functional as F 注意力计算公式A &#x3D; Softmax(Q*K^T&#x2F;\sqrt{d})*V">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Transformer">
+<meta property="og:url" content="http://yoursite.com/2020/07/29/Transformer/index.html">
+<meta property="og:site_name" content="Bool_tbb">
+<meta property="og:description" content="123456import torch.nn as nnimport torchimport numpy as npfrom torch.autograd import Variableimport mathimport torch.nn.functional as F 注意力计算公式A &#x3D; Softmax(Q*K^T&#x2F;\sqrt{d})*V">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-07-29T08:13:35.000Z">
+<meta property="article:modified_time" content="2022-03-28T09:04:28.988Z">
+<meta property="article:author" content="bool_tbb">
+<meta property="article:tag" content="Language Model">
+<meta property="article:tag" content="Deep Learning">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2020/07/29/Transformer/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Transformer | Bool_tbb</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+
+<body itemscope itemtype="http://schema.org/WebPage">
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Bool_tbb</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">留下点啥，证明活过</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/29/Transformer/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/tb.jpg">
+      <meta itemprop="name" content="bool_tbb">
+      <meta itemprop="description" content="十三月">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Bool_tbb">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Transformer
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-07-29 16:13:35" itemprop="dateCreated datePublished" datetime="2020-07-29T16:13:35+08:00">2020-07-29</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-03-28 17:04:28" itemprop="dateModified" datetime="2022-03-28T17:04:28+08:00">2022-03-28</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> torch.autograd <span class="keyword">import</span> Variable</span><br><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> F</span><br></pre></td></tr></table></figure>
+<h4 id="注意力计算公式"><a href="#注意力计算公式" class="headerlink" title="注意力计算公式"></a>注意力计算公式</h4><script type="math/tex; mode=display">A = Softmax(Q*K^T/\sqrt{d})*V</script><a id="more"></a>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x=torch.randn(<span class="number">2</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x</span><br></pre></td></tr></table></figure>
+<pre><code>tensor([[[[-1.6685, -1.7979,  0.0747]],
+
+         [[ 1.1604,  1.1415,  0.4631]],
+
+         [[ 1.6218, -1.3112, -0.6065]]],
+
+
+        [[[ 0.2836, -0.8159, -0.4028]],
+
+         [[-0.0721, -0.3244,  0.2214]],
+
+         [[-0.9558,  0.5414, -0.4869]]]])
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">y=torch.randn(<span class="number">2</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">y</span><br></pre></td></tr></table></figure>
+<pre><code>tensor([[[[ 0.5522, -3.4192,  0.7006]],
+
+         [[-1.5651, -1.0705,  1.7866]],
+
+         [[-2.1893, -0.2521,  0.2480]]],
+
+
+        [[[ 0.4621,  1.0492,  0.5085]],
+
+         [[-0.3847, -1.9930,  1.6604]],
+
+         [[-1.0364, -0.3537,  1.5496]]]])
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torch.matmul(x,y.transpose(<span class="number">-1</span>,<span class="number">-2</span>))</span><br></pre></td></tr></table></figure>
+<pre><code>tensor([[[[ 5.2783]],
+
+         [[-2.2107]],
+
+         [[-3.3705]]],
+
+
+        [[[-0.9298]],
+
+         [[ 1.0419]],
+
+         [[ 0.0446]]]])
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">y.size()</span><br></pre></td></tr></table></figure>
+<pre><code>torch.Size([2, 3, 3, 1])
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">s=nn.Softmax()</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">drop=nn.Dropout(<span class="number">0.25</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">drop(torch.randn(<span class="number">3</span>,<span class="number">4</span>))</span><br></pre></td></tr></table></figure>
+<pre><code>tensor([[ 0.0000, -1.8719,  0.5233, -0.0000],
+        [-0.0000,  0.6212,  0.2304, -0.1491],
+        [-1.5584, -2.3030,  0.0000, -0.8582]])
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">s(torch.FloatTensor([<span class="number">1</span>,-np.inf,<span class="number">3</span>]))</span><br></pre></td></tr></table></figure>
+<pre><code>&lt;ipython-input-33-50788e72e9da&gt;:1: UserWarning: Implicit dimension choice for softmax has been deprecated. Change the call to include dim=X as an argument.
+  s(torch.FloatTensor([1,-np.inf,3]))
+
+
+
+
+
+tensor([0.1192, 0.0000, 0.8808])
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ScaledDotProductAttention</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="comment">#计算注意力</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,</span></span></span><br><span class="line"><span class="function"><span class="params">                 attention_dropout=<span class="number">0.0</span>)</span>:</span></span><br><span class="line"></span><br><span class="line">        super(ScaledDotProductAttention,self).__init__()</span><br><span class="line"></span><br><span class="line">        self.dropout = nn.Dropout(attention_dropout)</span><br><span class="line">        self.softmax = nn.Softmax(dim = <span class="number">-1</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self,q,k,v,scale=None,attn_mask = None)</span>:</span></span><br><span class="line"></span><br><span class="line">        attention = torch.matmul(q,k.transpose(<span class="number">-2</span>,<span class="number">-1</span>)) <span class="comment"># 计算 Q*K^T ,交换最后两个维度的数据</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> scale:</span><br><span class="line">            attention = attention * scale</span><br><span class="line"></span><br><span class="line">        <span class="comment"># mask attention. The attentions between the masked words and</span></span><br><span class="line">        <span class="comment"># other words are set to negative infinity</span></span><br><span class="line">        <span class="keyword">if</span> attn_mask <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            attention = attention.masked_fill_(attn_mask,-np.inf) </span><br><span class="line">        <span class="comment"># 这里掩码会把 Q*K^T里需要被掩盖的部分换成-inf 这样在softmax里该数值就变为零</span></span><br><span class="line">        <span class="comment"># 在Encoder里 需要掩盖住填充的0  在Decoder里除了掩盖住填充的0外 还要掩盖住后面的词</span></span><br><span class="line"></span><br><span class="line">        attention = self.softmax(attention)</span><br><span class="line">        attention = self.dropout(attention)</span><br><span class="line">        context = torch.matmul(attention,v)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> context</span><br></pre></td></tr></table></figure>
+<h4 id="多头注意力机制"><a href="#多头注意力机制" class="headerlink" title="多头注意力机制"></a>多头注意力机制</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nn.Linear(<span class="number">10</span>,<span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>Linear(in_features=10, out_features=10, bias=True)
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x=torch.randn(<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x</span><br></pre></td></tr></table></figure>
+<pre><code>tensor([[[ 0.4640,  0.5466, -0.6880,  0.1568],
+         [ 0.8788,  0.9843, -0.4244, -1.5735],
+         [ 0.1039,  1.2114,  0.7816, -0.8735]],
+
+        [[ 1.1619, -2.5654,  0.5679, -1.1354],
+         [-0.9004,  0.5074,  1.4977, -0.5807],
+         [-1.3787,  0.7510, -1.1061,  1.2569]]])
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x.unsqueeze(<span class="number">2</span>).repeat(<span class="number">1</span>,<span class="number">1</span>,<span class="number">10</span>,<span class="number">1</span>).size()</span><br></pre></td></tr></table></figure>
+<pre><code>torch.Size([2, 3, 10, 4])
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MultiHeadAttention</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="comment"># compute multi heads attention</span></span><br><span class="line">    <span class="comment"># 多头注意力的本质是由多个Wq,Wk,Wv计算出多组 Q,K,V从而得到多个向量 </span></span><br><span class="line">    <span class="comment"># 这里实现的方式是 由一个大的Wq,Wk,Wv 计算出一组大的Q,K,V 再把这个Q,K,V分成若干个</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,</span></span></span><br><span class="line"><span class="function"><span class="params">                 d_modl=<span class="number">512</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                 num_heads=<span class="number">8</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                 dropout=<span class="number">0.0</span>)</span>:</span></span><br><span class="line"></span><br><span class="line">        super(MultiHeadAttention,self).__init__()</span><br><span class="line"></span><br><span class="line">        self.dim_per_head = d_modl // num_heads <span class="comment">#计算每个头的维度</span></span><br><span class="line">        self.num_heads = num_heads</span><br><span class="line">        self.linear_k = nn.Linear(d_modl, d_modl)</span><br><span class="line">        self.linear_v = nn.Linear(d_modl, d_modl)</span><br><span class="line">        self.linear_q = nn.Linear(d_modl, d_modl)</span><br><span class="line"></span><br><span class="line">        self.dot_product_attention = ScaledDotProductAttention(dropout)</span><br><span class="line">        self.linear_final = nn.Linear(d_modl,d_modl)</span><br><span class="line">        self.norm = nn.LayerNorm(d_modl)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, keys, values, queries, attn_mask=None)</span>:</span></span><br><span class="line"></span><br><span class="line">        residual = queries</span><br><span class="line">        batch_size = keys.size(<span class="number">0</span>)</span><br><span class="line">        <span class="comment">#generate keys,values and queries from inputs</span></span><br><span class="line">        keys = self.linear_k(keys) <span class="comment"># 计算Wk * E(输入词向量) = K</span></span><br><span class="line">        values = self.linear_v(values) <span class="comment"># Wv * E  = V</span></span><br><span class="line">        queries = self.linear_q(queries) <span class="comment">#Wq *E =Q</span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">#以下做的就是将Q,K,V分别拆分成num_head个 q,k,v</span></span><br><span class="line">        keys = keys.view(batch_size , <span class="number">-1</span>, self.num_heads, self.dim_per_head).transpose(<span class="number">1</span>,<span class="number">2</span>) </span><br><span class="line">        values = values.view(batch_size, <span class="number">-1</span>, self.num_heads, self.dim_per_head).transpose(<span class="number">1</span>,<span class="number">2</span>)</span><br><span class="line">        queries = queries.view(batch_size, <span class="number">-1</span>, self.num_heads, self.dim_per_head).transpose(<span class="number">1</span>,<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> attn_mask <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            attn_mask = attn_mask.unsqueeze(<span class="number">1</span>).repeat(<span class="number">1</span>,self.num_heads,<span class="number">1</span>,<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">        scale = (keys.size(<span class="number">-1</span>)) ** <span class="number">-0.5</span></span><br><span class="line">        <span class="comment">#计算注意力</span></span><br><span class="line">        context = self.dot_product_attention(queries,keys,values,scale,attn_mask)</span><br><span class="line">        </span><br><span class="line">        <span class="comment">#将多个头的输出向量拼接合并</span></span><br><span class="line">        context = context.transpose(<span class="number">1</span>,<span class="number">2</span>).contiguous() \</span><br><span class="line">                  .view(batch_size,<span class="number">-1</span>,self.num_heads * self.dim_per_head)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># layer normalization and residual network</span></span><br><span class="line">        <span class="keyword">return</span> self.norm(residual+self.linear_final(context)) <span class="comment"># linear 将拼接够的多头 进行信息融合和映射回d维度</span></span><br></pre></td></tr></table></figure>
+<h4 id="位置编码"><a href="#位置编码" class="headerlink" title="位置编码"></a>位置编码</h4><script type="math/tex; mode=display">PE_{(pos,2i)} = sin(\frac{pos}{1000^{2i/d_{model}}})</script><script type="math/tex; mode=display">PE_{(pos,2i+1)} = cos(\frac{pos}{1000^{2i/d_{model}}})</script><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">torch.arange(<span class="number">0</span>,<span class="number">10</span>).unsqueeze(<span class="number">1</span>).size()</span><br></pre></td></tr></table></figure>
+<pre><code>torch.Size([10, 1])
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">div_term = torch.exp(torch.arange(<span class="number">0.</span>,<span class="number">512</span>,<span class="number">2</span>)*-(math.log(<span class="number">10000.0</span>)/<span class="number">512</span>))</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">div_term.size()</span><br></pre></td></tr></table></figure>
+<pre><code>torch.Size([256])
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pe = torch.randn(<span class="number">20</span>,<span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pe</span><br></pre></td></tr></table></figure>
+<pre><code>tensor([[ 9.0318e-01,  0.0000e+00,  1.2352e-01,  0.0000e+00, -3.0140e-01,
+          0.0000e+00, -3.6465e-01,  0.0000e+00, -5.0365e-01,  0.0000e+00],
+        [-4.5975e-01,  0.0000e+00,  8.5064e-01,  0.0000e+00, -2.6547e+00,
+          0.0000e+00,  7.4937e-01,  0.0000e+00, -4.1507e-01,  0.0000e+00],
+        [-1.4702e+00,  0.0000e+00,  4.7715e-01,  0.0000e+00,  8.0542e-01,
+          0.0000e+00, -4.0687e-01,  0.0000e+00, -7.3654e-01,  0.0000e+00],
+        [ 1.2496e+00,  0.0000e+00,  1.0493e+00,  0.0000e+00,  1.4115e+00,
+          0.0000e+00, -4.0402e-01,  0.0000e+00,  1.9959e-01,  0.0000e+00],
+        [ 4.1005e-01,  0.0000e+00, -1.3749e+00,  0.0000e+00, -9.4356e-02,
+          0.0000e+00, -2.5279e-01,  0.0000e+00,  1.3641e+00,  0.0000e+00],
+        [ 3.0355e-01,  0.0000e+00, -7.0061e-01,  0.0000e+00, -6.3308e-01,
+          0.0000e+00,  7.0820e-02,  0.0000e+00, -6.3141e-02,  0.0000e+00],
+        [-1.7276e+00,  0.0000e+00,  7.1022e-01,  0.0000e+00, -3.7692e-01,
+          0.0000e+00,  5.7131e-01,  0.0000e+00, -1.0790e+00,  0.0000e+00],
+        [-1.9643e+00,  0.0000e+00, -8.7474e-01,  0.0000e+00, -1.2753e+00,
+          0.0000e+00,  2.8921e-01,  0.0000e+00, -1.4253e+00,  0.0000e+00],
+        [ 8.4792e-01,  0.0000e+00,  2.9655e-02,  0.0000e+00, -9.0477e-02,
+          0.0000e+00,  3.1047e-01,  0.0000e+00,  1.8603e+00,  0.0000e+00],
+        [-5.7733e-01,  0.0000e+00, -2.1318e-01,  0.0000e+00, -2.9424e-01,
+          0.0000e+00,  5.5969e-01,  0.0000e+00,  5.9077e-01,  0.0000e+00],
+        [-9.6322e-01,  0.0000e+00,  8.8474e-01,  0.0000e+00,  2.2378e-01,
+          0.0000e+00, -6.0010e-01,  0.0000e+00, -3.6576e-01,  0.0000e+00],
+        [ 8.8694e-01,  0.0000e+00,  2.8291e-02,  0.0000e+00, -6.5218e-01,
+          0.0000e+00, -3.9719e-01,  0.0000e+00, -8.0203e-01,  0.0000e+00],
+        [ 4.1978e-01,  0.0000e+00, -2.4290e-01,  0.0000e+00,  7.7798e-02,
+          0.0000e+00, -9.2004e-01,  0.0000e+00,  5.3866e-01,  0.0000e+00],
+        [-1.0515e+00,  0.0000e+00, -1.0967e+00,  0.0000e+00, -1.0951e+00,
+          0.0000e+00,  2.9280e-01,  0.0000e+00, -9.3913e-01,  0.0000e+00],
+        [ 8.6279e-01,  0.0000e+00,  4.4137e-01,  0.0000e+00,  2.5958e-01,
+          0.0000e+00,  7.3830e-01,  0.0000e+00,  7.2514e-01,  0.0000e+00],
+        [ 1.5696e+00,  0.0000e+00, -6.6977e-01,  0.0000e+00, -1.4154e+00,
+          0.0000e+00,  1.1696e+00,  0.0000e+00,  2.2280e-01,  0.0000e+00],
+        [-1.2376e+00,  0.0000e+00, -1.3173e-01,  0.0000e+00,  1.9464e-01,
+          0.0000e+00,  2.0106e-01,  0.0000e+00, -1.9465e-01,  0.0000e+00],
+        [-8.8660e-01,  0.0000e+00, -1.7934e-01,  0.0000e+00,  1.1574e+00,
+          0.0000e+00,  4.0144e-01,  0.0000e+00, -1.7495e-03,  0.0000e+00],
+        [ 6.2252e-01,  0.0000e+00, -3.1496e-01,  0.0000e+00,  6.6546e-01,
+          0.0000e+00, -1.8034e-01,  0.0000e+00, -7.8079e-01,  0.0000e+00],
+        [ 7.3892e-01,  0.0000e+00,  1.0642e+00,  0.0000e+00, -1.8440e-01,
+          0.0000e+00, -1.8549e+00,  0.0000e+00, -1.6177e+00,  0.0000e+00]])
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pe[:,<span class="number">1</span>::<span class="number">2</span>]=<span class="number">0</span><span class="comment">#从第二个维度的第一个数据开始，为2表示每两个取其中第一个，简单说就是隔一行取一个</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a=[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a[<span class="number">0</span>:<span class="number">2</span>]=[<span class="number">1</span>,<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a</span><br></pre></td></tr></table></figure>
+<pre><code>[1, 0, 3]
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pe[:,<span class="number">0</span>::<span class="number">8</span>].size()</span><br></pre></td></tr></table></figure>
+<pre><code>torch.Size([20, 2])
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PositionalEncoding</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">#compute position encoding</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,</span></span></span><br><span class="line"><span class="function"><span class="params">                 d_model,</span></span></span><br><span class="line"><span class="function"><span class="params">                 max_seq_len,</span></span></span><br><span class="line"><span class="function"><span class="params">                 dropout=<span class="number">0.0</span>)</span>:</span></span><br><span class="line"></span><br><span class="line">        super(PositionalEncoding,self).__init__()</span><br><span class="line">        self.dropout = nn.Dropout(p=dropout)</span><br><span class="line"></span><br><span class="line">        pe = torch.zeros(max_seq_len,d_model) <span class="comment">#初始化位置向量</span></span><br><span class="line">        position = torch.arange(<span class="number">0.</span>,max_seq_len).unsqueeze(<span class="number">1</span>)</span><br><span class="line">        div_term = torch.exp(torch.arange(<span class="number">0.</span>,d_model,<span class="number">2</span>)*-(math.log(<span class="number">10000.0</span>)/d_model)) <span class="comment">#计算分母</span></span><br><span class="line"></span><br><span class="line">        pe[:,<span class="number">0</span>::<span class="number">2</span>] = torch.sin(position * div_term) <span class="comment">#计算位置编码向量里偶数位子的数值</span></span><br><span class="line">        pe[:,<span class="number">1</span>::<span class="number">2</span>] = torch.cos(position * div_term) <span class="comment">#计算位置编码里奇数位置的数值</span></span><br><span class="line"></span><br><span class="line">        pe = pe.unsqueeze(<span class="number">0</span>)</span><br><span class="line">        self.register_buffer(<span class="string">"pe"</span>,pe)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self,x)</span>:</span></span><br><span class="line"></span><br><span class="line">        x = x + Variable(self.pe[:,:x.size(<span class="number">1</span>)],requires_grad=<span class="literal">False</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> self.dropout(x)</span><br></pre></td></tr></table></figure>
+<h4 id="前向-层归一"><a href="#前向-层归一" class="headerlink" title="前向+层归一"></a>前向+层归一</h4><script type="math/tex; mode=display">Out = Layernorm(x + W_2*ReLu(W_1+bias)+bias)</script><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PositionalWiseFeedForward</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">   <span class="comment">#前向传播+residual connection</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,</span></span></span><br><span class="line"><span class="function"><span class="params">                 d_model=<span class="number">512</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                 ffn_dim=<span class="number">2048</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                 dropout=<span class="number">0.0</span>)</span>:</span></span><br><span class="line"></span><br><span class="line">        super(PositionalWiseFeedForward,self).__init__()</span><br><span class="line"></span><br><span class="line">        self.w1 = nn.Linear(d_model,ffn_dim)</span><br><span class="line">        self.w2 = nn.Linear(ffn_dim,d_model)</span><br><span class="line">        self.dropout = nn.Dropout(dropout)</span><br><span class="line">        self.norm = nn.LayerNorm(d_model)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self,x)</span>:</span></span><br><span class="line"></span><br><span class="line">        output = self.w2(F.relu(self.w1(x)))</span><br><span class="line">        <span class="comment"># layer normalization and residual network</span></span><br><span class="line">        <span class="keyword">return</span> self.norm(x+self.dropout(output))</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">EncoderLayer</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,</span></span></span><br><span class="line"><span class="function"><span class="params">                 d_model = <span class="number">512</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                 num_heads = <span class="number">8</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                 ffn_dim = <span class="number">2018</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                 dropout = <span class="number">0.0</span>)</span>:</span></span><br><span class="line"></span><br><span class="line">        super(EncoderLayer,self).__init__()</span><br><span class="line"></span><br><span class="line">        self.attention = MultiHeadAttention(d_model, num_heads, dropout)</span><br><span class="line">        self.feed_forward = PositionalWiseFeedForward(d_model, ffn_dim, dropout)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x, attn_mask = None)</span>:</span></span><br><span class="line"></span><br><span class="line">        context = self.attention(x,x,x,attn_mask)</span><br><span class="line">        output = self.feed_forward(context)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> output</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Encoder</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,</span></span></span><br><span class="line"><span class="function"><span class="params">                 vocab_size,</span></span></span><br><span class="line"><span class="function"><span class="params">                 max_seq_len,</span></span></span><br><span class="line"><span class="function"><span class="params">                 num_layers = <span class="number">6</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                 d_model = <span class="number">512</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                 num_heads = <span class="number">8</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                 ffn_dim = <span class="number">2048</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                 dropout = <span class="number">0.0</span>)</span>:</span></span><br><span class="line"></span><br><span class="line">        super(Encoder,self).__init__()</span><br><span class="line">        <span class="comment">#以下代码是建立num_layer层 </span></span><br><span class="line">        self.encoder_layers = nn.ModuleList(</span><br><span class="line">                            [EncoderLayer(d_model,num_heads,ffn_dim,dropout) <span class="keyword">for</span> _ <span class="keyword">in</span> range(num_layers)])</span><br><span class="line"></span><br><span class="line">        self.pos_embedding = PositionalEncoding(d_model, max_seq_len,dropout)</span><br><span class="line">        self.norm = nn.LayerNorm(d_model)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x, seq_embedding)</span>:</span></span><br><span class="line"></span><br><span class="line">        embedding = seq_embedding(x)</span><br><span class="line">        output = self.pos_embedding(embedding)</span><br><span class="line">        self_attention_mask = padding_mask(x,x)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> encoder <span class="keyword">in</span> self.encoder_layers:</span><br><span class="line">            output = encoder(output,self_attention_mask)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> self.norm(output)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">DecoderLayer</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,</span></span></span><br><span class="line"><span class="function"><span class="params">                 d_model,</span></span></span><br><span class="line"><span class="function"><span class="params">                 num_heads = <span class="number">8</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                 ffn_dim = <span class="number">2048</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                 dropout = <span class="number">0.0</span>)</span>:</span></span><br><span class="line"></span><br><span class="line">        super(DecoderLayer,self).__init__()</span><br><span class="line"></span><br><span class="line">        self.attention = MultiHeadAttention(d_model, num_heads, dropout)</span><br><span class="line">        self.feed_forward = PositionalWiseFeedForward(d_model, ffn_dim, dropout)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, dec_inputs, enc_outputs, self_attn_mask = None,context_attn_mask = None)</span>:</span></span><br><span class="line"></span><br><span class="line">        dec_ouput  = self.attention(dec_inputs, dec_inputs, dec_inputs ,self_attn_mask)</span><br><span class="line"></span><br><span class="line">        dec_ouput = self.attention(enc_outputs, enc_outputs,dec_ouput, context_attn_mask)</span><br><span class="line"></span><br><span class="line">        dec_ouput = self.feed_forward(dec_ouput)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> dec_ouput</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Decoder</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,</span></span></span><br><span class="line"><span class="function"><span class="params">                vocab_size,</span></span></span><br><span class="line"><span class="function"><span class="params">                 max_seq_len,</span></span></span><br><span class="line"><span class="function"><span class="params">                 device,</span></span></span><br><span class="line"><span class="function"><span class="params">                 num_layers = <span class="number">6</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                 d_model  = <span class="number">512</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                 num_heads = <span class="number">8</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                 ffn_dim = <span class="number">2048</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                 dropout = <span class="number">0.0</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                 )</span>:</span></span><br><span class="line"></span><br><span class="line">        super(Decoder,self).__init__()</span><br><span class="line">        self.device = device</span><br><span class="line">        self.num_layers = num_layers</span><br><span class="line"></span><br><span class="line">        self.decoder_layers = nn.ModuleList(</span><br><span class="line">            [DecoderLayer(d_model,num_heads,ffn_dim,dropout) <span class="keyword">for</span> _ <span class="keyword">in</span> range(num_layers)])</span><br><span class="line"></span><br><span class="line">        self.seq_embedding = nn.Embedding(vocab_size, d_model, padding_idx=<span class="number">0</span>)</span><br><span class="line">        self.pos_embedding = PositionalEncoding(d_model, max_seq_len)</span><br><span class="line">        self.linear = nn.Linear(d_model, vocab_size, bias=<span class="literal">False</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, inputs, enc_output, seq_embedding, context_attn_mask = None)</span>:</span></span><br><span class="line"></span><br><span class="line">        embedding = seq_embedding(inputs)</span><br><span class="line">        output =  embedding + self.pos_embedding(embedding)</span><br><span class="line"></span><br><span class="line">        self_attention_padding_mask = padding_mask(inputs, inputs)</span><br><span class="line">        seq_mask = sequence_mask(inputs).to(self.device)</span><br><span class="line">        self_attn_mask = torch.gt((self_attention_padding_mask+seq_mask), <span class="number">0</span> )</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> decoder <span class="keyword">in</span> self.decoder_layers:</span><br><span class="line">            output = decoder(output, enc_output,self_attn_mask,context_attn_mask)</span><br><span class="line"></span><br><span class="line">        output = self.linear(output)</span><br><span class="line">        <span class="keyword">return</span> output</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nn.Embedding??</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Transformer</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="comment">#Build transformer model</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,</span></span></span><br><span class="line"><span class="function"><span class="params">                 vocab_size,</span></span></span><br><span class="line"><span class="function"><span class="params">                 max_len,</span></span></span><br><span class="line"><span class="function"><span class="params">                 device,</span></span></span><br><span class="line"><span class="function"><span class="params">                 num_layers = <span class="number">6</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                 stack_layers= <span class="number">6</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                 d_model = <span class="number">512</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                 num_heads = <span class="number">8</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                 ffn_dim = <span class="number">2048</span>,</span></span></span><br><span class="line"><span class="function"><span class="params">                 dropout = <span class="number">0.2</span>)</span>:</span></span><br><span class="line"></span><br><span class="line">        super(Transformer, self).__init__()</span><br><span class="line"></span><br><span class="line">        self.device = device</span><br><span class="line"></span><br><span class="line">        self.encoder = Encoder(vocab_size, max_len,num_layers,d_model,num_heads,ffn_dim,dropout)</span><br><span class="line">        self.decoder = Decoder(vocab_size, max_len,device, num_layers,d_model,num_heads, ffn_dim, dropout)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        self.embedding = nn.Embedding(vocab_size,d_model)</span><br><span class="line">        self.linear = nn.Linear(d_model, vocab_size, bias = <span class="literal">False</span>)</span><br><span class="line">        <span class="comment">#self.softmax = nn.Softmax(dim = 2)</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, src_seq, dec_tgt,dec_in)</span>:</span>                           <span class="comment">#</span></span><br><span class="line"></span><br><span class="line">        context_attn_mask_dec = padding_mask(dec_tgt, src_seq)</span><br><span class="line"></span><br><span class="line">        en_output = self.encoder(src_seq,self.embedding)</span><br><span class="line"></span><br><span class="line">        dec_output = self.decoder(dec_tgt, en_output,self.embedding,context_attn_mask_dec)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> dec_output</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">padding_mask</span><span class="params">(seq_k, seq_q)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># pad sentence</span></span><br><span class="line">    len_q = seq_q.size(<span class="number">1</span>)</span><br><span class="line">    pad_mask = seq_k.eq(<span class="number">0</span>)</span><br><span class="line">    pad_mask = pad_mask.unsqueeze(<span class="number">1</span>).expand(<span class="number">-1</span>,len_q,<span class="number">-1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> pad_mask</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">inputs = torch.tensor([[<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>],</span><br><span class="line">                       [<span class="number">3</span>,<span class="number">4</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>],</span><br><span class="line">                       [<span class="number">3</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>],</span><br><span class="line">                       [<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>]])</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">padding_mask(inputs,inputs)</span><br></pre></td></tr></table></figure>
+<pre><code>tensor([[[False, False, False,  True,  True,  True,  True,  True],
+         [False, False, False,  True,  True,  True,  True,  True],
+         [False, False, False,  True,  True,  True,  True,  True],
+         [False, False, False,  True,  True,  True,  True,  True],
+         [False, False, False,  True,  True,  True,  True,  True],
+         [False, False, False,  True,  True,  True,  True,  True],
+         [False, False, False,  True,  True,  True,  True,  True],
+         [False, False, False,  True,  True,  True,  True,  True]],
+
+        [[False, False,  True,  True,  True,  True,  True,  True],
+         [False, False,  True,  True,  True,  True,  True,  True],
+         [False, False,  True,  True,  True,  True,  True,  True],
+         [False, False,  True,  True,  True,  True,  True,  True],
+         [False, False,  True,  True,  True,  True,  True,  True],
+         [False, False,  True,  True,  True,  True,  True,  True],
+         [False, False,  True,  True,  True,  True,  True,  True],
+         [False, False,  True,  True,  True,  True,  True,  True]],
+
+        [[False,  True,  True,  True,  True,  True,  True,  True],
+         [False,  True,  True,  True,  True,  True,  True,  True],
+         [False,  True,  True,  True,  True,  True,  True,  True],
+         [False,  True,  True,  True,  True,  True,  True,  True],
+         [False,  True,  True,  True,  True,  True,  True,  True],
+         [False,  True,  True,  True,  True,  True,  True,  True],
+         [False,  True,  True,  True,  True,  True,  True,  True],
+         [False,  True,  True,  True,  True,  True,  True,  True]],
+
+        [[False, False, False, False,  True,  True,  True,  True],
+         [False, False, False, False,  True,  True,  True,  True],
+         [False, False, False, False,  True,  True,  True,  True],
+         [False, False, False, False,  True,  True,  True,  True],
+         [False, False, False, False,  True,  True,  True,  True],
+         [False, False, False, False,  True,  True,  True,  True],
+         [False, False, False, False,  True,  True,  True,  True],
+         [False, False, False, False,  True,  True,  True,  True]]])
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sequence_mask</span><span class="params">(seq)</span>:</span></span><br><span class="line"></span><br><span class="line">    batch_size , seq_len = seq.size()</span><br><span class="line">    mask = torch.triu(torch.ones((seq_len, seq_len),dtype = torch.uint8),<span class="comment">#上三角矩阵，加上diagnoal</span></span><br><span class="line">                      diagonal = <span class="number">1</span>)</span><br><span class="line">    mask = mask.unsqueeze(<span class="number">0</span>).expand(batch_size, <span class="number">-1</span>,<span class="number">-1</span>)</span><br><span class="line">    <span class="keyword">return</span> mask</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sequence_mask(inputs)</span><br></pre></td></tr></table></figure>
+<pre><code>tensor([[[0, 1, 1, 1, 1, 1, 1, 1],
+         [0, 0, 1, 1, 1, 1, 1, 1],
+         [0, 0, 0, 1, 1, 1, 1, 1],
+         [0, 0, 0, 0, 1, 1, 1, 1],
+         [0, 0, 0, 0, 0, 1, 1, 1],
+         [0, 0, 0, 0, 0, 0, 1, 1],
+         [0, 0, 0, 0, 0, 0, 0, 1],
+         [0, 0, 0, 0, 0, 0, 0, 0]],
+
+        [[0, 1, 1, 1, 1, 1, 1, 1],
+         [0, 0, 1, 1, 1, 1, 1, 1],
+         [0, 0, 0, 1, 1, 1, 1, 1],
+         [0, 0, 0, 0, 1, 1, 1, 1],
+         [0, 0, 0, 0, 0, 1, 1, 1],
+         [0, 0, 0, 0, 0, 0, 1, 1],
+         [0, 0, 0, 0, 0, 0, 0, 1],
+         [0, 0, 0, 0, 0, 0, 0, 0]],
+
+        [[0, 1, 1, 1, 1, 1, 1, 1],
+         [0, 0, 1, 1, 1, 1, 1, 1],
+         [0, 0, 0, 1, 1, 1, 1, 1],
+         [0, 0, 0, 0, 1, 1, 1, 1],
+         [0, 0, 0, 0, 0, 1, 1, 1],
+         [0, 0, 0, 0, 0, 0, 1, 1],
+         [0, 0, 0, 0, 0, 0, 0, 1],
+         [0, 0, 0, 0, 0, 0, 0, 0]],
+
+        [[0, 1, 1, 1, 1, 1, 1, 1],
+         [0, 0, 1, 1, 1, 1, 1, 1],
+         [0, 0, 0, 1, 1, 1, 1, 1],
+         [0, 0, 0, 0, 1, 1, 1, 1],
+         [0, 0, 0, 0, 0, 1, 1, 1],
+         [0, 0, 0, 0, 0, 0, 1, 1],
+         [0, 0, 0, 0, 0, 0, 0, 1],
+         [0, 0, 0, 0, 0, 0, 0, 0]]], dtype=torch.uint8)
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>O(∩_∩)O哈哈~</div>
+  <button disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="bool_tbb 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="bool_tbb 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Language-Model/" rel="tag"># Language Model</a>
+              <a href="/tags/Deep-Learning/" rel="tag"># Deep Learning</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2020/03/22/NLP%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="next" title="NLP学习笔记">
+                  <i class="fa fa-chevron-left"></i> NLP学习笔记
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2020/07/31/transformer%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83/" rel="prev" title="transformer语言模型训练">
+                  transformer语言模型训练 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#注意力计算公式"><span class="nav-number">1.</span> <span class="nav-text">注意力计算公式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#多头注意力机制"><span class="nav-number">2.</span> <span class="nav-text">多头注意力机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#位置编码"><span class="nav-number">3.</span> <span class="nav-text">位置编码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#前向-层归一"><span class="nav-number">4.</span> <span class="nav-text">前向+层归一</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bool_tbb"
+      src="/images/tb.jpg">
+  <p class="site-author-name" itemprop="name">bool_tbb</p>
+  <div class="site-description" itemprop="description">十三月</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/iiot-tbb" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;iiot-tbb" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/bool_tbb@sjtu.edu.cn" title="E-Mail → bool_tbb@sjtu.edu.cn"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/5313762851" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;5313762851" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/16817976/bool-tbb" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;16817976&#x2F;bool-tbb" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>StackOverflow</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      推荐阅读
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://developer.apple.com/swift/" title="https:&#x2F;&#x2F;developer.apple.com&#x2F;swift&#x2F;" rel="noopener" target="_blank">Swift 4</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://developer.apple.com/documentation/objectivec" title="https:&#x2F;&#x2F;developer.apple.com&#x2F;documentation&#x2F;objectivec" rel="noopener" target="_blank">Objective -C</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+      
+      <script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+      <script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+      <div class="widget-wrap">
+          <h3 class="widget-title">Tag Cloud</h3>
+          <div id="myCanvasContainer" class="widget tagcloud">
+              <canvas width="250" height="250" id="resCanvas" style="width=100%">
+                  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI/" rel="tag">AI</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Deep-Learning/" rel="tag">Deep Learning</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Languaage-Model/" rel="tag">Languaage Model</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Language-Model/" rel="tag">Language Model</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Machine-Learning/" rel="tag">Machine Learning</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NLP/" rel="tag">NLP</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PDF%E8%A7%A3%E6%9E%90/" rel="tag">PDF解析</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Syntax-Tree/" rel="tag">Syntax-Tree</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Transformer/" rel="tag">Transformer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/myBorn/" rel="tag">myBorn</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytorch/" rel="tag">pytorch</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" rel="tag">二叉树</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%BA%E6%96%87/" rel="tag">人文</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B3%95%E5%BE%8B/" rel="tag">法律</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9A%8F%E7%AC%94/" rel="tag">随笔</a><span class="tag-list-count">1</span></li></ul>
+              </canvas>
+          </div>
+      </div>
+      
+      
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">bool_tbb</span>
+</div>
+  <div class="powered-by">由 <a href="https://github.com/iiot-tbb" class="theme-link" rel="noopener" target="_blank">Tbb</a> 强力驱动 v1.0.0
+  </div>
+  <span class="post-meta-divider">|</span>
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共25.5k字</span>
+</div>
+
+
+<span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+<script>
+    var now = new Date(); 
+    function createtime() { 
+        var grt= new Date("11/11/2019 12:49:25");//在此处修改你的建站时间
+        now.setTime(now.getTime()+250); 
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days); 
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours); 
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum); 
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;} 
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum); 
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;} 
+        document.getElementById("timeDate").innerHTML = " 运行了 "+dnum+" 天 "; 
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒"; 
+    } 
+setInterval("createtime()",250);
+</script>
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>

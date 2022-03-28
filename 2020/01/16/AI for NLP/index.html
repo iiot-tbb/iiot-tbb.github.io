@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="Bool_tbb" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":true,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="Build Graph12345678910111213141516171819202122232425262728293031323334353637coordination_source &#x3D; &quot;&quot;&quot;&amp;#123;name:&#39;兰州&#39;, geoCoord:[103.73, 36.03]&amp;#125;,&amp;#123;name:&#39;嘉峪关&#39;, geoCoord:[98.17, 39.47]&amp;#125;,&amp;#1">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AI for NLP">
+<meta property="og:url" content="http://yoursite.com/2020/01/16/AI%20for%20NLP/index.html">
+<meta property="og:site_name" content="Bool_tbb">
+<meta property="og:description" content="Build Graph12345678910111213141516171819202122232425262728293031323334353637coordination_source &#x3D; &quot;&quot;&quot;&amp;#123;name:&#39;兰州&#39;, geoCoord:[103.73, 36.03]&amp;#125;,&amp;#123;name:&#39;嘉峪关&#39;, geoCoord:[98.17, 39.47]&amp;#125;,&amp;#1">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/images/output_18_0.png">
+<meta property="og:image" content="http://yoursite.com/images/output_26_0.png">
+<meta property="og:image" content="http://yoursite.com/images/output_49_1.png">
+<meta property="og:image" content="http://yoursite.com/images/output_62_1.png">
+<meta property="og:image" content="http://yoursite.com/images/output_63_1.png">
+<meta property="article:published_time" content="2020-01-16T12:23:35.000Z">
+<meta property="article:modified_time" content="2022-03-28T09:04:28.978Z">
+<meta property="article:author" content="bool_tbb">
+<meta property="article:tag" content="NLP">
+<meta property="article:tag" content="Machine Learning">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/images/output_18_0.png">
+
+<link rel="canonical" href="http://yoursite.com/2020/01/16/AI%20for%20NLP/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>AI for NLP | Bool_tbb</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+
+<body itemscope itemtype="http://schema.org/WebPage">
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Bool_tbb</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">留下点啥，证明活过</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/16/AI%20for%20NLP/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/tb.jpg">
+      <meta itemprop="name" content="bool_tbb">
+      <meta itemprop="description" content="十三月">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Bool_tbb">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          AI for NLP
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-01-16 20:23:35" itemprop="dateCreated datePublished" datetime="2020-01-16T20:23:35+08:00">2020-01-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-03-28 17:04:28" itemprop="dateModified" datetime="2022-03-28T17:04:28+08:00">2022-03-28</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="Build-Graph"><a href="#Build-Graph" class="headerlink" title="Build Graph"></a>Build Graph</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">coordination_source = <span class="string">"""</span></span><br><span class="line"><span class="string">&#123;name:'兰州', geoCoord:[103.73, 36.03]&#125;,</span></span><br><span class="line"><span class="string">&#123;name:'嘉峪关', geoCoord:[98.17, 39.47]&#125;,</span></span><br><span class="line"><span class="string">&#123;name:'西宁', geoCoord:[101.74, 36.56]&#125;,</span></span><br><span class="line"><span class="string">&#123;name:'成都', geoCoord:[104.06, 30.67]&#125;,</span></span><br><span class="line"><span class="string">&#123;name:'石家庄', geoCoord:[114.48, 38.03]&#125;,</span></span><br><span class="line"><span class="string">&#123;name:'拉萨', geoCoord:[102.73, 25.04]&#125;,</span></span><br><span class="line"><span class="string">&#123;name:'贵阳', geoCoord:[106.71, 26.57]&#125;,</span></span><br><span class="line"><span class="string">&#123;name:'武汉', geoCoord:[114.31, 30.52]&#125;,</span></span><br><span class="line"><span class="string">&#123;name:'郑州', geoCoord:[113.65, 34.76]&#125;,</span></span><br><span class="line"><span class="string">&#123;name:'济南', geoCoord:[117, 36.65]&#125;,</span></span><br><span class="line"><span class="string">&#123;name:'南京', geoCoord:[118.78, 32.04]&#125;,</span></span><br><span class="line"><span class="string">&#123;name:'合肥', geoCoord:[117.27, 31.86]&#125;,</span></span><br><span class="line"><span class="string">&#123;name:'杭州', geoCoord:[120.19, 30.26]&#125;,</span></span><br><span class="line"><span class="string">&#123;name:'南昌', geoCoord:[115.89, 28.68]&#125;,</span></span><br><span class="line"><span class="string">&#123;name:'福州', geoCoord:[119.3, 26.08]&#125;,</span></span><br><span class="line"><span class="string">&#123;name:'广州', geoCoord:[113.23, 23.16]&#125;,</span></span><br><span class="line"><span class="string">&#123;name:'长沙', geoCoord:[113, 28.21]&#125;,</span></span><br><span class="line"><span class="string">//&#123;name:'海口', geoCoord:[110.35, 20.02]&#125;,</span></span><br><span class="line"><span class="string">&#123;name:'沈阳', geoCoord:[123.38, 41.8]&#125;,</span></span><br><span class="line"><span class="string">&#123;name:'长春', geoCoord:[125.35, 43.88]&#125;,</span></span><br><span class="line"><span class="string">&#123;name:'哈尔滨', geoCoord:[126.63, 45.75]&#125;,</span></span><br><span class="line"><span class="string">&#123;name:'太原', geoCoord:[112.53, 37.87]&#125;,</span></span><br><span class="line"><span class="string">&#123;name:'西安', geoCoord:[108.95, 34.27]&#125;,</span></span><br><span class="line"><span class="string">//&#123;name:'台湾', geoCoord:[121.30, 25.03]&#125;,</span></span><br><span class="line"><span class="string">&#123;name:'北京', geoCoord:[116.46, 39.92]&#125;,</span></span><br><span class="line"><span class="string">&#123;name:'上海', geoCoord:[121.48, 31.22]&#125;,</span></span><br><span class="line"><span class="string">&#123;name:'重庆', geoCoord:[106.54, 29.59]&#125;,</span></span><br><span class="line"><span class="string">&#123;name:'天津', geoCoord:[117.2, 39.13]&#125;,</span></span><br><span class="line"><span class="string">&#123;name:'呼和浩特', geoCoord:[111.65, 40.82]&#125;,</span></span><br><span class="line"><span class="string">&#123;name:'南宁', geoCoord:[108.33, 22.84]&#125;,</span></span><br><span class="line"><span class="string">//&#123;name:'西藏', geoCoord:[91.11, 29.97]&#125;,</span></span><br><span class="line"><span class="string">&#123;name:'银川', geoCoord:[106.27, 38.47]&#125;,</span></span><br><span class="line"><span class="string">&#123;name:'乌鲁木齐', geoCoord:[87.68, 43.77]&#125;,</span></span><br><span class="line"><span class="string">&#123;name:'香港', geoCoord:[114.17, 22.28]&#125;,</span></span><br><span class="line"><span class="string">&#123;name:'澳门', geoCoord:[113.54, 22.19]&#125;</span></span><br><span class="line"><span class="string">"""</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">re.findall(<span class="string">"[\d\.]+"</span>,<span class="string">"&#123;name:'澳门', geoCoord:[113.54, 22.19]&#125;"</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>[&#39;113.54&#39;, &#39;22.19&#39;]
+</code></pre><h3 id="Get-data-from-source-using-regular-expression"><a href="#Get-data-from-source-using-regular-expression" class="headerlink" title="Get data from source using regular expression"></a>Get data from source using regular expression</h3><a id="more"></a>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> re</span><br></pre></td></tr></table></figure>
+<h2 id="regular-expression"><a href="#regular-expression" class="headerlink" title="regular expression"></a>regular expression</h2><p>[a-z][A-Z]<sup><a href="#fn_a" id="reffn_a">a</a></sup>: negation colou?r: ? zero or onr of its previous character<br>colou?r: ? zero or onr of its previous character</p>
+<ul>
+<li><p>: zero or more of its previous character +: one or more.:match any single character  </p>
+</li>
+<li><p>: ^: start of the line </p>
+</li>
+<li>: $:end of the line</li>
+<li>: | [cat|dog] : cat or dog</li>
+<li>(da): make the string da like a character</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">l = <span class="string">"color or colour"</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pattern = re.compile(<span class="string">"colou?r"</span>)</span><br><span class="line">pattern.findall(l)</span><br></pre></td></tr></table></figure>
+<pre><code>[&#39;color&#39;, &#39;colour&#39;]
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_city_info</span><span class="params">(city_coordination)</span>:</span></span><br><span class="line">    city_location = &#123;&#125;</span><br><span class="line">    first = <span class="literal">True</span></span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> city_coordination.split(<span class="string">'\n'</span>):</span><br><span class="line">        <span class="keyword">if</span> line.startswith(<span class="string">'//'</span>): <span class="keyword">continue</span></span><br><span class="line">        <span class="keyword">if</span> line.strip()==<span class="string">""</span>:<span class="keyword">continue</span>    </span><br><span class="line">        city =re.findall(<span class="string">"name:'(\w+)'"</span>,line)[<span class="number">0</span>]</span><br><span class="line">        x_y = re.findall(<span class="string">"Coord:\[(\d+.\d+),\s(\d+.\d+)\]"</span>,line)[<span class="number">0</span>]</span><br><span class="line">        <span class="keyword">if</span> first ==<span class="literal">True</span>:</span><br><span class="line">            print(<span class="string">"x_y: "</span>,x_y)</span><br><span class="line">        x_y = tuple(map(float,x_y))</span><br><span class="line">        city_location[city] = x_y</span><br><span class="line">        <span class="keyword">if</span> first ==<span class="literal">True</span>:</span><br><span class="line">            print(<span class="string">"city:"</span>,city )</span><br><span class="line">            print(<span class="string">"x_y: "</span>,x_y)</span><br><span class="line">            first =<span class="literal">False</span></span><br><span class="line">    <span class="keyword">return</span> city_location</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">city_info = get_city_info(coordination_source)</span><br></pre></td></tr></table></figure>
+<pre><code>x_y:  (&#39;103.73&#39;, &#39;36.03&#39;)
+city: 兰州
+x_y:  (103.73, 36.03)
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">city_info</span><br></pre></td></tr></table></figure>
+<pre><code>{&#39;兰州&#39;: (103.73, 36.03),
+ &#39;嘉峪关&#39;: (98.17, 39.47),
+ &#39;西宁&#39;: (101.74, 36.56),
+ &#39;成都&#39;: (104.06, 30.67),
+ &#39;石家庄&#39;: (114.48, 38.03),
+ &#39;拉萨&#39;: (102.73, 25.04),
+ &#39;贵阳&#39;: (106.71, 26.57),
+ &#39;武汉&#39;: (114.31, 30.52),
+ &#39;郑州&#39;: (113.65, 34.76),
+ &#39;济南&#39;: (117.0, 36.65),
+ &#39;南京&#39;: (118.78, 32.04),
+ &#39;合肥&#39;: (117.27, 31.86),
+ &#39;杭州&#39;: (120.19, 30.26),
+ &#39;南昌&#39;: (115.89, 28.68),
+ &#39;福州&#39;: (119.3, 26.08),
+ &#39;广州&#39;: (113.23, 23.16),
+ &#39;长沙&#39;: (113.0, 28.21),
+ &#39;沈阳&#39;: (123.38, 41.8),
+ &#39;长春&#39;: (125.35, 43.88),
+ &#39;哈尔滨&#39;: (126.63, 45.75),
+ &#39;太原&#39;: (112.53, 37.87),
+ &#39;西安&#39;: (108.95, 34.27),
+ &#39;北京&#39;: (116.46, 39.92),
+ &#39;上海&#39;: (121.48, 31.22),
+ &#39;重庆&#39;: (106.54, 29.59),
+ &#39;天津&#39;: (117.2, 39.13),
+ &#39;呼和浩特&#39;: (111.65, 40.82),
+ &#39;南宁&#39;: (108.33, 22.84),
+ &#39;银川&#39;: (106.27, 38.47),
+ &#39;乌鲁木齐&#39;: (87.68, 43.77),
+ &#39;香港&#39;: (114.17, 22.28),
+ &#39;澳门&#39;: (113.54, 22.19)}
+</code></pre><h3 id="Compute-distance-between-cities"><a href="#Compute-distance-between-cities" class="headerlink" title="Compute distance between cities"></a>Compute distance between cities</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> math</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">geo_distance</span><span class="params">(origin, destination)</span>:</span></span><br><span class="line">    <span class="string">"""</span></span><br><span class="line"><span class="string">    Calculate the Haversine distance.</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Parameters</span></span><br><span class="line"><span class="string">    ----------</span></span><br><span class="line"><span class="string">    origin: tuple of float</span></span><br><span class="line"><span class="string">        (lat,long)</span></span><br><span class="line"><span class="string">    destination: tuple of float</span></span><br><span class="line"><span class="string">        (lat,long)</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Returns</span></span><br><span class="line"><span class="string">    -------</span></span><br><span class="line"><span class="string">    distance_in_km: float</span></span><br><span class="line"><span class="string">    </span></span><br><span class="line"><span class="string">    Examples</span></span><br><span class="line"><span class="string">    --------</span></span><br><span class="line"><span class="string">    &gt;&gt;&gt; origin = (48,1372,11.5756) #Munich</span></span><br><span class="line"><span class="string">    &gt;&gt;&gt; destination = (52.5186,13.4083) #Berlin</span></span><br><span class="line"><span class="string">    &gt;&gt;&gt; round(distance(origin,destination),1)</span></span><br><span class="line"><span class="string">    504.2</span></span><br><span class="line"><span class="string">    """</span></span><br><span class="line">    </span><br><span class="line">    lat1,lon1 = origin</span><br><span class="line">    lat2,lon2 = destination</span><br><span class="line">    radius =<span class="number">6371</span> <span class="comment"># km</span></span><br><span class="line">    </span><br><span class="line">    dlat = math.radians(lat2 - lat1)</span><br><span class="line">    dlon = math.radians(lon2 - lon1)</span><br><span class="line">    a = (math.sin(dlat / <span class="number">2</span>) * math.sin(dlat / <span class="number">2</span>) +</span><br><span class="line">         math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) *</span><br><span class="line">         math.sin(dlon / <span class="number">2</span>) * math.sin(dlon / <span class="number">2</span>))</span><br><span class="line">    c = <span class="number">2</span> * math.atan2(math.sqrt(a), math.sqrt(<span class="number">1</span> - a))</span><br><span class="line">    d = radius * c</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> d</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_city_distance</span><span class="params">(city1,city2)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> geo_distance(city_info[city1],city_info[city2])</span><br><span class="line"></span><br><span class="line">get_city_distance(<span class="string">"上海"</span>,<span class="string">"北京"</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>727.52769688981
+</code></pre><h3 id="Draw-the-graph"><a href="#Draw-the-graph" class="headerlink" title="Draw the graph"></a>Draw the graph</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> networkx <span class="keyword">as</span> nx</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line">%matplotlib inline</span><br><span class="line">plt.rcParams[<span class="string">'font.sans-serif'</span>] = [<span class="string">'SimHei'</span>]</span><br><span class="line">plt.rcParams[<span class="string">'axes.unicode_minus'</span>] = <span class="literal">False</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">city_graph =nx.Graph()</span><br><span class="line">city_graph.add_nodes_from(list(city_info.keys()))</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nx.draw(city_graph,city_info,with_labels=<span class="literal">True</span>,node_size=<span class="number">30</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="/images/output_18_0.png" alt="png"></p>
+<h3 id="Build-connection-between-Let’s-assume-that-two-cities-are-connected-if-their-distance-is-less-than-700km"><a href="#Build-connection-between-Let’s-assume-that-two-cities-are-connected-if-their-distance-is-less-than-700km" class="headerlink" title="Build connection between. Let’s assume that two cities are connected if their distance is less than 700km"></a>Build connection between. Let’s assume that two cities are connected if their distance is less than 700km</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">threshold = <span class="number">700</span> <span class="comment"># defined the threshold</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">build_connection</span><span class="params">(city_info)</span>:</span></span><br><span class="line">    cities_connection = defaultdict(list)</span><br><span class="line">    cities = list(city_info.keys())</span><br><span class="line">    <span class="keyword">for</span> c1 <span class="keyword">in</span> cities:</span><br><span class="line">        <span class="keyword">for</span> c2 <span class="keyword">in</span> cities:</span><br><span class="line">            <span class="keyword">if</span> c1 == c2 :</span><br><span class="line">                <span class="keyword">continue</span></span><br><span class="line">            <span class="keyword">if</span> get_city_distance(c1,c2) &lt; threshold:</span><br><span class="line">                cities_connection[c1].append(c2)</span><br><span class="line">    <span class="keyword">return</span> cities_connection</span><br><span class="line"></span><br><span class="line">cities_connection = build_connection(city_info)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cities_connection</span><br></pre></td></tr></table></figure>
+<pre><code>defaultdict(list,
+            {&#39;兰州&#39;: [&#39;嘉峪关&#39;, &#39;西宁&#39;, &#39;成都&#39;, &#39;拉萨&#39;, &#39;贵阳&#39;, &#39;西安&#39;, &#39;重庆&#39;, &#39;南宁&#39;, &#39;银川&#39;],
+             &#39;嘉峪关&#39;: [&#39;兰州&#39;, &#39;西宁&#39;, &#39;成都&#39;, &#39;拉萨&#39;],
+             &#39;西宁&#39;: [&#39;兰州&#39;, &#39;嘉峪关&#39;, &#39;成都&#39;, &#39;拉萨&#39;, &#39;贵阳&#39;, &#39;重庆&#39;, &#39;银川&#39;],
+             &#39;成都&#39;: [&#39;兰州&#39;, &#39;嘉峪关&#39;, &#39;西宁&#39;, &#39;拉萨&#39;, &#39;贵阳&#39;, &#39;西安&#39;, &#39;重庆&#39;, &#39;南宁&#39;, &#39;银川&#39;],
+             &#39;石家庄&#39;: [&#39;武汉&#39;,
+              &#39;郑州&#39;,
+              &#39;济南&#39;,
+              &#39;南京&#39;,
+              &#39;合肥&#39;,
+              &#39;南昌&#39;,
+              &#39;广州&#39;,
+              &#39;长沙&#39;,
+              &#39;太原&#39;,
+              &#39;西安&#39;,
+              &#39;北京&#39;,
+              &#39;天津&#39;,
+              &#39;呼和浩特&#39;],
+             &#39;拉萨&#39;: [&#39;兰州&#39;, &#39;嘉峪关&#39;, &#39;西宁&#39;, &#39;成都&#39;, &#39;贵阳&#39;, &#39;重庆&#39;, &#39;南宁&#39;, &#39;银川&#39;],
+             &#39;贵阳&#39;: [&#39;兰州&#39;, &#39;西宁&#39;, &#39;成都&#39;, &#39;拉萨&#39;, &#39;西安&#39;, &#39;重庆&#39;, &#39;南宁&#39;, &#39;银川&#39;],
+             &#39;武汉&#39;: [&#39;石家庄&#39;,
+              &#39;郑州&#39;,
+              &#39;济南&#39;,
+              &#39;南京&#39;,
+              &#39;合肥&#39;,
+              &#39;杭州&#39;,
+              &#39;南昌&#39;,
+              &#39;福州&#39;,
+              &#39;广州&#39;,
+              &#39;长沙&#39;,
+              &#39;太原&#39;,
+              &#39;西安&#39;,
+              &#39;北京&#39;,
+              &#39;天津&#39;,
+              &#39;呼和浩特&#39;,
+              &#39;香港&#39;,
+              &#39;澳门&#39;],
+             &#39;郑州&#39;: [&#39;石家庄&#39;,
+              &#39;武汉&#39;,
+              &#39;济南&#39;,
+              &#39;南京&#39;,
+              &#39;合肥&#39;,
+              &#39;南昌&#39;,
+              &#39;广州&#39;,
+              &#39;长沙&#39;,
+              &#39;太原&#39;,
+              &#39;西安&#39;,
+              &#39;北京&#39;,
+              &#39;天津&#39;,
+              &#39;呼和浩特&#39;,
+              &#39;香港&#39;,
+              &#39;澳门&#39;],
+             &#39;济南&#39;: [&#39;石家庄&#39;,
+              &#39;武汉&#39;,
+              &#39;郑州&#39;,
+              &#39;南京&#39;,
+              &#39;合肥&#39;,
+              &#39;杭州&#39;,
+              &#39;南昌&#39;,
+              &#39;福州&#39;,
+              &#39;长沙&#39;,
+              &#39;太原&#39;,
+              &#39;北京&#39;,
+              &#39;上海&#39;,
+              &#39;天津&#39;,
+              &#39;呼和浩特&#39;],
+             &#39;南京&#39;: [&#39;石家庄&#39;,
+              &#39;武汉&#39;,
+              &#39;郑州&#39;,
+              &#39;济南&#39;,
+              &#39;合肥&#39;,
+              &#39;杭州&#39;,
+              &#39;南昌&#39;,
+              &#39;福州&#39;,
+              &#39;长沙&#39;,
+              &#39;北京&#39;,
+              &#39;上海&#39;,
+              &#39;天津&#39;],
+             &#39;合肥&#39;: [&#39;石家庄&#39;,
+              &#39;武汉&#39;,
+              &#39;郑州&#39;,
+              &#39;济南&#39;,
+              &#39;南京&#39;,
+              &#39;杭州&#39;,
+              &#39;南昌&#39;,
+              &#39;福州&#39;,
+              &#39;广州&#39;,
+              &#39;长沙&#39;,
+              &#39;太原&#39;,
+              &#39;北京&#39;,
+              &#39;上海&#39;,
+              &#39;天津&#39;,
+              &#39;香港&#39;,
+              &#39;澳门&#39;],
+             &#39;杭州&#39;: [&#39;武汉&#39;, &#39;济南&#39;, &#39;南京&#39;, &#39;合肥&#39;, &#39;南昌&#39;, &#39;福州&#39;, &#39;北京&#39;, &#39;上海&#39;, &#39;天津&#39;],
+             &#39;南昌&#39;: [&#39;石家庄&#39;,
+              &#39;武汉&#39;,
+              &#39;郑州&#39;,
+              &#39;济南&#39;,
+              &#39;南京&#39;,
+              &#39;合肥&#39;,
+              &#39;杭州&#39;,
+              &#39;福州&#39;,
+              &#39;广州&#39;,
+              &#39;长沙&#39;,
+              &#39;太原&#39;,
+              &#39;北京&#39;,
+              &#39;上海&#39;,
+              &#39;天津&#39;,
+              &#39;香港&#39;,
+              &#39;澳门&#39;],
+             &#39;福州&#39;: [&#39;武汉&#39;,
+              &#39;济南&#39;,
+              &#39;南京&#39;,
+              &#39;合肥&#39;,
+              &#39;杭州&#39;,
+              &#39;南昌&#39;,
+              &#39;广州&#39;,
+              &#39;上海&#39;,
+              &#39;香港&#39;,
+              &#39;澳门&#39;],
+             &#39;广州&#39;: [&#39;石家庄&#39;,
+              &#39;武汉&#39;,
+              &#39;郑州&#39;,
+              &#39;合肥&#39;,
+              &#39;南昌&#39;,
+              &#39;福州&#39;,
+              &#39;长沙&#39;,
+              &#39;太原&#39;,
+              &#39;西安&#39;,
+              &#39;南宁&#39;,
+              &#39;香港&#39;,
+              &#39;澳门&#39;],
+             &#39;长沙&#39;: [&#39;石家庄&#39;,
+              &#39;武汉&#39;,
+              &#39;郑州&#39;,
+              &#39;济南&#39;,
+              &#39;南京&#39;,
+              &#39;合肥&#39;,
+              &#39;南昌&#39;,
+              &#39;广州&#39;,
+              &#39;太原&#39;,
+              &#39;西安&#39;,
+              &#39;北京&#39;,
+              &#39;天津&#39;,
+              &#39;呼和浩特&#39;,
+              &#39;南宁&#39;,
+              &#39;香港&#39;,
+              &#39;澳门&#39;],
+             &#39;沈阳&#39;: [&#39;长春&#39;, &#39;哈尔滨&#39;, &#39;上海&#39;],
+             &#39;长春&#39;: [&#39;沈阳&#39;, &#39;哈尔滨&#39;],
+             &#39;哈尔滨&#39;: [&#39;沈阳&#39;, &#39;长春&#39;],
+             &#39;太原&#39;: [&#39;石家庄&#39;,
+              &#39;武汉&#39;,
+              &#39;郑州&#39;,
+              &#39;济南&#39;,
+              &#39;合肥&#39;,
+              &#39;南昌&#39;,
+              &#39;广州&#39;,
+              &#39;长沙&#39;,
+              &#39;西安&#39;,
+              &#39;北京&#39;,
+              &#39;天津&#39;,
+              &#39;呼和浩特&#39;,
+              &#39;银川&#39;,
+              &#39;澳门&#39;],
+             &#39;西安&#39;: [&#39;兰州&#39;,
+              &#39;成都&#39;,
+              &#39;石家庄&#39;,
+              &#39;贵阳&#39;,
+              &#39;武汉&#39;,
+              &#39;郑州&#39;,
+              &#39;广州&#39;,
+              &#39;长沙&#39;,
+              &#39;太原&#39;,
+              &#39;重庆&#39;,
+              &#39;呼和浩特&#39;,
+              &#39;南宁&#39;,
+              &#39;银川&#39;],
+             &#39;北京&#39;: [&#39;石家庄&#39;,
+              &#39;武汉&#39;,
+              &#39;郑州&#39;,
+              &#39;济南&#39;,
+              &#39;南京&#39;,
+              &#39;合肥&#39;,
+              &#39;杭州&#39;,
+              &#39;南昌&#39;,
+              &#39;长沙&#39;,
+              &#39;太原&#39;,
+              &#39;天津&#39;,
+              &#39;呼和浩特&#39;],
+             &#39;上海&#39;: [&#39;济南&#39;, &#39;南京&#39;, &#39;合肥&#39;, &#39;杭州&#39;, &#39;南昌&#39;, &#39;福州&#39;, &#39;沈阳&#39;, &#39;天津&#39;],
+             &#39;重庆&#39;: [&#39;兰州&#39;, &#39;西宁&#39;, &#39;成都&#39;, &#39;拉萨&#39;, &#39;贵阳&#39;, &#39;西安&#39;, &#39;呼和浩特&#39;, &#39;南宁&#39;, &#39;银川&#39;],
+             &#39;天津&#39;: [&#39;石家庄&#39;,
+              &#39;武汉&#39;,
+              &#39;郑州&#39;,
+              &#39;济南&#39;,
+              &#39;南京&#39;,
+              &#39;合肥&#39;,
+              &#39;杭州&#39;,
+              &#39;南昌&#39;,
+              &#39;长沙&#39;,
+              &#39;太原&#39;,
+              &#39;北京&#39;,
+              &#39;上海&#39;,
+              &#39;呼和浩特&#39;],
+             &#39;呼和浩特&#39;: [&#39;石家庄&#39;,
+              &#39;武汉&#39;,
+              &#39;郑州&#39;,
+              &#39;济南&#39;,
+              &#39;长沙&#39;,
+              &#39;太原&#39;,
+              &#39;西安&#39;,
+              &#39;北京&#39;,
+              &#39;重庆&#39;,
+              &#39;天津&#39;,
+              &#39;银川&#39;],
+             &#39;南宁&#39;: [&#39;兰州&#39;,
+              &#39;成都&#39;,
+              &#39;拉萨&#39;,
+              &#39;贵阳&#39;,
+              &#39;广州&#39;,
+              &#39;长沙&#39;,
+              &#39;西安&#39;,
+              &#39;重庆&#39;,
+              &#39;银川&#39;,
+              &#39;香港&#39;,
+              &#39;澳门&#39;],
+             &#39;银川&#39;: [&#39;兰州&#39;,
+              &#39;西宁&#39;,
+              &#39;成都&#39;,
+              &#39;拉萨&#39;,
+              &#39;贵阳&#39;,
+              &#39;太原&#39;,
+              &#39;西安&#39;,
+              &#39;重庆&#39;,
+              &#39;呼和浩特&#39;,
+              &#39;南宁&#39;],
+             &#39;香港&#39;: [&#39;武汉&#39;, &#39;郑州&#39;, &#39;合肥&#39;, &#39;南昌&#39;, &#39;福州&#39;, &#39;广州&#39;, &#39;长沙&#39;, &#39;南宁&#39;, &#39;澳门&#39;],
+             &#39;澳门&#39;: [&#39;武汉&#39;,
+              &#39;郑州&#39;,
+              &#39;合肥&#39;,
+              &#39;南昌&#39;,
+              &#39;福州&#39;,
+              &#39;广州&#39;,
+              &#39;长沙&#39;,
+              &#39;太原&#39;,
+              &#39;南宁&#39;,
+              &#39;香港&#39;]})
+</code></pre><h3 id="Draw-connection-graph"><a href="#Draw-connection-graph" class="headerlink" title="Draw connection graph"></a>Draw connection graph</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cities_connection_graph = nx.Graph(cities_connection)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nx.draw(cities_connection_graph,city_info,with_labels = <span class="literal">True</span>, node_size=<span class="number">10</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="/images/output_26_0.png" alt="png"></p>
+<h3 id="BFS-1-version"><a href="#BFS-1-version" class="headerlink" title="BFS 1 version"></a>BFS 1 version</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">search_1</span><span class="params">(graph, start, destination)</span>:</span></span><br><span class="line">    pathes = [[start]] <span class="comment"># list 用来存储待搜索路径</span></span><br><span class="line">    visited = set() <span class="comment">#set 用来存车已搜索节点</span></span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="keyword">while</span> pathes:</span><br><span class="line">        path= pathes.pop(<span class="number">0</span>) <span class="comment">#提取第一条路径</span></span><br><span class="line">        froniter = path[<span class="number">-1</span>] <span class="comment">#提取即将要探索的节点</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> froniter <span class="keyword">in</span> visited: <span class="keyword">continue</span> <span class="comment">#检查如果该点已经探索过，则不用探索</span></span><br><span class="line">        </span><br><span class="line">        successors = graph[froniter]</span><br><span class="line">        <span class="keyword">for</span> city <span class="keyword">in</span> successors: <span class="comment"># 遍历子节点</span></span><br><span class="line">            <span class="keyword">if</span> city <span class="keyword">in</span> path: <span class="keyword">continue</span> <span class="comment"># 检查会不会形成环</span></span><br><span class="line">            </span><br><span class="line">            new_path = path +[city]</span><br><span class="line">            pathes.append(new_path) <span class="comment">#bfs #将新路径加到list里面</span></span><br><span class="line">            <span class="comment"># pathes = [new_path] + pathes #dfs</span></span><br><span class="line">            <span class="keyword">if</span> city ==destination: <span class="comment">#检查是否到达目的地</span></span><br><span class="line">                <span class="keyword">return</span> new_path</span><br><span class="line">        visited.add(froniter)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">search_1(cities_connection,<span class="string">"上海"</span>,<span class="string">"石家庄"</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>[&#39;上海&#39;, &#39;济南&#39;, &#39;石家庄&#39;]
+</code></pre><h3 id="Optimal-search-using-variation-of-BFS"><a href="#Optimal-search-using-variation-of-BFS" class="headerlink" title="Optimal search using variation of BFS"></a>Optimal search using variation of BFS</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">search_2</span><span class="params">(graph,start,destination,search_strategy)</span>:</span></span><br><span class="line">    pathes = [[start]]</span><br><span class="line">    visited =set() <span class="comment"># !</span></span><br><span class="line">    <span class="keyword">while</span> pathes:</span><br><span class="line">        path = pathes.pop(<span class="number">0</span>)</span><br><span class="line">        froniter =path[<span class="number">-1</span>]</span><br><span class="line">        <span class="keyword">if</span> froniter <span class="keyword">in</span> visited:<span class="keyword">continue</span> <span class="comment"># !</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> froniter == destination:</span><br><span class="line">            <span class="keyword">return</span> path</span><br><span class="line">        successors = graph[froniter]</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> city <span class="keyword">in</span> successors:</span><br><span class="line">            <span class="keyword">if</span> city <span class="keyword">in</span> path:<span class="keyword">continue</span> <span class="comment">#check loop</span></span><br><span class="line">            </span><br><span class="line">            new_path = path + [city]</span><br><span class="line">            pathes.append(new_path)</span><br><span class="line">        </span><br><span class="line">        pathes =search_strategy(pathes)</span><br><span class="line">        visited.add(froniter) <span class="comment"># !</span></span><br><span class="line">        <span class="comment">#</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sort_by_distance</span><span class="params">(pathes)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_distance_of_path</span><span class="params">(path)</span>:</span></span><br><span class="line">        distance = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> i,_ <span class="keyword">in</span> enumerate(path[:<span class="number">-1</span>]):</span><br><span class="line">            distance += get_city_distance(path[i],path[i+<span class="number">1</span>])</span><br><span class="line">        <span class="keyword">return</span> distance</span><br><span class="line">    <span class="keyword">return</span> sorted(pathes,key =get_distance_of_path)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_distance_of_path</span><span class="params">(path)</span>:</span></span><br><span class="line">        distance = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> i,_ <span class="keyword">in</span> enumerate(path[:<span class="number">-1</span>]):</span><br><span class="line">            distance += get_city_distance(path[i],path[i+<span class="number">1</span>])</span><br><span class="line">        <span class="keyword">return</span> distance</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">get_distance_of_path([<span class="string">"北京"</span>,<span class="string">"济南"</span>,<span class="string">"上海"</span>])</span><br></pre></td></tr></table></figure>
+<pre><code>752.66259009181
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">search_2(cities_connection,<span class="string">"北京"</span>,<span class="string">"上海"</span>,search_strategy=<span class="keyword">lambda</span> x:x)</span><br></pre></td></tr></table></figure>
+<pre><code>[&#39;北京&#39;, &#39;济南&#39;, &#39;上海&#39;]
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">search_2(cities_connection,<span class="string">"北京"</span>,<span class="string">"上海"</span>,search_strategy=sort_by_distance)</span><br></pre></td></tr></table></figure>
+<pre><code>[&#39;北京&#39;, &#39;天津&#39;, &#39;上海&#39;]
+</code></pre><h2 id="Machine-Learning"><a href="#Machine-Learning" class="headerlink" title="Machine Learning"></a>Machine Learning</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> load_boston</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dataset = load_boston()</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#dataset</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x,y=dataset[<span class="string">'data'</span>],dataset[<span class="string">'target'</span>]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x.shape</span><br></pre></td></tr></table></figure>
+<pre><code>(506, 13)
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">y.shape</span><br></pre></td></tr></table></figure>
+<pre><code>(506,)
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x[<span class="number">1</span>].shape</span><br></pre></td></tr></table></figure>
+<pre><code>(13,)
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x[<span class="number">1</span>]</span><br></pre></td></tr></table></figure>
+<pre><code>array([2.7310e-02, 0.0000e+00, 7.0700e+00, 0.0000e+00, 4.6900e-01,
+       6.4210e+00, 7.8900e+01, 4.9671e+00, 2.0000e+00, 2.4200e+02,
+       1.7800e+01, 3.9690e+02, 9.1400e+00])
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dataset.feature_names</span><br></pre></td></tr></table></figure>
+<pre><code>array([&#39;CRIM&#39;, &#39;ZN&#39;, &#39;INDUS&#39;, &#39;CHAS&#39;, &#39;NOX&#39;, &#39;RM&#39;, &#39;AGE&#39;, &#39;DIS&#39;, &#39;RAD&#39;,
+       &#39;TAX&#39;, &#39;PTRATIO&#39;, &#39;B&#39;, &#39;LSTAT&#39;], dtype=&#39;&lt;U7&#39;)
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dataset[<span class="string">'DESCR'</span>]</span><br></pre></td></tr></table></figure>
+<pre><code>&quot;.. _boston_dataset:\n\nBoston house prices dataset\n---------------------------\n\n**Data Set Characteristics:**  \n\n    :Number of Instances: 506 \n\n    :Number of Attributes: 13 numeric/categorical predictive. Median Value (attribute 14) is usually the target.\n\n    :Attribute Information (in order):\n        - CRIM     per capita crime rate by town\n        - ZN       proportion of residential land zoned for lots over 25,000 sq.ft.\n        - INDUS    proportion of non-retail business acres per town\n        - CHAS     Charles River dummy variable (= 1 if tract bounds river; 0 otherwise)\n        - NOX      nitric oxides concentration (parts per 10 million)\n        - RM       average number of rooms per dwelling\n        - AGE      proportion of owner-occupied units built prior to 1940\n        - DIS      weighted distances to five Boston employment centres\n        - RAD      index of accessibility to radial highways\n        - TAX      full-value property-tax rate per $10,000\n        - PTRATIO  pupil-teacher ratio by town\n        - B        1000(Bk - 0.63)^2 where Bk is the proportion of blacks by town\n        - LSTAT    % lower status of the population\n        - MEDV     Median value of owner-occupied homes in $1000&#39;s\n\n    :Missing Attribute Values: None\n\n    :Creator: Harrison, D. and Rubinfeld, D.L.\n\nThis is a copy of UCI ML housing dataset.\nhttps://archive.ics.uci.edu/ml/machine-learning-databases/housing/\n\n\nThis dataset was taken from the StatLib library which is maintained at Carnegie Mellon University.\n\nThe Boston house-price data of Harrison, D. and Rubinfeld, D.L. &#39;Hedonic\nprices and the demand for clean air&#39;, J. Environ. Economics &amp; Management,\nvol.5, 81-102, 1978.   Used in Belsley, Kuh &amp; Welsch, &#39;Regression diagnostics\n...&#39;, Wiley, 1980.   N.B. Various transformations are used in the table on\npages 244-261 of the latter.\n\nThe Boston house-price data has been used in many machine learning papers that address regression\nproblems.   \n     \n.. topic:: References\n\n   - Belsley, Kuh &amp; Welsch, &#39;Regression diagnostics: Identifying Influential Data and Sources of Collinearity&#39;, Wiley, 1980. 244-261.\n   - Quinlan,R. (1993). Combining Instance-Based and Model-Based Learning. In Proceedings on the Tenth International Conference of Machine Learning, 236-243, University of Massachusetts, Amherst. Morgan Kaufmann.\n&quot;
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">X_rm = x[:,<span class="number">5</span>]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># plot the RM with respect to y</span></span><br><span class="line">plt.scatter(X_rm,y)</span><br></pre></td></tr></table></figure>
+<pre><code>&lt;matplotlib.collections.PathCollection at 0x11955a9f148&gt;
+</code></pre><p><img src="/images/output_49_1.png" alt="png"></p>
+<h2 id="Gradient-descent"><a href="#Gradient-descent" class="headerlink" title="Gradient descent"></a>Gradient descent</h2><h3 id="Assume-that-the-target-function-is-a-linear-function"><a href="#Assume-that-the-target-function-is-a-linear-function" class="headerlink" title="Assume that the target function is a linear function"></a>Assume that the target function is a linear function</h3><script type="math/tex; mode=display">y = k*rm +b</script><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># define target function</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">price</span><span class="params">(rm,k,b)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> k*rm + b</span><br></pre></td></tr></table></figure>
+<h3 id="Define-mean-square-loss"><a href="#Define-mean-square-loss" class="headerlink" title="Define mean square loss"></a>Define mean square loss</h3><script type="math/tex; mode=display">loss = \frac{1}{n} \sum{(y_i - \hat{y_i})}^2</script><script type="math/tex; mode=display">loss = \frac{1}{n}\sum{(y_i) - (kx_i + b_i))}^2</script><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># define loss function</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">loss</span><span class="params">(y,y_hat)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> sum((y_i - y_hat_i)**<span class="number">2</span> <span class="keyword">for</span> y_i,y_hat_i <span class="keyword">in</span> zip(list(y),list(y_hat)))/len(list(y))</span><br></pre></td></tr></table></figure>
+<h3 id="Define-partial-derivatives"><a href="#Define-partial-derivatives" class="headerlink" title="Define partial derivatives"></a>Define partial derivatives</h3><script type="math/tex; mode=display">\frac {\partial{loss}}{\partial{k}} = -\frac{2}{n}\sum(y_i -\hat{y_i})x_i</script><script type="math/tex; mode=display">\frac{\partial{loss}}{\partial{b}} = -\frac{2}{n}\sum(y_i - \hat{y_i})</script><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#define partial derivative</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">partial_derivative_k</span><span class="params">(x,y,y_hat)</span>:</span></span><br><span class="line">    n = len(y)</span><br><span class="line">    gradient = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> x_i,y_i,y_hat_i <span class="keyword">in</span> zip(list(x),list(y),list(y_hat)):</span><br><span class="line">        gradient += (y_i - y_hat_i) * x_i</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-2</span>/n * gradient</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">partial_derivative_b</span><span class="params">(y,y_hat)</span>:</span></span><br><span class="line">    n =len(y)</span><br><span class="line">    gradient = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> y_i,y_hat_i <span class="keyword">in</span> zip(list(y),list(y_hat)):</span><br><span class="line">        gradient+= (y_i-y_hat_i)</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-2</span>/n* gradient</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="comment">#initialized parameters</span></span><br><span class="line">k= random.random()*<span class="number">200</span><span class="number">-100</span> <span class="comment"># -100 100</span></span><br><span class="line">b= random.random()*<span class="number">200</span><span class="number">-100</span> <span class="comment"># -100 100</span></span><br><span class="line"></span><br><span class="line">learning_rate = <span class="number">1e-3</span></span><br><span class="line"></span><br><span class="line">iteration_num =<span class="number">200</span></span><br><span class="line">losses = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(iteration_num):</span><br><span class="line">    price_use_current_parameters = [price(r,k,b) <span class="keyword">for</span> r <span class="keyword">in</span> X_rm] <span class="comment"># \hat&#123;y&#125;</span></span><br><span class="line">    </span><br><span class="line">    current_loss = loss(y,price_use_current_parameters)</span><br><span class="line">    losses.append(current_loss)</span><br><span class="line">    <span class="comment">#print("Iteration &#123;&#125;,the loss is &#123;&#125;,parameters k is &#123;&#125; and b is &#123;&#125;".format(i,current_loss,k,b))</span></span><br><span class="line">    </span><br><span class="line">    k_gradient = partial_derivative_k(X_rm,y,price_use_current_parameters)</span><br><span class="line">    b_gradient = partial_derivative_b(y,price_use_current_parameters)</span><br><span class="line">    </span><br><span class="line">    k = k + (<span class="number">-1</span> * k_gradient) * learning_rate</span><br><span class="line">    b = b + (<span class="number">-1</span> * b_gradient) * learning_rate</span><br><span class="line"></span><br><span class="line">best_k =k </span><br><span class="line">best_b =b</span><br><span class="line">print(<span class="string">"best_k is&#123;&#125;,best_b is &#123;&#125;"</span>.format(best_k,best_b))</span><br></pre></td></tr></table></figure>
+<pre><code>best_k is12.41253129958806,best_b is -55.72859329657179
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">plt.plot(list(range(iteration_num)),losses)</span><br></pre></td></tr></table></figure>
+<pre><code>[&lt;matplotlib.lines.Line2D at 0x119550b6fc8&gt;]
+</code></pre><p><img src="/images/output_62_1.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">price_use_best_paramters = [price(r,best_k,best_b) <span class="keyword">for</span> r <span class="keyword">in</span> X_rm]</span><br><span class="line"></span><br><span class="line">plt.scatter(X_rm,y)</span><br><span class="line">plt.scatter(X_rm,price_use_current_parameters)</span><br></pre></td></tr></table></figure>
+<pre><code>&lt;matplotlib.collections.PathCollection at 0x11955a2d188&gt;
+</code></pre><p><img src="/images/output_63_1.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>O(∩_∩)O哈哈~</div>
+  <button disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="bool_tbb 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="bool_tbb 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/NLP/" rel="tag"># NLP</a>
+              <a href="/tags/Machine-Learning/" rel="tag"># Machine Learning</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2020/01/11/Syntax-Tree/" rel="next" title="Syntax-Tree">
+                  <i class="fa fa-chevron-left"></i> Syntax-Tree
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+                <a href="/2020/01/31/Machinglearing-Model-the-first-step/" rel="prev" title="Machinglearing Model,the first step">
+                  Machinglearing Model,the first step <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Build-Graph"><span class="nav-number">1.</span> <span class="nav-text">Build Graph</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Get-data-from-source-using-regular-expression"><span class="nav-number">1.1.</span> <span class="nav-text">Get data from source using regular expression</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#regular-expression"><span class="nav-number">2.</span> <span class="nav-text">regular expression</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Compute-distance-between-cities"><span class="nav-number">2.1.</span> <span class="nav-text">Compute distance between cities</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Draw-the-graph"><span class="nav-number">2.2.</span> <span class="nav-text">Draw the graph</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Build-connection-between-Let’s-assume-that-two-cities-are-connected-if-their-distance-is-less-than-700km"><span class="nav-number">2.3.</span> <span class="nav-text">Build connection between. Let’s assume that two cities are connected if their distance is less than 700km</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Draw-connection-graph"><span class="nav-number">2.4.</span> <span class="nav-text">Draw connection graph</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BFS-1-version"><span class="nav-number">2.5.</span> <span class="nav-text">BFS 1 version</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Optimal-search-using-variation-of-BFS"><span class="nav-number">2.6.</span> <span class="nav-text">Optimal search using variation of BFS</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Machine-Learning"><span class="nav-number">3.</span> <span class="nav-text">Machine Learning</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Gradient-descent"><span class="nav-number">4.</span> <span class="nav-text">Gradient descent</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Assume-that-the-target-function-is-a-linear-function"><span class="nav-number">4.1.</span> <span class="nav-text">Assume that the target function is a linear function</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Define-mean-square-loss"><span class="nav-number">4.2.</span> <span class="nav-text">Define mean square loss</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Define-partial-derivatives"><span class="nav-number">4.3.</span> <span class="nav-text">Define partial derivatives</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bool_tbb"
+      src="/images/tb.jpg">
+  <p class="site-author-name" itemprop="name">bool_tbb</p>
+  <div class="site-description" itemprop="description">十三月</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/iiot-tbb" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;iiot-tbb" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/bool_tbb@sjtu.edu.cn" title="E-Mail → bool_tbb@sjtu.edu.cn"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/5313762851" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;5313762851" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/16817976/bool-tbb" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;16817976&#x2F;bool-tbb" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>StackOverflow</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      推荐阅读
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://developer.apple.com/swift/" title="https:&#x2F;&#x2F;developer.apple.com&#x2F;swift&#x2F;" rel="noopener" target="_blank">Swift 4</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://developer.apple.com/documentation/objectivec" title="https:&#x2F;&#x2F;developer.apple.com&#x2F;documentation&#x2F;objectivec" rel="noopener" target="_blank">Objective -C</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+      
+      <script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+      <script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+      <div class="widget-wrap">
+          <h3 class="widget-title">Tag Cloud</h3>
+          <div id="myCanvasContainer" class="widget tagcloud">
+              <canvas width="250" height="250" id="resCanvas" style="width=100%">
+                  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI/" rel="tag">AI</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Deep-Learning/" rel="tag">Deep Learning</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Languaage-Model/" rel="tag">Languaage Model</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Language-Model/" rel="tag">Language Model</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Machine-Learning/" rel="tag">Machine Learning</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NLP/" rel="tag">NLP</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PDF%E8%A7%A3%E6%9E%90/" rel="tag">PDF解析</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Syntax-Tree/" rel="tag">Syntax-Tree</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Transformer/" rel="tag">Transformer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/myBorn/" rel="tag">myBorn</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytorch/" rel="tag">pytorch</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" rel="tag">二叉树</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%BA%E6%96%87/" rel="tag">人文</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B3%95%E5%BE%8B/" rel="tag">法律</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9A%8F%E7%AC%94/" rel="tag">随笔</a><span class="tag-list-count">1</span></li></ul>
+              </canvas>
+          </div>
+      </div>
+      
+      
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">bool_tbb</span>
+</div>
+  <div class="powered-by">由 <a href="https://github.com/iiot-tbb" class="theme-link" rel="noopener" target="_blank">Tbb</a> 强力驱动 v1.0.0
+  </div>
+  <span class="post-meta-divider">|</span>
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共25.5k字</span>
+</div>
+
+
+<span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+<script>
+    var now = new Date(); 
+    function createtime() { 
+        var grt= new Date("11/11/2019 12:49:25");//在此处修改你的建站时间
+        now.setTime(now.getTime()+250); 
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days); 
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours); 
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum); 
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;} 
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum); 
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;} 
+        document.getElementById("timeDate").innerHTML = " 运行了 "+dnum+" 天 "; 
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒"; 
+    } 
+setInterval("createtime()",250);
+</script>
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+
+  
+
+  
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>

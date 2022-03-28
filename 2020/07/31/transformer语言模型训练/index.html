@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="Bool_tbb" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":true,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="1%matplotlib inline Sequence-to-Sequence Modeling with nn.Transformer and TorchTextThis is a tutorial on how to train a sequence-to-sequence modelthat uses thenn.Transformer &lt;https:&#x2F;&#x2F;pytorch.org&#x2F;do">
+<meta property="og:type" content="article">
+<meta property="og:title" content="transformer语言模型训练">
+<meta property="og:url" content="http://yoursite.com/2020/07/31/transformer%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83/index.html">
+<meta property="og:site_name" content="Bool_tbb">
+<meta property="og:description" content="1%matplotlib inline Sequence-to-Sequence Modeling with nn.Transformer and TorchTextThis is a tutorial on how to train a sequence-to-sequence modelthat uses thenn.Transformer &lt;https:&#x2F;&#x2F;pytorch.org&#x2F;do">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/2020/07/31/transformer%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83/transformer_architecture.jpg">
+<meta property="og:image" content="http://yoursite.com/2020/07/31/transformer%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83/transformer_input_target.png">
+<meta property="article:published_time" content="2020-07-31T10:59:27.000Z">
+<meta property="article:modified_time" content="2022-03-28T09:04:28.988Z">
+<meta property="article:author" content="bool_tbb">
+<meta property="article:tag" content="NLP">
+<meta property="article:tag" content="Deep Learning">
+<meta property="article:tag" content="pytorch">
+<meta property="article:tag" content="Transformer">
+<meta property="article:tag" content="Languaage Model">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2020/07/31/transformer%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83/transformer_architecture.jpg">
+
+<link rel="canonical" href="http://yoursite.com/2020/07/31/transformer%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>transformer语言模型训练 | Bool_tbb</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+
+<body itemscope itemtype="http://schema.org/WebPage">
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Bool_tbb</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">留下点啥，证明活过</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/07/31/transformer%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/tb.jpg">
+      <meta itemprop="name" content="bool_tbb">
+      <meta itemprop="description" content="十三月">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Bool_tbb">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          transformer语言模型训练
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-07-31 18:59:27" itemprop="dateCreated datePublished" datetime="2020-07-31T18:59:27+08:00">2020-07-31</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2022-03-28 17:04:28" itemprop="dateModified" datetime="2022-03-28T17:04:28+08:00">2022-03-28</time>
+              </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%matplotlib inline</span><br></pre></td></tr></table></figure>
+<h1 id="Sequence-to-Sequence-Modeling-with-nn-Transformer-and-TorchText"><a href="#Sequence-to-Sequence-Modeling-with-nn-Transformer-and-TorchText" class="headerlink" title="Sequence-to-Sequence Modeling with nn.Transformer and TorchText"></a>Sequence-to-Sequence Modeling with nn.Transformer and TorchText</h1><p>This is a tutorial on how to train a sequence-to-sequence model<br>that uses the<br><code>nn.Transformer &lt;https://pytorch.org/docs/master/nn.html?highlight=nn%20transformer#torch.nn.Transformer&gt;</code> module.<br>PyTorch 1.2 release includes a standard transformer module based on the<br>paper <code>Attention is All You
+Need &lt;https://arxiv.org/pdf/1706.03762.pdf&gt;</code><br>The transformer model<br>has been proved to be superior in quality for many sequence-to-sequence<br>problems while being more parallelizable. The <code>nn.Transformer</code> module<br>relies entirely on an attention mechanism (another module recently<br>implemented as<br><code>nn.MultiheadAttention &lt;https://pytorch.org/docs/master/nn.html?highlight=multiheadattention#torch.nn.MultiheadAttention&gt;</code>)<br>to draw global dependencies between input and output. The <code>nn.Transformer</code> module is now highly modularized such that a single component (like <code>nn.TransformerEncoder &lt;https://pytorch.org/docs/master/nn.html?highlight=nn%20transformerencoder#torch.nn.TransformerEncoder&gt;</code>in this tutorial) can be easily adapted/composed.</p>
+<a id="more"></a>
+<p><img src="transformer_architecture.jpg" alt="avatar"></p>
+<h2 id="Define-the-model"><a href="#Define-the-model" class="headerlink" title="Define the model"></a>Define the model</h2><p>In this tutorial, we train <code>nn.TransformerEncoder</code> model on a<br>language modeling task. The language modeling task is to assign a<br>probability for the likelihood of a given word (or a sequence of words)<br>to follow a sequence of words. A sequence of tokens are passed to the embedding<br>layer first, followed by a positional encoding layer to account for the order<br>of the word (see the next paragraph for more details). The<br><code>nn.TransformerEncoder</code> consists of multiple layers of<br><code>nn.TransformerEncoderLayer &lt;https://pytorch.org/docs/master/nn.html?highlight=transformerencoderlayer#torch.nn.TransformerEncoderLayer&gt;</code>. Along with the input sequence, a square<br>attention mask is required because the self-attention layers in<br><code>nn.TransformerEncoder</code> are only allowed to attend the earlier positions in<br>the sequence. For the language modeling task, any tokens on the future<br>positions should be masked. To have the actual words, the output<br>of <code>nn.TransformerEncoder</code> model is sent to the final Linear<br>layer, which is followed by a log-Softmax function.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> F</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TransformerModel</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, ntoken, ninp, nhead, nhid, nlayers, dropout=<span class="number">0.5</span>)</span>:</span></span><br><span class="line">        super(TransformerModel, self).__init__()</span><br><span class="line">        <span class="keyword">from</span> torch.nn <span class="keyword">import</span> TransformerEncoder, TransformerEncoderLayer</span><br><span class="line">        self.model_type = <span class="string">'Transformer'</span></span><br><span class="line">        self.src_mask = <span class="literal">None</span></span><br><span class="line">        self.pos_encoder = PositionalEncoding(ninp, dropout)</span><br><span class="line">        encoder_layers = TransformerEncoderLayer(ninp, nhead, nhid, dropout)</span><br><span class="line">        self.transformer_encoder = TransformerEncoder(encoder_layers, nlayers)</span><br><span class="line">        self.encoder = nn.Embedding(ntoken, ninp)</span><br><span class="line">        self.ninp = ninp</span><br><span class="line">        self.decoder = nn.Linear(ninp, ntoken)</span><br><span class="line"></span><br><span class="line">        self.init_weights()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_generate_square_subsequent_mask</span><span class="params">(self, sz)</span>:</span></span><br><span class="line">        mask = (torch.triu(torch.ones(sz, sz)) == <span class="number">1</span>).transpose(<span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line">        mask = mask.float().masked_fill(mask == <span class="number">0</span>, float(<span class="string">'-inf'</span>)).masked_fill(mask == <span class="number">1</span>, float(<span class="number">0.0</span>))</span><br><span class="line">        <span class="keyword">return</span> mask</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">init_weights</span><span class="params">(self)</span>:</span></span><br><span class="line">        initrange = <span class="number">0.1</span></span><br><span class="line">        self.encoder.weight.data.uniform_(-initrange, initrange)</span><br><span class="line">        self.decoder.bias.data.zero_()</span><br><span class="line">        self.decoder.weight.data.uniform_(-initrange, initrange)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, src)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> self.src_mask <span class="keyword">is</span> <span class="literal">None</span> <span class="keyword">or</span> self.src_mask.size(<span class="number">0</span>) != len(src):</span><br><span class="line">            device = src.device</span><br><span class="line">            mask = self._generate_square_subsequent_mask(len(src)).to(device)</span><br><span class="line">            self.src_mask = mask</span><br><span class="line"></span><br><span class="line">        src = self.encoder(src) * math.sqrt(self.ninp)</span><br><span class="line">        src = self.pos_encoder(src)</span><br><span class="line">        output = self.transformer_encoder(src, self.src_mask)</span><br><span class="line">        output = self.decoder(output)</span><br><span class="line">        <span class="keyword">return</span> output</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sz=<span class="number">10</span></span><br><span class="line">mask=(torch.triu(torch.ones(sz, sz)) == <span class="number">1</span>).transpose(<span class="number">0</span>,<span class="number">1</span>)</span><br><span class="line">mask</span><br><span class="line">mask.float().masked_fill(mask == <span class="number">0</span>, float(<span class="string">'-inf'</span>)).masked_fill(mask == <span class="number">1</span>, float(<span class="number">0.0</span>))</span><br></pre></td></tr></table></figure>
+<pre><code>tensor([[0., -inf, -inf, -inf, -inf, -inf, -inf, -inf, -inf, -inf],
+        [0., 0., -inf, -inf, -inf, -inf, -inf, -inf, -inf, -inf],
+        [0., 0., 0., -inf, -inf, -inf, -inf, -inf, -inf, -inf],
+        [0., 0., 0., 0., -inf, -inf, -inf, -inf, -inf, -inf],
+        [0., 0., 0., 0., 0., -inf, -inf, -inf, -inf, -inf],
+        [0., 0., 0., 0., 0., 0., -inf, -inf, -inf, -inf],
+        [0., 0., 0., 0., 0., 0., 0., -inf, -inf, -inf],
+        [0., 0., 0., 0., 0., 0., 0., 0., -inf, -inf],
+        [0., 0., 0., 0., 0., 0., 0., 0., 0., -inf],
+        [0., 0., 0., 0., 0., 0., 0., 0., 0., 0.]])
+</code></pre><p><code>PositionalEncoding</code> module injects some information about the<br>relative or absolute position of the tokens in the sequence. The<br>positional encodings have the same dimension as the embeddings so that<br>the two can be summed. Here, we use <code>sine</code> and <code>cosine</code> functions of<br>different frequencies.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">PositionalEncoding</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, d_model, dropout=<span class="number">0.1</span>, max_len=<span class="number">5000</span>)</span>:</span></span><br><span class="line">        super(PositionalEncoding, self).__init__()</span><br><span class="line">        self.dropout = nn.Dropout(p=dropout)</span><br><span class="line"></span><br><span class="line">        pe = torch.zeros(max_len, d_model)</span><br><span class="line">        position = torch.arange(<span class="number">0</span>, max_len, dtype=torch.float).unsqueeze(<span class="number">1</span>)</span><br><span class="line">        div_term = torch.exp(torch.arange(<span class="number">0</span>, d_model, <span class="number">2</span>).float() * (-math.log(<span class="number">10000.0</span>) / d_model))</span><br><span class="line">        pe[:, <span class="number">0</span>::<span class="number">2</span>] = torch.sin(position * div_term)</span><br><span class="line">        pe[:, <span class="number">1</span>::<span class="number">2</span>] = torch.cos(position * div_term)</span><br><span class="line">        pe = pe.unsqueeze(<span class="number">0</span>).transpose(<span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line">        self.register_buffer(<span class="string">'pe'</span>, pe)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, x)</span>:</span></span><br><span class="line">        x = x + self.pe[:x.size(<span class="number">0</span>), :]</span><br><span class="line">        <span class="keyword">return</span> self.dropout(x)</span><br></pre></td></tr></table></figure>
+<h2 id="Load-and-batch-data"><a href="#Load-and-batch-data" class="headerlink" title="Load and batch data"></a>Load and batch data</h2><p>The training process uses Wikitext-2 dataset from <code>torchtext</code>. The<br>vocab object is built based on the train dataset and is used to numericalize<br>tokens into tensors. Starting from sequential data, the <code>batchify()</code><br>function arranges the dataset into columns, trimming off any tokens remaining<br>after the data has been divided into batches of size <code>batch_size</code>.<br>For instance, with the alphabet as the sequence (total length of 26)<br>and a batch size of 4, we would divide the alphabet into 4 sequences of<br>length 6:</p>
+<script type="math/tex; mode=display">\begin{aligned}\begin{bmatrix}\text{A} & \text{B}& \text{C} & \ldots & \text{X} & \text{Y} & \text{Z}\end{bmatrix}\Rightarrow\begin{bmatrix}\begin{bmatrix}\text{A} \\ \text{B} \\ \text{C} \\ \text{D} \\ \text{E} \\ \text{F} \end{bmatrix} &\begin{bmatrix}\text{G}\\\text{H} \\ \text{I} \\ \text{J} \\ \text{K} \\ \text{L}\end{bmatrix} &\begin{bmatrix}\text{M} \\\text{N} \\ \text{O} \\ \text{P} \\ \text{Q} \\ \text{R}\end{bmatrix} &\begin{bmatrix}\text{S} \\ \text{T} \\ \text{U} \\ \text{V} \\ \text{W} \\ \text{X}\end{bmatrix}\end{bmatrix}\end{aligned}</script><p>These columns are treated as independent by the model, which means that<br>the dependence of <code>G</code> and <code>F</code> can not be learned, but allows more<br>efficient batch processing.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torchtext</span><br><span class="line"><span class="keyword">from</span> torchtext.data.utils <span class="keyword">import</span> get_tokenizer</span><br><span class="line">TEXT = torchtext.data.Field(tokenize=get_tokenizer(<span class="string">"basic_english"</span>),</span><br><span class="line">                            init_token=<span class="string">'&lt;sos&gt;'</span>,</span><br><span class="line">                            eos_token=<span class="string">'&lt;eos&gt;'</span>,</span><br><span class="line">                            lower=<span class="literal">True</span>)</span><br><span class="line">train_txt, val_txt, test_txt = torchtext.datasets.WikiText2.splits(TEXT)</span><br><span class="line">TEXT.build_vocab(train_txt)</span><br><span class="line">device = torch.device(<span class="string">"cuda"</span> <span class="keyword">if</span> torch.cuda.is_available() <span class="keyword">else</span> <span class="string">"cpu"</span>)</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">batchify</span><span class="params">(data, bsz)</span>:</span></span><br><span class="line">    data = TEXT.numericalize([data.examples[<span class="number">0</span>].text])</span><br><span class="line">    <span class="comment"># Divide the dataset into bsz parts.</span></span><br><span class="line">    nbatch = data.size(<span class="number">0</span>) // bsz</span><br><span class="line">    <span class="comment"># Trim off any extra elements that wouldn't cleanly fit (remainders).</span></span><br><span class="line">    data = data.narrow(<span class="number">0</span>, <span class="number">0</span>, nbatch * bsz)</span><br><span class="line">    <span class="comment"># Evenly divide the data across the bsz batches.</span></span><br><span class="line">    data = data.view(bsz, <span class="number">-1</span>).t().contiguous()</span><br><span class="line">    <span class="keyword">return</span> data.to(device)</span><br><span class="line"></span><br><span class="line">batch_size = <span class="number">20</span></span><br><span class="line">eval_batch_size = <span class="number">10</span></span><br><span class="line">train_data = batchify(train_txt, batch_size)</span><br><span class="line">val_data = batchify(val_txt, eval_batch_size)</span><br><span class="line">test_data = batchify(test_txt, eval_batch_size)</span><br></pre></td></tr></table></figure>
+<pre><code>/home/bool_tbb/miniconda3/envs/pytorch/lib/python3.8/site-packages/torchtext/data/field.py:150: UserWarning: Field class will be retired in the 0.8.0 release and moved to torchtext.legacy. Please see 0.7.0 release notes for further information.
+  warnings.warn(&#39;{} class will be retired in the 0.8.0 release and moved to torchtext.legacy. Please see 0.7.0 release notes for further information.&#39;.format(self.__class__.__name__), UserWarning)
+/home/bool_tbb/miniconda3/envs/pytorch/lib/python3.8/site-packages/torchtext/data/example.py:78: UserWarning: Example class will be retired in the 0.8.0 release and moved to torchtext.legacy. Please see 0.7.0 release notes for further information.
+  warnings.warn(&#39;Example class will be retired in the 0.8.0 release and moved to torchtext.legacy. Please see 0.7.0 release notes for further information.&#39;, UserWarning)
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data = TEXT.numericalize([train_txt.examples[<span class="number">0</span>].text])</span><br></pre></td></tr></table></figure>
+<p>Functions to generate input and target sequence</p>
+<p><code>get_batch()</code> function generates the input and target sequence for<br>the transformer model. It subdivides the source data into chunks of<br>length <code>bptt</code>. For the language modeling task, the model needs the<br>following words as <code>Target</code>. For example, with a <code>bptt</code> value of 2,<br>we’d get the following two Variables for <code>i</code> = 0:</p>
+<p><img src="transformer_input_target.png" alt="avatar"></p>
+<p>It should be noted that the chunks are along dimension 0, consistent<br>with the <code>S</code> dimension in the Transformer model. The batch dimension<br><code>N</code> is along dimension 1.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">bptt = <span class="number">35</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_batch</span><span class="params">(source, i)</span>:</span></span><br><span class="line">    seq_len = min(bptt, len(source) - <span class="number">1</span> - i)</span><br><span class="line">    data = source[i:i+seq_len]</span><br><span class="line">    target = source[i+<span class="number">1</span>:i+<span class="number">1</span>+seq_len].view(<span class="number">-1</span>)</span><br><span class="line">    <span class="keyword">return</span> data, target</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">get_batch(train_data,<span class="number">0</span>)[<span class="number">0</span>][:<span class="number">10</span>]</span><br></pre></td></tr></table></figure>
+<pre><code>tensor([[    3,    25,  1849,   570,     7,     5,     5,  9258,     4,    56,
+             0,     7,     6,  6634,     4,  6603,     6,     5,    65,    30],
+        [   12,    66,    13,  4889,   458,     8,  1045,    21, 19094,    34,
+           147,     4,     0,    10,  2280,  2294,    58,    35,  2438,  4064],
+        [ 3852, 13667,  2962,    68,     6, 28374,    39,   417,     0,  2034,
+            29,    88, 27804,   350,     7,    17,  4811,   902,    33,    20],
+        [ 3872,     5,     9,     4,   155,     8,  1669,    32,  2634,   257,
+             4,     5,     5,    11,  4568,  8205,    78,  5258,  7723, 12009],
+        [  884,    91,   963,   294,     4,   548,    29,   279,    37,     4,
+           391,    31,     4,  2614,   948, 13583,   405,   545,    15,    16],
+        [   12,    25,     5,     5,  1688,     0,    39,    59,  8785,     0,
+             6,    13,  3026,    43,    11,     6,     0,   349,  3134,  4538],
+        [    3,     6,    82,  1780,    21,     6,  2158,     4,     8,     8,
+            27,  1485,     0,   194,    96,   195,  3545,   101,  1150,  3486],
+        [    3,    25,    13,   885,     4,  6360,    15,   670,     0,    13,
+            26,    17,     5,   417,   894,    10,     5,     5,  2998,    27],
+        [20003,   190,    33,  1516,  1085,    34,   680,  3597,  2475,   664,
+            47,    11,   127,    63,     6,    46, 24995,    72, 10190,    26],
+        [   86,  9076, 10540,     6,     9,    74,   198,     7,     6,    17,
+          3134,  5312,     4,     4,     3, 25509,     5,  2034,     5,    86]])
+</code></pre><h2 id="Initiate-an-instance"><a href="#Initiate-an-instance" class="headerlink" title="Initiate an instance"></a>Initiate an instance</h2><p>The model is set up with the hyperparameter below. The vocab size is<br>equal to the length of the vocab object.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">ntokens = len(TEXT.vocab.stoi) <span class="comment"># the size of vocabulary</span></span><br><span class="line">emsize = <span class="number">200</span> <span class="comment"># embedding dimension</span></span><br><span class="line">nhid = <span class="number">200</span> <span class="comment"># the dimension of the feedforward network model in nn.TransformerEncoder</span></span><br><span class="line">nlayers = <span class="number">2</span> <span class="comment"># the number of nn.TransformerEncoderLayer in nn.TransformerEncoder</span></span><br><span class="line">nhead = <span class="number">2</span> <span class="comment"># the number of heads in the multiheadattention models</span></span><br><span class="line">dropout = <span class="number">0.2</span> <span class="comment"># the dropout value</span></span><br><span class="line">model = nn.DataParallel(model)</span><br><span class="line">model = TransformerModel(ntokens, emsize, nhead, nhid, nlayers, dropout).to(device)</span><br></pre></td></tr></table></figure>
+<h2 id="Run-the-model"><a href="#Run-the-model" class="headerlink" title="Run the model"></a>Run the model</h2><p><code>CrossEntropyLoss &lt;https://pytorch.org/docs/master/nn.html?highlight=crossentropyloss#torch.nn.CrossEntropyLoss&gt;</code><br>is applied to track the loss and<br><code>SGD &lt;https://pytorch.org/docs/master/optim.html?highlight=sgd#torch.optim.SGD&gt;</code><br>implements stochastic gradient descent method as the optimizer. The initial<br>learning rate is set to 5.0. <code>StepLR &lt;https://pytorch.org/docs/master/optim.html?highlight=steplr#torch.optim.lr_scheduler.StepLR&gt;</code>is<br>applied to adjust the learn rate through epochs. During the<br>training, we use<br><code>nn.utils.clip_grad_norm\_ &lt;https://pytorch.org/docs/master/nn.html?highlight=nn%20utils%20clip_grad_norm#torch.nn.utils.clip_grad_norm_&gt;</code><br>function to scale all the gradient together to prevent exploding.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">criterion = nn.CrossEntropyLoss()</span><br><span class="line">lr = <span class="number">5.0</span> <span class="comment"># learning rate</span></span><br><span class="line">optimizer = torch.optim.SGD(model.parameters(), lr=lr)</span><br><span class="line">scheduler = torch.optim.lr_scheduler.StepLR(optimizer, <span class="number">1.0</span>, gamma=<span class="number">0.95</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">train</span><span class="params">()</span>:</span></span><br><span class="line">    model.train() <span class="comment"># Turn on the train mode</span></span><br><span class="line">    total_loss = <span class="number">0.</span></span><br><span class="line">    start_time = time.time()</span><br><span class="line">    ntokens = len(TEXT.vocab.stoi)</span><br><span class="line">    <span class="keyword">for</span> batch, i <span class="keyword">in</span> enumerate(range(<span class="number">0</span>, train_data.size(<span class="number">0</span>) - <span class="number">1</span>, bptt)):</span><br><span class="line">        data, targets = get_batch(train_data, i)</span><br><span class="line">        optimizer.zero_grad()</span><br><span class="line">        output = model(data)</span><br><span class="line">        loss = criterion(output.view(<span class="number">-1</span>, ntokens), targets)</span><br><span class="line">        loss.backward()</span><br><span class="line">        torch.nn.utils.clip_grad_norm_(model.parameters(), <span class="number">0.5</span>)</span><br><span class="line">        optimizer.step()</span><br><span class="line"></span><br><span class="line">        total_loss += loss.item()</span><br><span class="line">        log_interval = <span class="number">200</span></span><br><span class="line">        <span class="keyword">if</span> batch % log_interval == <span class="number">0</span> <span class="keyword">and</span> batch &gt; <span class="number">0</span>:</span><br><span class="line">            cur_loss = total_loss / log_interval</span><br><span class="line">            elapsed = time.time() - start_time</span><br><span class="line">            print(<span class="string">'| epoch &#123;:3d&#125; | &#123;:5d&#125;/&#123;:5d&#125; batches | '</span></span><br><span class="line">                  <span class="string">'lr &#123;:02.2f&#125; | ms/batch &#123;:5.2f&#125; | '</span></span><br><span class="line">                  <span class="string">'loss &#123;:5.2f&#125; | ppl &#123;:8.2f&#125;'</span>.format(</span><br><span class="line">                    epoch, batch, len(train_data) // bptt, scheduler.get_lr()[<span class="number">0</span>],</span><br><span class="line">                    elapsed * <span class="number">1000</span> / log_interval,</span><br><span class="line">                    cur_loss, math.exp(cur_loss)))</span><br><span class="line">            total_loss = <span class="number">0</span></span><br><span class="line">            start_time = time.time()</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">evaluate</span><span class="params">(eval_model, data_source)</span>:</span></span><br><span class="line">    eval_model.eval() <span class="comment"># Turn on the evaluation mode</span></span><br><span class="line">    total_loss = <span class="number">0.</span></span><br><span class="line">    ntokens = len(TEXT.vocab.stoi)</span><br><span class="line">    <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, data_source.size(<span class="number">0</span>) - <span class="number">1</span>, bptt):</span><br><span class="line">            data, targets = get_batch(data_source, i)</span><br><span class="line">            output = eval_model(data)</span><br><span class="line">            output_flat = output.view(<span class="number">-1</span>, ntokens)</span><br><span class="line">            total_loss += len(data) * criterion(output_flat, targets).item()</span><br><span class="line">    <span class="keyword">return</span> total_loss / (len(data_source) - <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<p>Loop over epochs. Save the model if the validation loss is the best<br>we’ve seen so far. Adjust the learning rate after each epoch.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">best_val_loss = float(<span class="string">"inf"</span>)</span><br><span class="line">epochs = <span class="number">100</span> <span class="comment"># The number of epochs</span></span><br><span class="line">best_model = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> range(<span class="number">1</span>, epochs + <span class="number">1</span>):</span><br><span class="line">    epoch_start_time = time.time()</span><br><span class="line">    train()</span><br><span class="line">    val_loss = evaluate(model, val_data)</span><br><span class="line">    print(<span class="string">'-'</span> * <span class="number">89</span>)</span><br><span class="line">    print(<span class="string">'| end of epoch &#123;:3d&#125; | time: &#123;:5.2f&#125;s | valid loss &#123;:5.2f&#125; | '</span></span><br><span class="line">          <span class="string">'valid ppl &#123;:8.2f&#125;'</span>.format(epoch, (time.time() - epoch_start_time),</span><br><span class="line">                                     val_loss, math.exp(val_loss)))</span><br><span class="line">    print(<span class="string">'-'</span> * <span class="number">89</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> val_loss &lt; best_val_loss:</span><br><span class="line">        best_val_loss = val_loss</span><br><span class="line">        best_model = model</span><br><span class="line"></span><br><span class="line">    scheduler.step()</span><br></pre></td></tr></table></figure>
+<pre><code>| epoch   1 |   200/ 2981 batches | lr 4.07 | ms/batch  9.71 | loss  5.39 | ppl   218.21
+| epoch   1 |   400/ 2981 batches | lr 4.07 | ms/batch  9.50 | loss  5.39 | ppl   220.00
+| epoch   1 |   600/ 2981 batches | lr 4.07 | ms/batch  9.55 | loss  5.20 | ppl   181.36
+| epoch   1 |   800/ 2981 batches | lr 4.07 | ms/batch  9.60 | loss  5.26 | ppl   193.18
+| epoch   1 |  1000/ 2981 batches | lr 4.07 | ms/batch  9.55 | loss  5.23 | ppl   186.05
+| epoch   1 |  1200/ 2981 batches | lr 4.07 | ms/batch  9.55 | loss  5.26 | ppl   192.45
+| epoch   1 |  1400/ 2981 batches | lr 4.07 | ms/batch  9.55 | loss  5.29 | ppl   197.86
+| epoch   1 |  1600/ 2981 batches | lr 4.07 | ms/batch  9.60 | loss  5.33 | ppl   206.42
+| epoch   1 |  1800/ 2981 batches | lr 4.07 | ms/batch  9.59 | loss  5.27 | ppl   193.88
+| epoch   1 |  2000/ 2981 batches | lr 4.07 | ms/batch  9.70 | loss  5.30 | ppl   200.64
+| epoch   1 |  2200/ 2981 batches | lr 4.07 | ms/batch  9.64 | loss  5.17 | ppl   176.64
+| epoch   1 |  2400/ 2981 batches | lr 4.07 | ms/batch  9.62 | loss  5.26 | ppl   192.57
+| epoch   1 |  2600/ 2981 batches | lr 4.07 | ms/batch  9.63 | loss  5.28 | ppl   195.69
+| epoch   1 |  2800/ 2981 batches | lr 4.07 | ms/batch  9.64 | loss  5.21 | ppl   182.35
+-----------------------------------------------------------------------------------------
+| end of epoch   1 | time: 30.36s | valid loss  5.55 | valid ppl   256.32
+-----------------------------------------------------------------------------------------
+| epoch   2 |   200/ 2981 batches | lr 3.87 | ms/batch  9.73 | loss  5.26 | ppl   192.78
+| epoch   2 |   400/ 2981 batches | lr 3.87 | ms/batch  9.65 | loss  5.27 | ppl   194.78
+| epoch   2 |   600/ 2981 batches | lr 3.87 | ms/batch  9.68 | loss  5.08 | ppl   160.59
+| epoch   2 |   800/ 2981 batches | lr 3.87 | ms/batch  9.67 | loss  5.14 | ppl   171.46
+| epoch   2 |  1000/ 2981 batches | lr 3.87 | ms/batch  9.68 | loss  5.10 | ppl   164.78
+| epoch   2 |  1200/ 2981 batches | lr 3.87 | ms/batch  9.70 | loss  5.14 | ppl   171.25
+| epoch   2 |  1400/ 2981 batches | lr 3.87 | ms/batch  9.71 | loss  5.18 | ppl   177.40
+| epoch   2 |  1600/ 2981 batches | lr 3.87 | ms/batch  9.70 | loss  5.23 | ppl   186.59
+| epoch   2 |  1800/ 2981 batches | lr 3.87 | ms/batch  9.70 | loss  5.16 | ppl   173.63
+| epoch   2 |  2000/ 2981 batches | lr 3.87 | ms/batch  9.61 | loss  5.19 | ppl   179.61
+| epoch   2 |  2200/ 2981 batches | lr 3.87 | ms/batch  9.61 | loss  5.06 | ppl   158.22
+| epoch   2 |  2400/ 2981 batches | lr 3.87 | ms/batch  9.66 | loss  5.14 | ppl   170.97
+| epoch   2 |  2600/ 2981 batches | lr 3.87 | ms/batch  9.63 | loss  5.16 | ppl   173.44
+| epoch   2 |  2800/ 2981 batches | lr 3.87 | ms/batch  9.62 | loss  5.10 | ppl   163.57
+-----------------------------------------------------------------------------------------
+| end of epoch   2 | time: 30.54s | valid loss  5.44 | valid ppl   231.52
+-----------------------------------------------------------------------------------------
+| epoch   3 |   200/ 2981 batches | lr 3.68 | ms/batch  9.74 | loss  5.15 | ppl   172.66
+| epoch   3 |   400/ 2981 batches | lr 3.68 | ms/batch  9.81 | loss  5.16 | ppl   174.57
+| epoch   3 |   600/ 2981 batches | lr 3.68 | ms/batch  9.76 | loss  4.98 | ppl   145.22
+| epoch   3 |   800/ 2981 batches | lr 3.68 | ms/batch  9.69 | loss  5.04 | ppl   154.24
+| epoch   3 |  1000/ 2981 batches | lr 3.68 | ms/batch  9.92 | loss  5.02 | ppl   150.68
+| epoch   3 |  1200/ 2981 batches | lr 3.68 | ms/batch  9.75 | loss  5.05 | ppl   156.65
+| epoch   3 |  1400/ 2981 batches | lr 3.68 | ms/batch  9.81 | loss  5.08 | ppl   161.32
+| epoch   3 |  1600/ 2981 batches | lr 3.68 | ms/batch  9.87 | loss  5.13 | ppl   168.46
+| epoch   3 |  1800/ 2981 batches | lr 3.68 | ms/batch  9.73 | loss  5.06 | ppl   158.11
+| epoch   3 |  2000/ 2981 batches | lr 3.68 | ms/batch  9.78 | loss  5.09 | ppl   162.57
+| epoch   3 |  2200/ 2981 batches | lr 3.68 | ms/batch  9.80 | loss  4.97 | ppl   143.40
+| epoch   3 |  2400/ 2981 batches | lr 3.68 | ms/batch  9.84 | loss  5.05 | ppl   156.10
+| epoch   3 |  2600/ 2981 batches | lr 3.68 | ms/batch  9.78 | loss  5.07 | ppl   158.92
+| epoch   3 |  2800/ 2981 batches | lr 3.68 | ms/batch  9.80 | loss  5.01 | ppl   149.25
+-----------------------------------------------------------------------------------------
+| end of epoch   3 | time: 30.91s | valid loss  5.46 | valid ppl   234.33
+-----------------------------------------------------------------------------------------
+</code></pre><h2 id="Evaluate-the-model-with-the-test-dataset"><a href="#Evaluate-the-model-with-the-test-dataset" class="headerlink" title="Evaluate the model with the test dataset"></a>Evaluate the model with the test dataset</h2><p>Apply the best model to check the result with the test dataset.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">test_loss = evaluate(best_model, test_data)</span><br><span class="line">print(<span class="string">'='</span> * <span class="number">89</span>)</span><br><span class="line">print(<span class="string">'| End of training | test loss &#123;:5.2f&#125; | test ppl &#123;:8.2f&#125;'</span>.format(</span><br><span class="line">    test_loss, math.exp(test_loss)))</span><br><span class="line">print(<span class="string">'='</span> * <span class="number">89</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>=========================================================================================
+| End of training | test loss  5.48 | test ppl   238.72
+=========================================================================================
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">PATH = <span class="string">'./transformer_net.pth'</span></span><br><span class="line">torch.save(model.state_dict(), PATH)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">model_dict=model.load_state_dict(torch.load(PATH))</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">type(model_dict)</span><br></pre></td></tr></table></figure>
+<pre><code>torch.nn.modules.module._IncompatibleKeys
+</code></pre><p> <a href="https://pytorch.org/tutorials/beginner/transformer_tutorial.html#define-the-model" target="_blank" rel="noopener">REFERENCE:SEQUENCE-TO-SEQUENCE MODELING WITH NN.TRANSFORMER AND TORCHTEXT</a>. </p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>O(∩_∩)O哈哈~</div>
+  <button disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="bool_tbb 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="bool_tbb 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/NLP/" rel="tag"># NLP</a>
+              <a href="/tags/Deep-Learning/" rel="tag"># Deep Learning</a>
+              <a href="/tags/pytorch/" rel="tag"># pytorch</a>
+              <a href="/tags/Transformer/" rel="tag"># Transformer</a>
+              <a href="/tags/Languaage-Model/" rel="tag"># Languaage Model</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2020/07/29/Transformer/" rel="next" title="Transformer">
+                  <i class="fa fa-chevron-left"></i> Transformer
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Sequence-to-Sequence-Modeling-with-nn-Transformer-and-TorchText"><span class="nav-number">1.</span> <span class="nav-text">Sequence-to-Sequence Modeling with nn.Transformer and TorchText</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Define-the-model"><span class="nav-number">1.1.</span> <span class="nav-text">Define the model</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Load-and-batch-data"><span class="nav-number">1.2.</span> <span class="nav-text">Load and batch data</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Initiate-an-instance"><span class="nav-number">1.3.</span> <span class="nav-text">Initiate an instance</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Run-the-model"><span class="nav-number">1.4.</span> <span class="nav-text">Run the model</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Evaluate-the-model-with-the-test-dataset"><span class="nav-number">1.5.</span> <span class="nav-text">Evaluate the model with the test dataset</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bool_tbb"
+      src="/images/tb.jpg">
+  <p class="site-author-name" itemprop="name">bool_tbb</p>
+  <div class="site-description" itemprop="description">十三月</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/iiot-tbb" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;iiot-tbb" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/bool_tbb@sjtu.edu.cn" title="E-Mail → bool_tbb@sjtu.edu.cn"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/5313762851" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;5313762851" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/16817976/bool-tbb" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;16817976&#x2F;bool-tbb" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>StackOverflow</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      推荐阅读
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://developer.apple.com/swift/" title="https:&#x2F;&#x2F;developer.apple.com&#x2F;swift&#x2F;" rel="noopener" target="_blank">Swift 4</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://developer.apple.com/documentation/objectivec" title="https:&#x2F;&#x2F;developer.apple.com&#x2F;documentation&#x2F;objectivec" rel="noopener" target="_blank">Objective -C</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+      
+      <script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+      <script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+      <div class="widget-wrap">
+          <h3 class="widget-title">Tag Cloud</h3>
+          <div id="myCanvasContainer" class="widget tagcloud">
+              <canvas width="250" height="250" id="resCanvas" style="width=100%">
+                  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI/" rel="tag">AI</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Deep-Learning/" rel="tag">Deep Learning</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Languaage-Model/" rel="tag">Languaage Model</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Language-Model/" rel="tag">Language Model</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Machine-Learning/" rel="tag">Machine Learning</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NLP/" rel="tag">NLP</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PDF%E8%A7%A3%E6%9E%90/" rel="tag">PDF解析</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Syntax-Tree/" rel="tag">Syntax-Tree</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Transformer/" rel="tag">Transformer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/myBorn/" rel="tag">myBorn</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytorch/" rel="tag">pytorch</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" rel="tag">二叉树</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%BA%E6%96%87/" rel="tag">人文</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B3%95%E5%BE%8B/" rel="tag">法律</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9A%8F%E7%AC%94/" rel="tag">随笔</a><span class="tag-list-count">1</span></li></ul>
+              </canvas>
+          </div>
+      </div>
+      
+      
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">bool_tbb</span>
+</div>
+  <div class="powered-by">由 <a href="https://github.com/iiot-tbb" class="theme-link" rel="noopener" target="_blank">Tbb</a> 强力驱动 v1.0.0
+  </div>
+  <span class="post-meta-divider">|</span>
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共25.5k字</span>
+</div>
+
+
+<span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+<script>
+    var now = new Date(); 
+    function createtime() { 
+        var grt= new Date("11/11/2019 12:49:25");//在此处修改你的建站时间
+        now.setTime(now.getTime()+250); 
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days); 
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours); 
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum); 
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;} 
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum); 
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;} 
+        document.getElementById("timeDate").innerHTML = " 运行了 "+dnum+" 天 "; 
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒"; 
+    } 
+setInterval("createtime()",250);
+</script>
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>
