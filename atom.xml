@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Bool_tbb</title>
+  
+  <subtitle>留下点啥，证明活过</subtitle>
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://yoursite.com/"/>
+  <updated>2022-03-28T09:04:28.988Z</updated>
+  <id>http://yoursite.com/</id>
+  
+  <author>
+    <name>bool_tbb</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>transformer语言模型训练</title>
+    <link href="http://yoursite.com/2020/07/31/transformer%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83/"/>
+    <id>http://yoursite.com/2020/07/31/transformer%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83/</id>
+    <published>2020-07-31T10:59:27.000Z</published>
+    <updated>2022-03-28T09:04:28.988Z</updated>
+    
+    <summary type="html">
+    
+      &lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;%matplotlib inline&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h1 id=&quot;Sequence-to-Sequence-Modeling-with-nn-Transformer-and-TorchText&quot;&gt;&lt;a href=&quot;#Sequence-to-Sequence-Modeling-with-nn-Transformer-and-TorchText&quot; class=&quot;headerlink&quot; title=&quot;Sequence-to-Sequence Modeling with nn.Transformer and TorchText&quot;&gt;&lt;/a&gt;Sequence-to-Sequence Modeling with nn.Transformer and TorchText&lt;/h1&gt;&lt;p&gt;This is a tutorial on how to train a sequence-to-sequence model&lt;br&gt;that uses the&lt;br&gt;&lt;code&gt;nn.Transformer &amp;lt;https://pytorch.org/docs/master/nn.html?highlight=nn%20transformer#torch.nn.Transformer&amp;gt;&lt;/code&gt; module.&lt;br&gt;PyTorch 1.2 release includes a standard transformer module based on the&lt;br&gt;paper &lt;code&gt;Attention is All You
+Need &amp;lt;https://arxiv.org/pdf/1706.03762.pdf&amp;gt;&lt;/code&gt;&lt;br&gt;The transformer model&lt;br&gt;has been proved to be superior in quality for many sequence-to-sequence&lt;br&gt;problems while being more parallelizable. The &lt;code&gt;nn.Transformer&lt;/code&gt; module&lt;br&gt;relies entirely on an attention mechanism (another module recently&lt;br&gt;implemented as&lt;br&gt;&lt;code&gt;nn.MultiheadAttention &amp;lt;https://pytorch.org/docs/master/nn.html?highlight=multiheadattention#torch.nn.MultiheadAttention&amp;gt;&lt;/code&gt;)&lt;br&gt;to draw global dependencies between input and output. The &lt;code&gt;nn.Transformer&lt;/code&gt; module is now highly modularized such that a single component (like &lt;code&gt;nn.TransformerEncoder &amp;lt;https://pytorch.org/docs/master/nn.html?highlight=nn%20transformerencoder#torch.nn.TransformerEncoder&amp;gt;&lt;/code&gt;in this tutorial) can be easily adapted/composed.&lt;/p&gt;
+    
+    </summary>
+    
+    
+    
+      <category term="NLP" scheme="http://yoursite.com/tags/NLP/"/>
+    
+      <category term="Deep Learning" scheme="http://yoursite.com/tags/Deep-Learning/"/>
+    
+      <category term="pytorch" scheme="http://yoursite.com/tags/pytorch/"/>
+    
+      <category term="Transformer" scheme="http://yoursite.com/tags/Transformer/"/>
+    
+      <category term="Languaage Model" scheme="http://yoursite.com/tags/Languaage-Model/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Transformer</title>
+    <link href="http://yoursite.com/2020/07/29/Transformer/"/>
+    <id>http://yoursite.com/2020/07/29/Transformer/</id>
+    <published>2020-07-29T08:13:35.000Z</published>
+    <updated>2022-03-28T09:04:28.988Z</updated>
+    
+    <summary type="html">
+    
+      &lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; torch.nn &lt;span class=&quot;keyword&quot;&gt;as&lt;/span&gt; nn&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; torch&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; numpy &lt;span class=&quot;keyword&quot;&gt;as&lt;/span&gt; np&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;from&lt;/span&gt; torch.autograd &lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; Variable&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; math&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; torch.nn.functional &lt;span class=&quot;keyword&quot;&gt;as&lt;/span&gt; F&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h4 id=&quot;注意力计算公式&quot;&gt;&lt;a href=&quot;#注意力计算公式&quot; class=&quot;headerlink&quot; title=&quot;注意力计算公式&quot;&gt;&lt;/a&gt;注意力计算公式&lt;/h4&gt;&lt;script type=&quot;math/tex; mode=display&quot;&gt;A = Softmax(Q*K^T/\sqrt{d})*V&lt;/script&gt;
+    
+    </summary>
+    
+    
+    
+      <category term="Language Model" scheme="http://yoursite.com/tags/Language-Model/"/>
+    
+      <category term="Deep Learning" scheme="http://yoursite.com/tags/Deep-Learning/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>NLP学习笔记</title>
+    <link href="http://yoursite.com/2020/03/22/NLP%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    <id>http://yoursite.com/2020/03/22/NLP%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</id>
+    <published>2020-03-22T14:06:01.000Z</published>
+    <updated>2022-03-28T09:04:28.980Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;NLP中如何发掘模型的可解释性&quot;&gt;&lt;a href=&quot;#NLP中如何发掘模型的可解释性&quot; class=&quot;headerlink&quot; title=&quot;NLP中如何发掘模型的可解释性&quot;&gt;&lt;/a&gt;NLP中如何发掘模型的可解释性&lt;/h2&gt;&lt;p&gt;可解释性在AI的模型设计中十分重要。需要防止模型存在偏见和缺陷带来的伦理问题，并且帮助决策者理解如何正确地使用我们的模型。越是严苛的场景，越需要模型提供证明它们是如何运作且避免错误的证据。如实时性较强的无人驾驶领域，黑盒模型无法让人们信服其工作的安全性。&lt;/p&gt;
+&lt;p&gt;通常深度学习模型就像一个黑匣子，它能预测出很好的结果，但是你并不知道它为什么会预测出这样的结果。想知道它是如何工作的，那么得尝试打开这个黑匣子，解释模型的意义十分必要。&lt;/p&gt;
+    
+    </summary>
+    
+    
+    
+      <category term="NLP" scheme="http://yoursite.com/tags/NLP/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>PdfMiner文档解析</title>
+    <link href="http://yoursite.com/2020/02/27/PdfMiner%E6%96%87%E6%A1%A3%E8%A7%A3%E6%9E%90/"/>
+    <id>http://yoursite.com/2020/02/27/PdfMiner%E6%96%87%E6%A1%A3%E8%A7%A3%E6%9E%90/</id>
+    <published>2020-02-27T09:51:57.000Z</published>
+    <updated>2022-03-28T09:04:28.984Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;PDFMiner是一个可以从PDF文档中提取信息的工具。与其他PDF相关的工具不同，它注重的完全是获取和分析文本数据。PDFMiner允许你获取某一页中文本的准确位置和一些诸如字体、行数的信息。它包括一个PDF转换器，可以把PDF文件转换成HTML等格式。它还有一个扩展的PDF解析器，可以用于除文本分析以外的其他用途。&lt;a href=&quot;https://euske.github.io/pdfminer/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;官方主页&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;其特征有：1、完全使用python编写。（适用于2.4或更新版本）2、解析，分析，并转换成PDF文档。3、PDF-1.7规范的支持。（几乎）4、中日韩语言和垂直书写脚本支持。5、各种字体类型（Type1、TrueType、Type3，和CID）的支持。6、基本加密（RC4）的支持。7、PDF与HTML转换。8、纲要（TOC）的提取。9、标签内容提取。10、通过分组文本块重建原始的布局。&lt;br&gt;如果你的Python有安装pip模块，就可以通过命令“python pip install pdfminer”，自动安装pdfminer。&lt;br&gt;
+    
+    </summary>
+    
+    
+    
+      <category term="PDF解析" scheme="http://yoursite.com/tags/PDF%E8%A7%A3%E6%9E%90/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>全连接神经网络-FNN</title>
+    <link href="http://yoursite.com/2020/02/27/%E5%85%A8%E8%BF%9E%E6%8E%A5%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-FNN/"/>
+    <id>http://yoursite.com/2020/02/27/%E5%85%A8%E8%BF%9E%E6%8E%A5%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C-FNN/</id>
+    <published>2020-02-27T09:34:02.000Z</published>
+    <updated>2022-03-28T09:04:28.990Z</updated>
+    
+    <summary type="html">
+    
+      &lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; numpy &lt;span class=&quot;keyword&quot;&gt;as&lt;/span&gt; np&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+    
+    </summary>
+    
+    
+    
+      <category term="Deep Learning" scheme="http://yoursite.com/tags/Deep-Learning/"/>
+    
+      <category term="AI" scheme="http://yoursite.com/tags/AI/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Machinglearing Model,the first step</title>
+    <link href="http://yoursite.com/2020/01/31/Machinglearing-Model-the-first-step/"/>
+    <id>http://yoursite.com/2020/01/31/Machinglearing-Model-the-first-step/</id>
+    <published>2020-01-31T13:01:01.000Z</published>
+    <updated>2022-03-28T09:04:28.979Z</updated>
+    
+    <summary type="html">
+    
+      &lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;%matplotlib inline&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; numpy &lt;span class=&quot;keyword&quot;&gt;as&lt;/span&gt; np&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;random_data = np.random.random((&lt;span class=&quot;number&quot;&gt;20&lt;/span&gt;,&lt;span class=&quot;number&quot;&gt;2&lt;/span&gt;))&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;random_data&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+    
+    </summary>
+    
+    
+    
+      <category term="Machine Learning" scheme="http://yoursite.com/tags/Machine-Learning/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>AI for NLP</title>
+    <link href="http://yoursite.com/2020/01/16/AI%20for%20NLP/"/>
+    <id>http://yoursite.com/2020/01/16/AI%20for%20NLP/</id>
+    <published>2020-01-16T12:23:35.000Z</published>
+    <updated>2022-03-28T09:04:28.978Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;Build-Graph&quot;&gt;&lt;a href=&quot;#Build-Graph&quot; class=&quot;headerlink&quot; title=&quot;Build Graph&quot;&gt;&lt;/a&gt;Build Graph&lt;/h2&gt;&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;23&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;24&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;25&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;26&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;27&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;28&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;29&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;30&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;31&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;32&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;33&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;34&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;35&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;36&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;37&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;coordination_source = &lt;span class=&quot;string&quot;&gt;&quot;&quot;&quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;&amp;#123;name:&#39;兰州&#39;, geoCoord:[103.73, 36.03]&amp;#125;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;&amp;#123;name:&#39;嘉峪关&#39;, geoCoord:[98.17, 39.47]&amp;#125;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;&amp;#123;name:&#39;西宁&#39;, geoCoord:[101.74, 36.56]&amp;#125;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;&amp;#123;name:&#39;成都&#39;, geoCoord:[104.06, 30.67]&amp;#125;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;&amp;#123;name:&#39;石家庄&#39;, geoCoord:[114.48, 38.03]&amp;#125;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;&amp;#123;name:&#39;拉萨&#39;, geoCoord:[102.73, 25.04]&amp;#125;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;&amp;#123;name:&#39;贵阳&#39;, geoCoord:[106.71, 26.57]&amp;#125;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;&amp;#123;name:&#39;武汉&#39;, geoCoord:[114.31, 30.52]&amp;#125;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;&amp;#123;name:&#39;郑州&#39;, geoCoord:[113.65, 34.76]&amp;#125;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;&amp;#123;name:&#39;济南&#39;, geoCoord:[117, 36.65]&amp;#125;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;&amp;#123;name:&#39;南京&#39;, geoCoord:[118.78, 32.04]&amp;#125;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;&amp;#123;name:&#39;合肥&#39;, geoCoord:[117.27, 31.86]&amp;#125;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;&amp;#123;name:&#39;杭州&#39;, geoCoord:[120.19, 30.26]&amp;#125;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;&amp;#123;name:&#39;南昌&#39;, geoCoord:[115.89, 28.68]&amp;#125;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;&amp;#123;name:&#39;福州&#39;, geoCoord:[119.3, 26.08]&amp;#125;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;&amp;#123;name:&#39;广州&#39;, geoCoord:[113.23, 23.16]&amp;#125;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;&amp;#123;name:&#39;长沙&#39;, geoCoord:[113, 28.21]&amp;#125;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;//&amp;#123;name:&#39;海口&#39;, geoCoord:[110.35, 20.02]&amp;#125;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;&amp;#123;name:&#39;沈阳&#39;, geoCoord:[123.38, 41.8]&amp;#125;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;&amp;#123;name:&#39;长春&#39;, geoCoord:[125.35, 43.88]&amp;#125;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;&amp;#123;name:&#39;哈尔滨&#39;, geoCoord:[126.63, 45.75]&amp;#125;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;&amp;#123;name:&#39;太原&#39;, geoCoord:[112.53, 37.87]&amp;#125;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;&amp;#123;name:&#39;西安&#39;, geoCoord:[108.95, 34.27]&amp;#125;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;//&amp;#123;name:&#39;台湾&#39;, geoCoord:[121.30, 25.03]&amp;#125;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;&amp;#123;name:&#39;北京&#39;, geoCoord:[116.46, 39.92]&amp;#125;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;&amp;#123;name:&#39;上海&#39;, geoCoord:[121.48, 31.22]&amp;#125;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;&amp;#123;name:&#39;重庆&#39;, geoCoord:[106.54, 29.59]&amp;#125;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;&amp;#123;name:&#39;天津&#39;, geoCoord:[117.2, 39.13]&amp;#125;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;&amp;#123;name:&#39;呼和浩特&#39;, geoCoord:[111.65, 40.82]&amp;#125;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;&amp;#123;name:&#39;南宁&#39;, geoCoord:[108.33, 22.84]&amp;#125;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;//&amp;#123;name:&#39;西藏&#39;, geoCoord:[91.11, 29.97]&amp;#125;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;&amp;#123;name:&#39;银川&#39;, geoCoord:[106.27, 38.47]&amp;#125;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;&amp;#123;name:&#39;乌鲁木齐&#39;, geoCoord:[87.68, 43.77]&amp;#125;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;&amp;#123;name:&#39;香港&#39;, geoCoord:[114.17, 22.28]&amp;#125;,&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;&amp;#123;name:&#39;澳门&#39;, geoCoord:[113.54, 22.19]&amp;#125;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;&quot;&quot;&quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;re.findall(&lt;span class=&quot;string&quot;&gt;&quot;[\d\.]+&quot;&lt;/span&gt;,&lt;span class=&quot;string&quot;&gt;&quot;&amp;#123;name:&#39;澳门&#39;, geoCoord:[113.54, 22.19]&amp;#125;&quot;&lt;/span&gt;)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;pre&gt;&lt;code&gt;[&amp;#39;113.54&amp;#39;, &amp;#39;22.19&amp;#39;]
+&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&quot;Get-data-from-source-using-regular-expression&quot;&gt;&lt;a href=&quot;#Get-data-from-source-using-regular-expression&quot; class=&quot;headerlink&quot; title=&quot;Get data from source using regular expression&quot;&gt;&lt;/a&gt;Get data from source using regular expression&lt;/h3&gt;
+    
+    </summary>
+    
+    
+    
+      <category term="Machine Learning" scheme="http://yoursite.com/tags/Machine-Learning/"/>
+    
+      <category term="NLP" scheme="http://yoursite.com/tags/NLP/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Syntax-Tree</title>
+    <link href="http://yoursite.com/2020/01/11/Syntax-Tree/"/>
+    <id>http://yoursite.com/2020/01/11/Syntax-Tree/</id>
+    <published>2020-01-11T11:46:35.000Z</published>
+    <updated>2022-03-28T09:04:28.987Z</updated>
+    
+    <summary type="html">
+    
+      &lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;simple_grammar =&lt;span class=&quot;string&quot;&gt;&quot;&quot;&quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;sentence =&amp;gt; noun_phrase verb_phrase&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;noun_phrase =&amp;gt; Article Adj* noun&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;Adj* =&amp;gt; null | Adj Adj*&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;verb_phrase =&amp;gt; verb noun_phrase&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;Article =&amp;gt; 一个 | 这个&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;noun =&amp;gt; 女人 | 篮球 | 桌子 | 小猫&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;verb =&amp;gt; 看着 | 坐着 | 听见 | 看着&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;Adj =&amp;gt; 蓝色的 | 好看的 | 小小的&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;&quot;&quot;&quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;another_grammar = &lt;span class=&quot;string&quot;&gt;&quot;&quot;&quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;#&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;string&quot;&gt;&quot;&quot;&quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; random&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;adj&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;()&lt;/span&gt;:&lt;/span&gt;&lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; random.choice(&lt;span class=&quot;string&quot;&gt;&#39;蓝色的|好看的|小小的&#39;&lt;/span&gt;.split(&lt;span class=&quot;string&quot;&gt;&#39;|&#39;&lt;/span&gt;))&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;adj_star&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;()&lt;/span&gt;:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; random.choice([&lt;span class=&quot;keyword&quot;&gt;lambda&lt;/span&gt; : &lt;span class=&quot;string&quot;&gt;&#39;&#39;&lt;/span&gt;,&lt;span class=&quot;keyword&quot;&gt;lambda&lt;/span&gt; : adj()+adj_star()])()&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;adj_star()&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;pre&gt;&lt;code&gt;&amp;#39;蓝色的好看的小小的好看的小小的蓝色的&amp;#39;
+&lt;/code&gt;&lt;/pre&gt;
+    
+    </summary>
+    
+    
+    
+      <category term="NLP" scheme="http://yoursite.com/tags/NLP/"/>
+    
+      <category term="Language Model" scheme="http://yoursite.com/tags/Language-Model/"/>
+    
+      <category term="Syntax-Tree" scheme="http://yoursite.com/tags/Syntax-Tree/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>python BinarySearchTree</title>
+    <link href="http://yoursite.com/2019/11/29/python-BinarySearchTree/"/>
+    <id>http://yoursite.com/2019/11/29/python-BinarySearchTree/</id>
+    <published>2019-11-29T13:04:20.000Z</published>
+    <updated>2022-03-28T09:04:28.988Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;python&quot;&gt;&lt;a href=&quot;#python&quot; class=&quot;headerlink&quot; title=&quot;python&quot;&gt;&lt;/a&gt;python&lt;/h2&gt;&lt;p&gt;&amp;emsp;&amp;emsp;最近在学python，断断续续的，感觉学的慢，就顺便写写代码，加强对python的感觉。&lt;br&gt;虽然学了半天还是啥都不会，但是还是要写写博客啥的，激励自己不老懒惰，不能因为眼前的&lt;/p&gt;
+&lt;h2 id=&quot;困难而放弃进步。所以，下面我要贴代码了…&quot;&gt;&lt;a href=&quot;#困难而放弃进步。所以，下面我要贴代码了…&quot; class=&quot;headerlink&quot; title=&quot;困难而放弃进步。所以，下面我要贴代码了….&quot;&gt;&lt;/a&gt;困难而放弃进步。所以，下面我要贴代码了….&lt;/h2&gt;
+    
+    </summary>
+    
+    
+    
+      <category term="python" scheme="http://yoursite.com/tags/python/"/>
+    
+      <category term="数据结构" scheme="http://yoursite.com/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/"/>
+    
+      <category term="二叉树" scheme="http://yoursite.com/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Hello World ~</title>
+    <link href="http://yoursite.com/2019/11/11/hello-world/"/>
+    <id>http://yoursite.com/2019/11/11/hello-world/</id>
+    <published>2019-11-11T13:04:20.000Z</published>
+    <updated>2022-03-28T09:04:28.988Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;Welcome to  my own web,you can find me on github &lt;a href=&quot;https://github.com/iiot-tbb&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;iiot-tbb&lt;/a&gt;! This is my very first post.&lt;/p&gt;
+    
+    </summary>
+    
+    
+    
+      <category term="myBorn" scheme="http://yoursite.com/tags/myBorn/"/>
+    
+      <category term="hexo" scheme="http://yoursite.com/tags/hexo/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>论法的精神（节选）</title>
+    <link href="http://yoursite.com/2019/11/11/%E8%AE%BA%E6%B3%95%E7%9A%84%E7%B2%BE%E7%A5%9E%EF%BC%88%E8%8A%82%E9%80%89%EF%BC%89/"/>
+    <id>http://yoursite.com/2019/11/11/%E8%AE%BA%E6%B3%95%E7%9A%84%E7%B2%BE%E7%A5%9E%EF%BC%88%E8%8A%82%E9%80%89%EF%BC%89/</id>
+    <published>2019-11-11T08:21:35.000Z</published>
+    <updated>2022-03-28T09:04:28.990Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h3 id=&quot;法与一切存在物的关系&quot;&gt;&lt;a href=&quot;#法与一切存在物的关系&quot; class=&quot;headerlink&quot; title=&quot;法与一切存在物的关系&quot;&gt;&lt;/a&gt;法与一切存在物的关系&lt;/h3&gt;&lt;p&gt;从最大限度的广义上说，法是源于客观事物性质的必然关系。从这个意义上推断，所有的&lt;/p&gt;
+&lt;p&gt;存在物都有属于自己的法；上帝有他的法；物质世界也有它的法；高于人类的“先知&lt;/p&gt;
+&lt;p&gt;圣人们”有着他们的法；畜类也有自己的法；人类拥有他们的法。&lt;/p&gt;
+&lt;p&gt;有些人说，世间我们看到的万物都是由一个盲目的命运所创造的，这种说法荒谬绝伦。因&lt;/p&gt;
+&lt;p&gt;为盲目的命运竟然创造“具有智能的创造物”，岂不是一件更为荒谬的事吗?&lt;/p&gt;
+&lt;p&gt;于是便有了一个最浅显的理性的存在。法就是这个浅显理性与各种存在物之间关系的总&lt;/p&gt;
+&lt;p&gt;和，同时也体现着所有客观存在物彼此之间的关系。&lt;/p&gt;
+&lt;p&gt;上帝与宇宙的关系体现在，它既是宇宙的创造者又是它的保管者：以此产生的规律，便是&lt;/p&gt;
+&lt;p&gt;保管时参照的规律。上帝遵循这些规律行事，因为他熟知这些规范；之所以他熟知这些规&lt;/p&gt;
+&lt;p&gt;范，因为正是他制定了这些规范；他之所以制定这些规范，因为这些规律与他的才智和能&lt;br&gt;量有着密不可分的关系。&lt;/p&gt;
+&lt;p&gt;如同我们看到的一样，我们所在的世界是由物质的运动而构成的，它在一个非智能的状态&lt;/p&gt;
+&lt;p&gt;中永恒地生存着。它的物质运动必然具有某种固定的规律。如果人们能够在自己所处的世&lt;/p&gt;
+&lt;p&gt;界之外再臆想出另一个世界的话，那个世界要么具有恒定的规律可循，要么便是毁灭。&lt;/p&gt;
+&lt;p&gt;创造本身似乎是某种随意的行为，然而其中必定蕴涵着恒定的规律，就如同无神论者的命&lt;/p&gt;
+&lt;p&gt;运一般。如果造世主没有这些规范就能统管世界的话，那么，这显然是荒谬的说法，因为&lt;/p&gt;
+&lt;p&gt;没有这些规范，世界将无法生存。&lt;br&gt;
+    
+    </summary>
+    
+    
+    
+      <category term="人文" scheme="http://yoursite.com/tags/%E4%BA%BA%E6%96%87/"/>
+    
+      <category term="法律" scheme="http://yoursite.com/tags/%E6%B3%95%E5%BE%8B/"/>
+    
+      <category term="随笔" scheme="http://yoursite.com/tags/%E9%9A%8F%E7%AC%94/"/>
+    
+  </entry>
+  
+</feed>
