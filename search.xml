@@ -1762,8 +1762,8 @@ x_y:  (103.73, 36.03)
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 ]]></content>
       <tags>
-        <tag>NLP</tag>
         <tag>Machine Learning</tag>
+        <tag>NLP</tag>
       </tags>
   </entry>
   <entry>
@@ -3198,8 +3198,8 @@ sentence: 这个女人听见这个好看的篮球 with Prb: 2.948877435423709e-4
 ]]></content>
       <tags>
         <tag>NLP</tag>
-        <tag>Syntax-Tree</tag>
         <tag>Language Model</tag>
+        <tag>Syntax-Tree</tag>
       </tags>
   </entry>
   <entry>

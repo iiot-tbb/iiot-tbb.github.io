@@ -168,9 +168,9 @@ Need &amp;lt;https://arxiv.org/pdf/1706.03762.pdf&amp;gt;&lt;/code&gt;&lt;br&gt;
     
     
     
-      <category term="NLP" scheme="http://yoursite.com/tags/NLP/"/>
-    
       <category term="Machine Learning" scheme="http://yoursite.com/tags/Machine-Learning/"/>
+    
+      <category term="NLP" scheme="http://yoursite.com/tags/NLP/"/>
     
   </entry>
   
@@ -197,9 +197,9 @@ Need &amp;lt;https://arxiv.org/pdf/1706.03762.pdf&amp;gt;&lt;/code&gt;&lt;br&gt;
     
       <category term="NLP" scheme="http://yoursite.com/tags/NLP/"/>
     
-      <category term="Syntax-Tree" scheme="http://yoursite.com/tags/Syntax-Tree/"/>
-    
       <category term="Language Model" scheme="http://yoursite.com/tags/Language-Model/"/>
+    
+      <category term="Syntax-Tree" scheme="http://yoursite.com/tags/Syntax-Tree/"/>
     
   </entry>
   
