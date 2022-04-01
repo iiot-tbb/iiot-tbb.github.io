@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="Bool_tbb" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":true,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="什么是 Autograd?Autograd是反向自动微分系统。从概念上讲，autograd 记录一个图结构，记录执行操作时创建数据的所有操作，一个有向无环图，其叶子是输入张量，根是输出张量。通过从根到叶跟踪此图，可以使用链式法则自动计算梯度。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Pytorch Autograd 机制介绍">
+<meta property="og:url" content="http://yoursite.com/2022/04/01/Pytorch-Autograd-%E6%9C%BA%E5%88%B6%E4%BB%8B%E7%BB%8D/index.html">
+<meta property="og:site_name" content="Bool_tbb">
+<meta property="og:description" content="什么是 Autograd?Autograd是反向自动微分系统。从概念上讲，autograd 记录一个图结构，记录执行操作时创建数据的所有操作，一个有向无环图，其叶子是输入张量，根是输出张量。通过从根到叶跟踪此图，可以使用链式法则自动计算梯度。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-04-01T06:23:16.000Z">
+<meta property="article:modified_time" content="2022-04-01T14:14:30.475Z">
+<meta property="article:author" content="bool_tbb">
+<meta property="article:tag" content="Pytorch">
+<meta property="article:tag" content="Autograd">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2022/04/01/Pytorch-Autograd-%E6%9C%BA%E5%88%B6%E4%BB%8B%E7%BB%8D/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Pytorch Autograd 机制介绍 | Bool_tbb</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+
+<body itemscope itemtype="http://schema.org/WebPage">
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Bool_tbb</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">留下点啥，证明活过</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/04/01/Pytorch-Autograd-%E6%9C%BA%E5%88%B6%E4%BB%8B%E7%BB%8D/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/tb.jpg">
+      <meta itemprop="name" content="bool_tbb">
+      <meta itemprop="description" content="十三月">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Bool_tbb">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Pytorch Autograd 机制介绍
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-04-01 14:23:16 / 修改时间：22:14:30" itemprop="dateCreated datePublished" datetime="2022-04-01T14:23:16+08:00">2022-04-01</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="什么是-Autograd"><a href="#什么是-Autograd" class="headerlink" title="什么是 Autograd?"></a>什么是 Autograd?</h2><p>Autograd是反向自动微分系统。从概念上讲，autograd 记录一个图结构，记录执行操作时创建数据的所有操作，一个有向无环图，其叶子是输入张量，根是输出张量。通过从根到叶跟踪此图，可以使用链式法则自动计算梯度。</p>
+<a id="more"></a>
+<p>更为具体的来说，Autograd方法是构造一个图结构的函数传播形式。它在计算网络的前向传播过程中构造了一个梯度的函数计算图。当完成前向过程后，进行反向传播时，计算每一个节点的梯度。在每一轮次都是即时构建这个图结构，并不用提前对图结构进行编码。按照python的函数流程，所构即所得。</p>
+<h2 id="保存Tensor张量"><a href="#保存Tensor张量" class="headerlink" title="保存Tensor张量"></a>保存Tensor张量</h2><p>一些操作需要在前向传递期间保存中间结果，以便执行反向传递。例如，函数 $x\mapsto x^{2}$ 保存输入 $x$ 以计算梯度。</p>
+<p>定义自定义 <code>Python</code> 函数时，您可以使用 <code>save_for_backward()</code> 在前向传递期间保存张量，并在后向传递期间使用 <code>saved_tensors</code> 检索它们。</p>
+<p>对于<code>PyTorch</code>定义的操作（例如 <code>torch.pow()</code>），张量会根据需要自动保存。您可以通过查找以前缀 <code>_saved</code> 开头的属性来探索某个<code>grad_fn</code> 保存了哪些张量。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">x = torch.randn(<span class="number">5</span>, requires_grad=<span class="literal">True</span>)</span><br><span class="line">y = x.pow(<span class="number">2</span>)</span><br><span class="line">print(x.equal(y.grad_fn._saved_self))  <span class="comment"># True</span></span><br><span class="line">print(x <span class="keyword">is</span> y.grad_fn._saved_self)  <span class="comment"># True</span></span><br></pre></td></tr></table></figure>
+<p>在前面的代码中，<code>y.grad_fn._saved_self</code> 指的是与 <code>x</code> 相同的 Tensor 对象。但情况可能并非总是如此。例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">x = torch.randn(<span class="number">5</span>, requires_grad=<span class="literal">True</span>)</span><br><span class="line">y = x.exp()</span><br><span class="line">print(y.equal(y.grad_fn._saved_result))  <span class="comment"># True</span></span><br><span class="line">print(y <span class="keyword">is</span> y.grad_fn._saved_result)  <span class="comment"># False</span></span><br></pre></td></tr></table></figure>
+<p>在底层，为了防止引用循环，PyTorch 在保存时打包了张量，并将其解包到不同的张量中以供读取。在这里，您通过访问 y.grad_fn._saved_result 获得的张量是与 y 不同的张量对象（但它们仍然共享相同的存储）。一个张量是否会被打包到不同的张量对象中，取决于它是否是它自己的 grad_fn 的输出，这是一个可能会发生变化的实现细节，因此在操作时不应该依赖它。</p>
+<h2 id="局部禁用梯度计算"><a href="#局部禁用梯度计算" class="headerlink" title="局部禁用梯度计算"></a>局部禁用梯度计算</h2><p>Python 有几种机制可以局部的禁用梯度计算：</p>
+<p>要禁用整个代码块的梯度，有上下文管理器，如 no-grad 模式和 inference 模式。为了从梯度计算中更细粒度地排除子图，可以设置张量的 <code>requires_grad</code> 字段。<br>下面，除了讨论上述机制之外，我们还描述了 evaluate 模式<code>nn.Module.eval()</code>，这种方法实际上并不用于禁用梯度计算，但由于其名称，经常与这三种方法混淆。</p>
+<h3 id="设置-required-grad"><a href="#设置-required-grad" class="headerlink" title="设置 required_grad"></a>设置 <code>required_grad</code></h3><p><code>requires_grad</code> 是一个标志，除非包含在 <code>nn.Parameter</code> 中，否则默认为 false，它允许从梯度计算中细粒度地排除子图。它在向前和向后传递中都生效：</p>
+<p>在前向传递期间，只有至少一个输入张量需要 grad 时，才会将操作记录在后向图中。在后向传递 (.backward()) 期间，只有 requires_grad=True 的叶张量才会将梯度累积到它们的 <code>.grad</code> 字段中。</p>
+<p>重要的是要注意，即使每个张量都有这个标志，设置它只对叶张量有意义（没有 grad_fn 的张量，例如，nn.Module 的参数）。非叶张量（具有 grad_fn 的张量）是具有与之关联的后向图的张量。因此，需要它们的梯度作为中间结果来计算需要 grad 的叶张量的梯度。从这个定义中，很明显所有非叶张量都会自动具有<code>require_grad=True</code>。</p>
+<p>设置<code>require_grad</code>字段是有效的控制在你所用的模型中哪一部分的梯度需要被计算。比如说，当你使用预训练模型Bert类进行微调时，可以冻结这部分参数不跟随训练。当你设置<code>require_grad=False</code>时，你的这部分参数将不会在前向传播的过程中不会被保存记录，他们不会在后向传递中更新他们的 <code>.grad</code>字段，因为它们一开始就不会成为后向图的一部分。因为这是一种常见的模式，所以也可以使用 <code>nn.Module.requires_grad_()</code> 在模块级别设置<code>requires_grad</code>。当应用于模块时， .<code>requires_grad_()</code> 会影响模块的所有参数（默认情况下 <code>requires_grad=True</code> ）。</p>
+<h3 id="梯度模式"><a href="#梯度模式" class="headerlink" title="梯度模式"></a>梯度模式</h3><p>除了设置 <code>requires_grad</code>之外，还可以从 Python 启用三种可能的模式，这些模式可以影响 PyTorch 中 autograd 计算的处理的方式：默认模式（grad 模式）、no-grad 模式和inference模式，所有这些都可以通过context manager和decorator。</p>
+<h4 id="默认模式"><a href="#默认模式" class="headerlink" title="默认模式"></a>默认模式</h4><p>“默认模式”实际上是我们在没有启用其他模式（如 no-grad 和 inference 模式）时隐含的模式。与“no-grad mode”相比，默认模式有时也称为“grad mode”。<br>关于默认模式，最重要的一点是它是 <code>requires_grad</code> 生效的唯一模式。在其他两种模式下，<code>requires_grad</code> 总是被覆盖为 False。</p>
+<h4 id="no-grad模式"><a href="#no-grad模式" class="headerlink" title="no-grad模式"></a>no-grad模式</h4><p>在no-grad模式下，所有的计算都表现为所有的输入都不需要有梯度，即使有 <code>require_grad=True</code> 的输入，no-grad 模式下的计算也永远不会记录在后向图中。<br>当您需要执行不应该由 autograd 记录的操作时启用 no-grad 模式，但您以后仍希望在 grad 模式下使用这些计算的输出。这个context-manager可以方便地禁用代码块或函数的梯度，而无需临时将张量设置为 requires_grad=False。</p>
+<p>例如，在编写优化器时，no-grad 模式可能很有用：在执行训练更新时，您希望就地更新参数，而 autograd 不会记录更新。您还打算在下一次正向传递中使用更新的参数以 grad 模式进行计算。</p>
+<p><code>torch.nn.init</code> 中的实现在初始化参数时也依赖于 no-grad 模式，以避免在就地更新初始化参数时进行 autograd 跟踪。</p>
+<h4 id="Inference-模式"><a href="#Inference-模式" class="headerlink" title="Inference 模式"></a>Inference 模式</h4><p>推理模式是无梯度模式的极端版本​​。就像在 no-grad 模式下一样，推理模式下的计算不会记录在后向图中，但启用推理模式将允许 PyTorch 进一步加速您的模型。这种更好的运行时有一个缺点：在推理模式下创建的张量将无法用于退出推理模式后由 autograd 记录的计算。</p>
+<p>当您执行不需要在后向图中记录的计算时启用推理模式，并且您不打算在稍后将由 autograd 记录的任何计算中使用在推理模式中创建的张量。</p>
+<p>建议您在代码中不需要自动梯度跟踪的部分（例如，数据处理和模型评估）尝试推理模式。如果它为您的用例开箱即用，那将是免费的性能胜利。如果您在启用推理模式后遇到错误，请检查您是否没有在退出推理模式后由 autograd 记录的计算中使用在推理模式下创建的张量。如果在您的情况下无法避免此类使用，您可以随时切换回 no-grad 模式。</p>
+<h3 id="评估-Evaluation-模式-nn-Module-eval"><a href="#评估-Evaluation-模式-nn-Module-eval" class="headerlink" title="评估(Evaluation)模式 (nn.Module.eval())"></a>评估(Evaluation)模式 (<code>nn.Module.eval()</code>)</h3><p>评估模式实际上并不是一种在本地禁用梯度计算的机制。在这里为什么要介绍它呢，因为它有时会被混淆为这样的机制。</p>
+<p>在功能上，module.eval()（或等效的 module.train()）与 no-grad 模式和推理模式完全正交(即不存在相关性)。 model.eval() 如何影响您的模型完全取决于模型中使用的特定模块以及它们是否定义任何训练模式特定行为。</p>
+<p>如果您的模型依赖于诸如 torch.nn.Dropout 和 torch.nn.BatchNorm2d 之类的模块，这些模块可能会因训练模式而有所不同，则您应当区分调用 model.eval() 和 model.train()。<br>例如，为了避免更新验证数据的 BatchNorm 运行统计信息。</p>
+<p>建议您在训练时始终使用 model.train()，在评估模型（验证/测试）时始终使用 model.eval()，即使您不确定模型是否具有特定于训练模式的行为，因为您使用的某个模块可能会更新为在训练和评估模式下表现不同。</p>
+<hr>
+<h3 id="使用-autograd-进行原地操作"><a href="#使用-autograd-进行原地操作" class="headerlink" title="使用 autograd 进行原地操作"></a>使用 autograd 进行原地操作</h3><p>对于使用in-place的操作运算，pytorch这边不是非常建议使用，Autograd本身的缓冲区的释放和重用的效率是非常高的，极少情况下进行原地操作会显著降低内存的使用，</p>
+<p>限制原地操作有两个主要原因：</p>
+<ol>
+<li>原地操作可能会覆盖计算梯度所需要的值。</li>
+<li>原地操作需要重写计算图的操作实现，out-of-place的方法只需要分配新的内存给创造的对象，并且保存了对旧图的引用。在原地操作时，需要将所有输入的创建者更改为表示此操作的函数。这可能很棘手，特别是如果有许多张量引用相同的存储。比如，通过索引或转置创建。如果修改的输入的存储被任何其他张量引用，则in-place函数实际上会引发错误。</li>
+</ol>
+<h3 id="pytorch如何保证原地操作的正确性？"><a href="#pytorch如何保证原地操作的正确性？" class="headerlink" title="pytorch如何保证原地操作的正确性？"></a>pytorch如何保证原地操作的正确性？</h3><p> 每个张量都有一个版本计数器，每次它在任何操作中被标记为脏时都会递增。当一个函数保存任何用于后向计算的张量时，它们包含的张量的版本计数器也会被保存。当你访问<code>self.saved_tensor</code>时它就会被检查，如果它大于保存的值，则会引发错误。这可以确保如果您使用原地函数并且没有看到任何错误，则可以确保计算出的梯度是正确的。</p>
+<h3 id="多线程-Autograd"><a href="#多线程-Autograd" class="headerlink" title="多线程 Autograd"></a>多线程 Autograd</h3><p>autograd 引擎负责运行计算反向传递所需的所有反向操作。下面将介绍在多线程环境中充分利用它的所有细节。<br>（仅与 PyTorch 1.6+ 相关，因为以前版本中的行为不同）</p>
+<p>用户可以使用多线程代码（例如 Hogwild 训练）训练他们的模型，并且不会阻塞并发的反向计算，示例代码可以是：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment"># Define a train function to be used in different threads</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">train_fn</span><span class="params">()</span>:</span></span><br><span class="line">    x = torch.ones(<span class="number">5</span>, <span class="number">5</span>, requires_grad=<span class="literal">True</span>)</span><br><span class="line">    <span class="comment"># forward</span></span><br><span class="line">    y = (x + <span class="number">3</span>) * (x + <span class="number">4</span>) * <span class="number">0.5</span></span><br><span class="line">    <span class="comment"># backward</span></span><br><span class="line">    y.sum().backward()</span><br><span class="line">    <span class="comment"># potential optimizer update</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># User write their own threading code to drive the train_fn</span></span><br><span class="line">threads = []</span><br><span class="line"><span class="keyword">for</span> _ <span class="keyword">in</span> range(<span class="number">10</span>):</span><br><span class="line">    p = threading.Thread(target=train_fn, args=())</span><br><span class="line">    p.start()</span><br><span class="line">    threads.append(p)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> p <span class="keyword">in</span> threads:</span><br><span class="line">    p.join()</span><br></pre></td></tr></table></figure>
+<p>一些需要被了解的特性：</p>
+<h3 id="CPU-上的并发"><a href="#CPU-上的并发" class="headerlink" title="CPU 上的并发"></a>CPU 上的并发</h3><hr>
+<p>当您在 CPU 上的多个线程中通过 python 或 C++ API 运行<code>backward()</code> 或 grad() 时，将会看到额外的并发性，而不是在执行期间以特定顺序序列化所有向后调用（PyTorch 1.6 之前的行为）。</p>
+<h4 id="Non-determinism"><a href="#Non-determinism" class="headerlink" title="Non-determinism"></a>Non-determinism</h4><p>如果您同时在多个线程上调用<code>backward()</code>，但使用共享输入（即Hogwild CPU 训练）。由于参数在线程之间自动共享，梯度累积可能在线程之间的反向调用中变得不确定，因为两个反向调用可能会访问并尝试累积相同的 <code>.grad</code>属性。这在技术上是不安全的，它可能会导致赛车状态，结果可能无法使用。</p>
+<p>但是，如果您使用多线程方法来驱动整个训练过程但使用共享参数，那么这是预期的模式，使用多线程的用户应该牢记线程模型并且应该预期会发生这种情况。用户可以使用功能 API <code>torch.autograd.grad()</code> 来计算梯度，而不是使用 <code>backward()</code> 来避免不确定性。</p>
+<h4 id="Graph-retaining"><a href="#Graph-retaining" class="headerlink" title="Graph retaining"></a>Graph retaining</h4><p>如果autograd图结构在多线程中被共享，例如图的第一部分运行在单线程上，图的第二部分采用多线程进行优化，在这种情况下，图结构的第一部分被优化，在这种情况下，不同的线程在同一个图上执行 <code>grad()</code>或 <code>backward()</code>可能会在一个线程的运行中破坏图，并且在这种情况下另一个线程将崩溃。 Autograd 将向用户发出错误，类似于在没有 <code>retain_graph=True</code> 的情况下两次调用 <code>backward()</code>，并让用户知道他们应该使用 <code>retain_graph=True</code>。</p>
+<h4 id="在-Autograd节点上的线程安全。"><a href="#在-Autograd节点上的线程安全。" class="headerlink" title="在 Autograd节点上的线程安全。"></a>在 Autograd节点上的线程安全。</h4><p>由于 Autograd 允许调用者线程驱动其向后执行以实现潜在的并行性，因此我们必须确保 CPU 上的线程安全，并行反向传播共享 GraphTask 的部分/全部。</p>
+<p>由于 GIL，自定义 Python <code>autograd.function</code> 是自动线程安全的。对于内置 C++ Autograd 节点（例如 AccumulateGrad、CopySlices）和自定义 autograd::Function，Autograd 引擎使用线程互斥锁来保护可能具有状态写入/读取的 autograd 节点上的线程安全。</p>
+<h4 id="C-hooks上没有线程安全"><a href="#C-hooks上没有线程安全" class="headerlink" title="C++ hooks上没有线程安全"></a>C++ hooks上没有线程安全</h4><p>Autograd 依赖于用户编写线程安全的 C++ hooks。如果您希望hooks在多线程环境中正确应用，则需要编写适当的线程锁定代码以确保hooks是线程安全的。</p>
+
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>O(∩_∩)O哈哈~</div>
+  <button disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="bool_tbb 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="bool_tbb 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Pytorch/" rel="tag"># Pytorch</a>
+              <a href="/tags/Autograd/" rel="tag"># Autograd</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2020/07/31/transformer%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83/" rel="next" title="transformer语言模型训练">
+                  <i class="fa fa-chevron-left"></i> transformer语言模型训练
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是-Autograd"><span class="nav-number">1.</span> <span class="nav-text">什么是 Autograd?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#保存Tensor张量"><span class="nav-number">2.</span> <span class="nav-text">保存Tensor张量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#局部禁用梯度计算"><span class="nav-number">3.</span> <span class="nav-text">局部禁用梯度计算</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#设置-required-grad"><span class="nav-number">3.1.</span> <span class="nav-text">设置 required_grad</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#梯度模式"><span class="nav-number">3.2.</span> <span class="nav-text">梯度模式</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#默认模式"><span class="nav-number">3.2.1.</span> <span class="nav-text">默认模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#no-grad模式"><span class="nav-number">3.2.2.</span> <span class="nav-text">no-grad模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Inference-模式"><span class="nav-number">3.2.3.</span> <span class="nav-text">Inference 模式</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#评估-Evaluation-模式-nn-Module-eval"><span class="nav-number">3.3.</span> <span class="nav-text">评估(Evaluation)模式 (nn.Module.eval())</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用-autograd-进行原地操作"><span class="nav-number">3.4.</span> <span class="nav-text">使用 autograd 进行原地操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#pytorch如何保证原地操作的正确性？"><span class="nav-number">3.5.</span> <span class="nav-text">pytorch如何保证原地操作的正确性？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多线程-Autograd"><span class="nav-number">3.6.</span> <span class="nav-text">多线程 Autograd</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CPU-上的并发"><span class="nav-number">3.7.</span> <span class="nav-text">CPU 上的并发</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Non-determinism"><span class="nav-number">3.7.1.</span> <span class="nav-text">Non-determinism</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Graph-retaining"><span class="nav-number">3.7.2.</span> <span class="nav-text">Graph retaining</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#在-Autograd节点上的线程安全。"><span class="nav-number">3.7.3.</span> <span class="nav-text">在 Autograd节点上的线程安全。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#C-hooks上没有线程安全"><span class="nav-number">3.7.4.</span> <span class="nav-text">C++ hooks上没有线程安全</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bool_tbb"
+      src="/images/tb.jpg">
+  <p class="site-author-name" itemprop="name">bool_tbb</p>
+  <div class="site-description" itemprop="description">十三月</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/iiot-tbb" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;iiot-tbb" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/bool_tbb@sjtu.edu.cn" title="E-Mail → bool_tbb@sjtu.edu.cn"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/5313762851" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;5313762851" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/16817976/bool-tbb" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;16817976&#x2F;bool-tbb" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>StackOverflow</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      推荐阅读
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://developer.apple.com/swift/" title="https:&#x2F;&#x2F;developer.apple.com&#x2F;swift&#x2F;" rel="noopener" target="_blank">Swift 4</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://developer.apple.com/documentation/objectivec" title="https:&#x2F;&#x2F;developer.apple.com&#x2F;documentation&#x2F;objectivec" rel="noopener" target="_blank">Objective -C</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+      
+      <script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+      <script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+      <div class="widget-wrap">
+          <h3 class="widget-title">Tag Cloud</h3>
+          <div id="myCanvasContainer" class="widget tagcloud">
+              <canvas width="250" height="250" id="resCanvas" style="width=100%">
+                  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI/" rel="tag">AI</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Autograd/" rel="tag">Autograd</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Deep-Learning/" rel="tag">Deep Learning</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Languaage-Model/" rel="tag">Languaage Model</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Language-Model/" rel="tag">Language Model</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Machine-Learning/" rel="tag">Machine Learning</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NLP/" rel="tag">NLP</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PDF%E8%A7%A3%E6%9E%90/" rel="tag">PDF解析</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pytorch/" rel="tag">Pytorch</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Syntax-Tree/" rel="tag">Syntax-Tree</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Transformer/" rel="tag">Transformer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/myBorn/" rel="tag">myBorn</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytorch/" rel="tag">pytorch</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" rel="tag">二叉树</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%BA%E6%96%87/" rel="tag">人文</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B3%95%E5%BE%8B/" rel="tag">法律</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9A%8F%E7%AC%94/" rel="tag">随笔</a><span class="tag-list-count">1</span></li></ul>
+              </canvas>
+          </div>
+      </div>
+      
+      
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">bool_tbb</span>
+</div>
+  <div class="powered-by">由 <a href="https://github.com/iiot-tbb" class="theme-link" rel="noopener" target="_blank">Tbb</a> 强力驱动 v1.0.0
+  </div>
+  <span class="post-meta-divider">|</span>
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共28.9k字</span>
+</div>
+
+
+<span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+<script>
+    var now = new Date(); 
+    function createtime() { 
+        var grt= new Date("11/11/2019 12:49:25");//在此处修改你的建站时间
+        now.setTime(now.getTime()+250); 
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days); 
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours); 
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum); 
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;} 
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum); 
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;} 
+        document.getElementById("timeDate").innerHTML = " 运行了 "+dnum+" 天 "; 
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒"; 
+    } 
+setInterval("createtime()",250);
+</script>
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>
