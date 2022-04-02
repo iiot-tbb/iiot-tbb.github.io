@@ -51,6 +51,13 @@
 <h4 id="在-Autograd节点上的线程安全。"><a href="#在-Autograd节点上的线程安全。" class="headerlink" title="在 Autograd节点上的线程安全。"></a>在 Autograd节点上的线程安全。</h4><p>由于 Autograd 允许调用者线程驱动其向后执行以实现潜在的并行性，因此我们必须确保 CPU 上的线程安全，并行反向传播共享 GraphTask 的部分/全部。</p>
 <p>由于 GIL，自定义 Python <code>autograd.function</code> 是自动线程安全的。对于内置 C++ Autograd 节点（例如 AccumulateGrad、CopySlices）和自定义 autograd::Function，Autograd 引擎使用线程互斥锁来保护可能具有状态写入/读取的 autograd 节点上的线程安全。</p>
 <h4 id="C-hooks上没有线程安全"><a href="#C-hooks上没有线程安全" class="headerlink" title="C++ hooks上没有线程安全"></a>C++ hooks上没有线程安全</h4><p>Autograd 依赖于用户编写线程安全的 C++ hooks。如果您希望hooks在多线程环境中正确应用，则需要编写适当的线程锁定代码以确保hooks是线程安全的。</p>
+<hr>
+<h2 id="对于复数的Autograd"><a href="#对于复数的Autograd" class="headerlink" title="对于复数的Autograd"></a>对于复数的Autograd</h2><p>简要概括:</p>
+<ol>
+<li>当你对具有复数域或者共域的函数$f(z)$进行微分时，梯度是在假设函数是更大的实值损失函数$g(input)=L$的一部分的情况下计算的，<br>$\frac{\partial L}{\partial z^{<em>}}$($z^{</em>}$代表 $z$ 的共轭)。其负值正是梯度下降算法中使用的最陡下降方向。因此说有的优化器对于复数参数都是开箱即用的。</li>
+<li>此约定与 TensorFlow 的复杂微分约定相匹配，但与 JAX(计算$\frac{\partial L}{\partial z}$) 不同。</li>
+<li>如果您有一个内部使用复数操作的实对实函数，则此处的约定无关紧要：您将始终获得与仅使用实数操作实现相同的结果。</li>
+</ol>
 ]]></content>
       <tags>
         <tag>Pytorch</tag>
