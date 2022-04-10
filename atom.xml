@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2022-04-02T13:20:33.665Z</updated>
+  <updated>2022-04-10T08:24:33.851Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>kmeans numpy实现</title>
+    <link href="http://yoursite.com/2022/04/10/kmeans-numpy%E5%AE%9E%E7%8E%B0/"/>
+    <id>http://yoursite.com/2022/04/10/kmeans-numpy%E5%AE%9E%E7%8E%B0/</id>
+    <published>2022-04-10T08:11:32.000Z</published>
+    <updated>2022-04-10T08:24:33.851Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;k-means算法&quot;&gt;&lt;a href=&quot;#k-means算法&quot; class=&quot;headerlink&quot; title=&quot;k-means算法&quot;&gt;&lt;/a&gt;k-means算法&lt;/h2&gt;&lt;p&gt;k-means作为基本的无监督机器学习算法，在一些面试场景下经常会被拉起来让做手动实现，算法本身其实不难，但在面试场景下复现的准确且简洁则十分重要，因此，本篇博文实现了k-means基本算法，希望大家都可以动手自己实现一遍以保证在需要手写的时候能够快速完成。关于k-means算法的基本原理，我相信大家都应该十分的清楚，因此在这个不多展开介绍，不懂的同学请自行百度或者Google。&lt;/p&gt;
+    
+    </summary>
+    
+    
+    
+      <category term="机器学习" scheme="http://yoursite.com/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+    
+      <category term="numpy" scheme="http://yoursite.com/tags/numpy/"/>
+    
+  </entry>
   
   <entry>
     <title>Pytorch Autograd 机制介绍</title>
@@ -218,9 +239,9 @@ Need &amp;lt;https://arxiv.org/pdf/1706.03762.pdf&amp;gt;&lt;/code&gt;&lt;br&gt;
     
       <category term="NLP" scheme="http://yoursite.com/tags/NLP/"/>
     
-      <category term="Language Model" scheme="http://yoursite.com/tags/Language-Model/"/>
-    
       <category term="Syntax-Tree" scheme="http://yoursite.com/tags/Syntax-Tree/"/>
+    
+      <category term="Language Model" scheme="http://yoursite.com/tags/Language-Model/"/>
     
   </entry>
   

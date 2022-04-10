@@ -48,17 +48,23 @@
   };
 </script>
 
-  <meta name="description" content="十三月">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Bool_tbb">
-<meta property="og:url" content="http://yoursite.com/tags/Transformer/index.html">
+  <meta name="description" content="k-means算法k-means作为基本的无监督机器学习算法，在一些面试场景下经常会被拉起来让做手动实现，算法本身其实不难，但在面试场景下复现的准确且简洁则十分重要，因此，本篇博文实现了k-means基本算法，希望大家都可以动手自己实现一遍以保证在需要手写的时候能够快速完成。关于k-means算法的基本原理，我相信大家都应该十分的清楚，因此在这个不多展开介绍，不懂的同学请自行百度或者Google。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kmeans numpy实现">
+<meta property="og:url" content="http://yoursite.com/2022/04/10/kmeans-numpy%E5%AE%9E%E7%8E%B0/index.html">
 <meta property="og:site_name" content="Bool_tbb">
-<meta property="og:description" content="十三月">
+<meta property="og:description" content="k-means算法k-means作为基本的无监督机器学习算法，在一些面试场景下经常会被拉起来让做手动实现，算法本身其实不难，但在面试场景下复现的准确且简洁则十分重要，因此，本篇博文实现了k-means基本算法，希望大家都可以动手自己实现一遍以保证在需要手写的时候能够快速完成。关于k-means算法的基本原理，我相信大家都应该十分的清楚，因此在这个不多展开介绍，不懂的同学请自行百度或者Google。">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://yoursite.com/2022/04/10/kmeans-numpy%E5%AE%9E%E7%8E%B0/output.png">
+<meta property="article:published_time" content="2022-04-10T08:11:32.000Z">
+<meta property="article:modified_time" content="2022-04-10T08:24:33.851Z">
 <meta property="article:author" content="bool_tbb">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="numpy">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2022/04/10/kmeans-numpy%E5%AE%9E%E7%8E%B0/output.png">
 
-<link rel="canonical" href="http://yoursite.com/tags/Transformer/">
+<link rel="canonical" href="http://yoursite.com/2022/04/10/kmeans-numpy%E5%AE%9E%E7%8E%B0/">
 
 
 <script id="page-configurations">
@@ -66,13 +72,13 @@
   CONFIG.page = {
     sidebar: "",
     isHome: false,
-    isPost: false,
+    isPost: true,
     isPage: false,
     isArchive: false
   };
 </script>
 
-  <title>标签: Transformer | Bool_tbb</title>
+  <title>kmeans numpy实现 | Bool_tbb</title>
   
 
 
@@ -195,50 +201,116 @@
           <div class="content">
             
 
+  <div class="posts-expand">
+      
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h1 class="collection-header">Transformer
-          <small>标签</small>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/04/10/kmeans-numpy%E5%AE%9E%E7%8E%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/tb.jpg">
+      <meta itemprop="name" content="bool_tbb">
+      <meta itemprop="description" content="十三月">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Bool_tbb">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          kmeans numpy实现
         </h1>
-      </div>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-04-10 16:11:32 / 修改时间：16:24:33" itemprop="dateCreated datePublished" datetime="2022-04-10T16:11:32+08:00">2022-04-10</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <h1 class="collection-header">2020</h1>
+        <h2 id="k-means算法"><a href="#k-means算法" class="headerlink" title="k-means算法"></a>k-means算法</h2><p>k-means作为基本的无监督机器学习算法，在一些面试场景下经常会被拉起来让做手动实现，算法本身其实不难，但在面试场景下复现的准确且简洁则十分重要，因此，本篇博文实现了k-means基本算法，希望大家都可以动手自己实现一遍以保证在需要手写的时候能够快速完成。关于k-means算法的基本原理，我相信大家都应该十分的清楚，因此在这个不多展开介绍，不懂的同学请自行百度或者Google。</p>
+<a id="more"></a>
+<p>具体实现代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="comment">#距离计算以欧式距离为例</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">eulDistance</span><span class="params">(vector1,vevtor2)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> np.sqrt(np.sum(np.power(vector1-vevtor2,<span class="number">2</span>)))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#随机初始化中心点</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">initCentroids</span><span class="params">(dataset,k)</span>:</span></span><br><span class="line">    numSamples, dim = dataset.shape</span><br><span class="line">    centerid = np.zeros((k,dim))</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(k):</span><br><span class="line">        index = int(random.uniform(<span class="number">0</span>,numSamples))</span><br><span class="line">        centerid[i,:] =dataset[index,:]</span><br><span class="line">    <span class="keyword">return</span> centerid</span><br><span class="line"></span><br><span class="line"><span class="comment">#具体实现</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">kmeans</span><span class="params">(dataset,k)</span>:</span></span><br><span class="line">    numsamples = dataset.shape[<span class="number">0</span>]</span><br><span class="line">   </span><br><span class="line">    cluster = np.mat(np.zeros((numsamples,<span class="number">2</span>)))</span><br><span class="line"></span><br><span class="line">    cluseter_flag = <span class="literal">True</span> <span class="comment">#判断是否簇发生了改变</span></span><br><span class="line"></span><br><span class="line">    centroids = initCentroids(dataset,k)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> cluseter_flag:</span><br><span class="line">        cluseter_flag =<span class="literal">False</span></span><br><span class="line">        <span class="comment">#更新每一个样本所属的簇</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(numsamples):</span><br><span class="line">            minDis = float(<span class="string">'inf'</span>)</span><br><span class="line">            minIndex = <span class="number">-1</span></span><br><span class="line">            <span class="keyword">for</span> cls <span class="keyword">in</span> range(k):</span><br><span class="line">                dis_tmp = eulDistance(dataset[i,:],centroids[cls,:])</span><br><span class="line">                <span class="keyword">if</span> dis_tmp &lt; minDis:</span><br><span class="line">                    minDis  = dis_tmp</span><br><span class="line">                    minIndex = cls</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> cluster[i,<span class="number">0</span>]!=minIndex:</span><br><span class="line">                cluseter_flag =<span class="literal">True</span></span><br><span class="line">                cluster[i] = minIndex,minDis**<span class="number">2</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># 更新簇的中心位置</span></span><br><span class="line">        <span class="keyword">for</span> cls <span class="keyword">in</span> range(k):</span><br><span class="line"></span><br><span class="line">            pointers = dataset[np.nonzero(cluster[:,<span class="number">0</span>].A == cls)[<span class="number">0</span>]]</span><br><span class="line"></span><br><span class="line">            centroids[cls,:] = np.mean(pointers,axis=<span class="number">0</span>)</span><br><span class="line">    <span class="keyword">return</span> centroids, cluster <span class="comment">#返回簇中心点和对应每一个样本点的簇分配情况</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#画图</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">plotCluster</span><span class="params">(dataSet,k,centroids,cluster)</span>:</span></span><br><span class="line">    numsamples ,dim = dataSet.shape</span><br><span class="line"></span><br><span class="line">    color = [<span class="string">'or'</span>, <span class="string">'ob'</span>, <span class="string">'og'</span>, <span class="string">'ok'</span>, <span class="string">'^r'</span>, <span class="string">'+r'</span>, <span class="string">'sr'</span>, <span class="string">'dr'</span>, <span class="string">'&lt;r'</span>, <span class="string">'pr'</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(numsamples):</span><br><span class="line">        indx = int(cluster[i,<span class="number">0</span>])</span><br><span class="line">        plt.plot(dataSet[i,<span class="number">0</span>],dataSet[i,<span class="number">1</span>],color[indx])</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(k):</span><br><span class="line">        plt.plot(centroids[i,<span class="number">0</span>],centroids[i,<span class="number">1</span>],color[i],markersize =<span class="number">12</span>)</span><br><span class="line">    </span><br><span class="line">    plt.savefig(<span class="string">"./output.png"</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</span><br><span class="line">    dataset = []</span><br><span class="line">    f = open(<span class="string">'./ceshi.txt'</span>,<span class="string">'r'</span>)</span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> f.readlines():</span><br><span class="line">        lineArr = line.strip().split(<span class="string">'\t'</span>)</span><br><span class="line">        dataset.append([float(lineArr[<span class="number">0</span>]), float(lineArr[<span class="number">1</span>])])</span><br><span class="line"></span><br><span class="line">    dataset = np.mat(dataset)                </span><br><span class="line">    k = <span class="number">4</span></span><br><span class="line">    cenid,cluster = kmeans(dataset,k)</span><br><span class="line"></span><br><span class="line">    plotCluster(dataset,k,cenid,cluster)</span><br></pre></td></tr></table></figure>
+<p>输出如下图所示<br><img src="output.png" alt="avatar"></p>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-07-31T18:59:27+08:00"
-              content="2020-07-31">
-          07-31
-        </time>
+    
+    
+    
+        <div class="reward-container">
+  <div>O(∩_∩)O哈哈~</div>
+  <button disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="bool_tbb 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="bool_tbb 支付宝">
+        <p>支付宝</p>
       </div>
 
-      <h2 class="post-title">
-          <a class="post-title-link" href="/2020/07/31/transformer%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83/" itemprop="url">
-            <span itemprop="name">transformer语言模型训练</span>
-          </a>
-      </h2>
-
-    </header>
-  </article>
-
-    </div>
   </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
+              <a href="/tags/numpy/" rel="tag"># numpy</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2022/04/01/Pytorch-Autograd-%E6%9C%BA%E5%88%B6%E4%BB%8B%E7%BB%8D/" rel="next" title="Pytorch Autograd 机制介绍">
+                  <i class="fa fa-chevron-left"></i> Pytorch Autograd 机制介绍
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+            </div>
+          </div>
+      </footer>
+    
+  </article>
   
   
   
 
-  
-
+  </div>
 
 
           </div>
@@ -267,6 +339,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#k-means算法"><span class="nav-number">1.</span> <span class="nav-text">k-means算法</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
