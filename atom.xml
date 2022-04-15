@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2022-04-15T07:21:48.373Z</updated>
+  <updated>2022-04-15T07:28:31.310Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -21,17 +21,12 @@
     <link href="http://yoursite.com/2022/04/15/pytorch%E7%89%88%E6%9C%AC%E7%9A%84bilstm-crf%E7%9A%84%E5%AE%9E%E7%8E%B0/"/>
     <id>http://yoursite.com/2022/04/15/pytorch%E7%89%88%E6%9C%AC%E7%9A%84bilstm-crf%E7%9A%84%E5%AE%9E%E7%8E%B0/</id>
     <published>2022-04-14T17:12:00.000Z</published>
-    <updated>2022-04-15T07:21:48.373Z</updated>
+    <updated>2022-04-15T07:28:31.310Z</updated>
     
     <summary type="html">
     
-      
-      
-        
-        
-          &lt;h2 id=&quot;CRF-代码实现&quot;&gt;&lt;a href=&quot;#CRF-代码实现&quot; class=&quot;headerlink&quot; title=&quot;CRF 代码实现&quot;&gt;&lt;/a&gt;CRF
-        
-      
+      &lt;h2 id=&quot;CRF-代码实现&quot;&gt;&lt;a href=&quot;#CRF-代码实现&quot; class=&quot;headerlink&quot; title=&quot;CRF 代码实现&quot;&gt;&lt;/a&gt;CRF 代码实现&lt;/h2&gt;&lt;p&gt;最近没啥事情，想把CRF相关的内容再捋一捋，因此研究了Pytoch的CRF实现，代码如下展示，之后将会研究如何做batch版本的CRF。&lt;/p&gt;
+&lt;p&gt;关于CRF的实现，表面上和HMM模型基本一致，从我的角度来看，因为其观测矩阵的实现由模型给出，即 $P(Y|X)$，因此其展示的是判别模型。所以才认为其是CRF模型，&lt;br&gt;如果变成隐马尔可夫模型，需要建模$P(Y,X)$, 十分有趣，不同观测矩阵的给出方式决定了模型的类型。&lt;/p&gt;
     
     </summary>
     
@@ -104,9 +99,9 @@ Need &amp;lt;https://arxiv.org/pdf/1706.03762.pdf&amp;gt;&lt;/code&gt;&lt;br&gt;
     
       <category term="NLP" scheme="http://yoursite.com/tags/NLP/"/>
     
-      <category term="pytorch" scheme="http://yoursite.com/tags/pytorch/"/>
-    
       <category term="Deep Learning" scheme="http://yoursite.com/tags/Deep-Learning/"/>
+    
+      <category term="pytorch" scheme="http://yoursite.com/tags/pytorch/"/>
     
       <category term="Transformer" scheme="http://yoursite.com/tags/Transformer/"/>
     
