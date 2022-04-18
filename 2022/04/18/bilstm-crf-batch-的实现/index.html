@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+  <link rel="alternate" href="/atom.xml" title="Bool_tbb" type="application/atom+xml">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.5.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":true,"scrollpercent":true},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    sidebarPadding: 40
+  };
+</script>
+
+  <meta name="description" content="batch版本的条件随机场在上一篇文章中我们按照了 pytorch的官方教程复现了 简单版本的 条件随机场。基本了解了其中的代码实现。但是我们可以看到上一篇中的 crf需要反复的条件循环，同时也没有支持批处理的操作，如果实际应用的话，速度应该会慢很多，因此，在这里，我们实现了Batch版本的条件随机场。to be honest, batch版本相比较 傻瓜版本的实现有一丢丢的复杂，尤其是需要考虑大">
+<meta property="og:type" content="article">
+<meta property="og:title" content="bilstm+crf(batch)的实现">
+<meta property="og:url" content="http://yoursite.com/2022/04/18/bilstm-crf-batch-%E7%9A%84%E5%AE%9E%E7%8E%B0/index.html">
+<meta property="og:site_name" content="Bool_tbb">
+<meta property="og:description" content="batch版本的条件随机场在上一篇文章中我们按照了 pytorch的官方教程复现了 简单版本的 条件随机场。基本了解了其中的代码实现。但是我们可以看到上一篇中的 crf需要反复的条件循环，同时也没有支持批处理的操作，如果实际应用的话，速度应该会慢很多，因此，在这里，我们实现了Batch版本的条件随机场。to be honest, batch版本相比较 傻瓜版本的实现有一丢丢的复杂，尤其是需要考虑大">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-04-18T13:27:11.000Z">
+<meta property="article:modified_time" content="2022-04-18T13:40:45.581Z">
+<meta property="article:author" content="bool_tbb">
+<meta property="article:tag" content="pytorch">
+<meta property="article:tag" content="crf">
+<meta property="article:tag" content="自然语言处理">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://yoursite.com/2022/04/18/bilstm-crf-batch-%E7%9A%84%E5%AE%9E%E7%8E%B0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>bilstm+crf(batch)的实现 | Bool_tbb</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+
+<body itemscope itemtype="http://schema.org/WebPage">
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Bool_tbb</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">留下点啥，证明活过</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/04/18/bilstm-crf-batch-%E7%9A%84%E5%AE%9E%E7%8E%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/tb.jpg">
+      <meta itemprop="name" content="bool_tbb">
+      <meta itemprop="description" content="十三月">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Bool_tbb">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          bilstm+crf(batch)的实现
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2022-04-18 21:27:11 / 修改时间：21:40:45" itemprop="dateCreated datePublished" datetime="2022-04-18T21:27:11+08:00">2022-04-18</time>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="batch版本的条件随机场"><a href="#batch版本的条件随机场" class="headerlink" title="batch版本的条件随机场"></a>batch版本的条件随机场</h2><p>在上一篇文章中我们按照了 pytorch的官方教程复现了 简单版本的 条件随机场。基本了解了其中的代码实现。但是我们可以看到上一篇中的 crf需要反复的条件循环，同时也没有支持批处理的操作，如果实际应用的话，速度应该会慢很多，因此，在这里，我们实现了Batch版本的条件随机场。to be honest, batch版本相比较 傻瓜版本的实现有一丢丢的复杂，尤其是需要考虑大量的矩阵并行的操作，十分伤脑筋。还好，我参考了<a href="https://github.com/jtlin-sync/batch_bilstm_crf" target="_blank" rel="noopener">batch lstm+crf</a>代码并且认真的剖析其中的细节后，基本弄清了其中的实现细节。如果你对 这部分代码感兴趣，可以参考我下面的代码跑起来学一学。在这部分代码中，一些核心地方给出了注释，但是可能仍然不够清晰，希望你可以自己画画图搞清楚这些细节。<br><a id="more"></a></p>
+ <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">import</span> torch.nn.utils.rnn <span class="keyword">as</span> rnn_utils</span><br><span class="line"><span class="keyword">import</span> torch.optim <span class="keyword">as</span> optim</span><br><span class="line"><span class="keyword">from</span> xarray <span class="keyword">import</span> Dataset</span><br><span class="line"><span class="keyword">from</span> torch.utils.data <span class="keyword">import</span> Dataset,DataLoader</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BiLSTM</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, vocab_size, tagset, embedding_dim, hidden_dim,</span></span></span><br><span class="line"><span class="function"><span class="params">                 num_layers, bidirectional, dropout, pretrained=None)</span>:</span></span><br><span class="line">        super(BiLSTM, self).__init__()</span><br><span class="line">        self.embedding_dim = embedding_dim</span><br><span class="line">        self.hidden_dim = hidden_dim</span><br><span class="line">        self.tagset_size = len(tagset)</span><br><span class="line">        self.bidirectional = bidirectional</span><br><span class="line">        self.num_layers = num_layers</span><br><span class="line">        self.word_embeds = nn.Embedding(vocab_size, embedding_dim)</span><br><span class="line">        <span class="keyword">if</span> pretrained <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            self.word_embeds = nn.Embedding.from_pretrained(pretrained)</span><br><span class="line">        self.lstm = nn.LSTM(</span><br><span class="line">            input_size=embedding_dim,</span><br><span class="line">            hidden_size=hidden_dim // <span class="number">2</span> <span class="keyword">if</span> bidirectional <span class="keyword">else</span> hidden_dim,</span><br><span class="line">            num_layers=num_layers,</span><br><span class="line">            dropout=dropout,</span><br><span class="line">            bidirectional=bidirectional,</span><br><span class="line">            batch_first=<span class="literal">True</span>,</span><br><span class="line">        )</span><br><span class="line">        self.hidden2tag = nn.Linear(hidden_dim, self.tagset_size)</span><br><span class="line">        self.hidden = <span class="literal">None</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">init_hidden</span><span class="params">(self, batch_size, device)</span>:</span></span><br><span class="line">        init_hidden_dim = self.hidden_dim // <span class="number">2</span> <span class="keyword">if</span> self.bidirectional <span class="keyword">else</span> self.hidden_dim</span><br><span class="line">        init_first_dim = self.num_layers * <span class="number">2</span> <span class="keyword">if</span> self.bidirectional <span class="keyword">else</span> self.num_layers</span><br><span class="line">        self.hidden = (</span><br><span class="line">            torch.randn(init_first_dim, batch_size, init_hidden_dim).to(device),</span><br><span class="line">            torch.randn(init_first_dim, batch_size, init_hidden_dim).to(device)</span><br><span class="line">        )</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">repackage_hidden</span><span class="params">(self, hidden)</span>:</span></span><br><span class="line">        <span class="string">"""Wraps hidden states in new Tensors, to detach them from their history."""</span></span><br><span class="line">        <span class="keyword">if</span> isinstance(hidden, torch.Tensor):</span><br><span class="line">            <span class="keyword">return</span> hidden.detach_()</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> tuple(self.repackage_hidden(h) <span class="keyword">for</span> h <span class="keyword">in</span> hidden)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, batch_input, batch_input_lens, batch_mask)</span>:</span></span><br><span class="line">        batch_size, padding_length = batch_input.size()</span><br><span class="line">        batch_input = self.word_embeds(batch_input)  <span class="comment"># size: #batch * padding_length * embedding_dim</span></span><br><span class="line">        batch_input = rnn_utils.pack_padded_sequence(</span><br><span class="line">            batch_input, batch_input_lens, batch_first=<span class="literal">True</span>)</span><br><span class="line">        batch_output, self.hidden = self.lstm(batch_input, self.hidden)</span><br><span class="line">        self.repackage_hidden(self.hidden)</span><br><span class="line">        batch_output, _ = rnn_utils.pad_packed_sequence(batch_output, batch_first=<span class="literal">True</span>)</span><br><span class="line">       </span><br><span class="line">        batch_output = batch_output.contiguous().view(batch_size * padding_length, <span class="number">-1</span>)</span><br><span class="line">       </span><br><span class="line">        batch_output = batch_output[batch_mask, ...]</span><br><span class="line">        </span><br><span class="line">        out = self.hidden2tag(batch_output)</span><br><span class="line">        <span class="keyword">return</span> out</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">neg_log_likelihood</span><span class="params">(self, batch_input, batch_input_lens, batch_mask, batch_target)</span>:</span></span><br><span class="line">        loss = nn.CrossEntropyLoss(reduction=<span class="string">'mean'</span>)</span><br><span class="line">        feats = self(batch_input, batch_input_lens, batch_mask)</span><br><span class="line">        batch_target = torch.cat(batch_target, <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> loss(feats, batch_target)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">predict</span><span class="params">(self, batch_input, batch_input_lens, batch_mask)</span>:</span></span><br><span class="line">        feats = self(batch_input, batch_input_lens, batch_mask)</span><br><span class="line">        val, pred = torch.max(feats, <span class="number">1</span>)</span><br><span class="line">        <span class="keyword">return</span> pred</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CRF</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="comment"># 下面让我们看一下关于 batch 版本的 CRF</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, tagset, start_tag, end_tag, device)</span>:</span></span><br><span class="line">        super(CRF, self).__init__()</span><br><span class="line">        self.tagset_size = len(tagset)</span><br><span class="line">        self.START_TAG_IDX = tagset.index(start_tag)</span><br><span class="line">        self.END_TAG_IDX = tagset.index(end_tag)</span><br><span class="line">        self.START_TAG_TENSOR = torch.LongTensor([self.START_TAG_IDX], device=device)</span><br><span class="line">        self.END_TAG_TENSOR = torch.LongTensor([self.END_TAG_IDX], device=device)</span><br><span class="line">        <span class="comment"># trans: (tagset_size, tagset_size) trans (i, j) means state_i -&gt; state_j</span></span><br><span class="line">        self.trans = nn.Parameter(</span><br><span class="line">            torch.randn(self.tagset_size, self.tagset_size)</span><br><span class="line">        )</span><br><span class="line">        <span class="comment"># self.trans.data[...] = 1</span></span><br><span class="line">        self.trans.data[:, self.START_TAG_IDX] = <span class="number">-10000</span></span><br><span class="line">        self.trans.data[self.END_TAG_IDX, :] = <span class="number">-10000</span></span><br><span class="line">        self.device = device</span><br><span class="line">    </span><br><span class="line">    <span class="comment"># 初始状态</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">init_alpha</span><span class="params">(self, batch_size, tagset_size)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> torch.full((batch_size, tagset_size, <span class="number">1</span>), <span class="number">-10000</span>, dtype=torch.float, device=self.device)</span><br><span class="line">    <span class="comment"># 做维特比解码的图，初始为word_size * tag_szie。</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">init_path</span><span class="params">(self, size_shape)</span>:</span></span><br><span class="line">        <span class="comment"># Initialization Path - LongTensor + Device + Full_value=0</span></span><br><span class="line">        <span class="keyword">return</span> torch.full(size_shape, <span class="number">0</span>, dtype=torch.long, device=self.device)</span><br><span class="line">    <span class="comment"># 重新打包，将相同位置的词汇作为一个组。</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_iter_legal_batch</span><span class="params">(self, batch_input_lens, reverse=False)</span>:</span></span><br><span class="line">        index = torch.arange(<span class="number">0</span>, batch_input_lens.sum(), dtype=torch.long) <span class="comment"># 初始了一个tensor[0,length_sum)</span></span><br><span class="line">        </span><br><span class="line">        packed_index = rnn_utils.pack_sequence(</span><br><span class="line">            torch.split(index, batch_input_lens.tolist())                 <span class="comment"># split 应该是要把它找到对应的索引</span></span><br><span class="line">        )                                                                 <span class="comment"># 再 把 它打包，具体来说是让列元素对其</span></span><br><span class="line">        <span class="comment">#print("pack_index",packed_index)</span></span><br><span class="line">        batch_iter = torch.split(packed_index.data, packed_index.batch_sizes.tolist()) <span class="comment"># 重新组batch,按照每个text文本词的对应位置</span></span><br><span class="line">        batch_iter = reversed(batch_iter) <span class="keyword">if</span> reverse <span class="keyword">else</span> batch_iter</span><br><span class="line">        <span class="keyword">for</span> idx <span class="keyword">in</span> batch_iter:</span><br><span class="line">            <span class="keyword">yield</span> idx, idx.size()[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">score_z</span><span class="params">(self, feats, batch_input_lens)</span>:</span></span><br><span class="line">        <span class="comment"># 模拟packed pad过程</span></span><br><span class="line">        tagset_size = feats.shape[<span class="number">1</span>]</span><br><span class="line">        batch_size = len(batch_input_lens)</span><br><span class="line">        alpha = self.init_alpha(batch_size, tagset_size) <span class="comment"># batch_size,tag_size,1</span></span><br><span class="line">        alpha[:, self.START_TAG_IDX, :] = <span class="number">0</span>  <span class="comment"># Initialization</span></span><br><span class="line">        <span class="keyword">for</span> legal_idx, legal_batch_size <span class="keyword">in</span> self._iter_legal_batch(batch_input_lens):</span><br><span class="line">            <span class="comment">#print(feats.shape) #batch_size,tag_size</span></span><br><span class="line">            feat = feats[legal_idx, ].view(legal_batch_size, <span class="number">1</span>, tagset_size)  <span class="comment"># </span></span><br><span class="line">            <span class="comment"># #batch * 1 * |tag| + #batch * |tag| * 1 + |tag| * |tag| = #batch * |tag| * |tag| 广播机制</span></span><br><span class="line">            legal_batch_score = feat + alpha[:legal_batch_size, ] + self.trans <span class="comment"># 每一列是一个被转移状态的i-j的分布</span></span><br><span class="line">            alpha_new = torch.logsumexp(legal_batch_score, <span class="number">1</span>).unsqueeze(<span class="number">2</span>) <span class="comment"># batch_size,tag_size,1</span></span><br><span class="line">            alpha[:legal_batch_size, ] = alpha_new</span><br><span class="line">        alpha = alpha + self.trans[:, self.END_TAG_IDX].unsqueeze(<span class="number">1</span>)</span><br><span class="line">        score = torch.logsumexp(alpha, <span class="number">1</span>).sum()</span><br><span class="line">        <span class="keyword">return</span> score</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">score_sentence</span><span class="params">(self, feats, batch_target)</span>:</span></span><br><span class="line">        <span class="comment"># CRF Batched Sentence Score</span></span><br><span class="line">        <span class="comment"># feats: (#batch_state(#words), tagset_size)</span></span><br><span class="line">        <span class="comment"># batch_target: list&lt;torch.LongTensor&gt; At least One LongTensor</span></span><br><span class="line">        <span class="comment"># Warning: words order =  batch_target order</span></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">_add_start_tag</span><span class="params">(target)</span>:</span></span><br><span class="line">            <span class="keyword">return</span> torch.cat([self.START_TAG_TENSOR, target])</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">_add_end_tag</span><span class="params">(target)</span>:</span></span><br><span class="line">            <span class="keyword">return</span> torch.cat([target, self.END_TAG_TENSOR])</span><br><span class="line"></span><br><span class="line">        from_state = [_add_start_tag(target) <span class="keyword">for</span> target <span class="keyword">in</span> batch_target]</span><br><span class="line">        to_state = [_add_end_tag(target) <span class="keyword">for</span> target <span class="keyword">in</span> batch_target]</span><br><span class="line">      </span><br><span class="line">        from_state = torch.cat(from_state)  <span class="comment">#拼接成一维tensor</span></span><br><span class="line">        to_state = torch.cat(to_state)      <span class="comment">#同理拼接成一维tensor</span></span><br><span class="line">        trans_score = self.trans[from_state, to_state] <span class="comment"># 转移概率得分</span></span><br><span class="line">      </span><br><span class="line">        gather_target = torch.cat(batch_target).view(<span class="number">-1</span>, <span class="number">1</span>)</span><br><span class="line">        emit_score = torch.gather(feats, <span class="number">1</span>, gather_target)  <span class="comment"># 得到对应每一个标签位置的观测概率得分</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> trans_score.sum() + emit_score.sum()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">viterbi</span><span class="params">(self, feats, batch_input_lens)</span>:</span></span><br><span class="line">        word_size, tagset_size = feats.shape</span><br><span class="line">        </span><br><span class="line">        batch_size = len(batch_input_lens)</span><br><span class="line">        viterbi_path = self.init_path(feats.shape)  <span class="comment"># use feats.shape to init path.shape</span></span><br><span class="line">        alpha = self.init_alpha(batch_size, tagset_size) <span class="comment"># batch_size, tag_size ,1</span></span><br><span class="line">        alpha[:, self.START_TAG_IDX, :] = <span class="number">0</span>  <span class="comment"># Initialization</span></span><br><span class="line">        <span class="keyword">for</span> legal_idx, legal_batch_size <span class="keyword">in</span> self._iter_legal_batch(batch_input_lens):</span><br><span class="line">            feat = feats[legal_idx, :].view(legal_batch_size, <span class="number">1</span>, tagset_size)</span><br><span class="line">            legal_batch_score = feat + alpha[:legal_batch_size, ] + self.trans <span class="comment"># batch_size, tag_size,tag_size</span></span><br><span class="line">            alpha_new, best_tag = torch.max(legal_batch_score, <span class="number">1</span>)</span><br><span class="line">          </span><br><span class="line">           </span><br><span class="line">            alpha[:legal_batch_size, ] = alpha_new.unsqueeze(<span class="number">2</span>)</span><br><span class="line">            viterbi_path[legal_idx, ] = best_tag</span><br><span class="line">        alpha = alpha + self.trans[:, self.END_TAG_IDX].unsqueeze(<span class="number">1</span>)</span><br><span class="line">        path_score, best_tag = torch.max(alpha, <span class="number">1</span>) <span class="comment"># batch_size,1</span></span><br><span class="line">     </span><br><span class="line">        path_score = path_score.squeeze()  <span class="comment"># path_score=#batch</span></span><br><span class="line"></span><br><span class="line">        best_paths = self.init_path((word_size, <span class="number">1</span>))</span><br><span class="line">        <span class="keyword">for</span> legal_idx, legal_batch_size <span class="keyword">in</span> self._iter_legal_batch(batch_input_lens, reverse=<span class="literal">True</span>):</span><br><span class="line">            best_paths[legal_idx, ] = best_tag[:legal_batch_size, ]  <span class="comment"># </span></span><br><span class="line">            backword_path = viterbi_path[legal_idx, ]  <span class="comment"># legal_size * |Tag|</span></span><br><span class="line">           </span><br><span class="line">            this_tag = best_tag[:legal_batch_size, ]  <span class="comment"># |legal_batch_size| * 1</span></span><br><span class="line">         </span><br><span class="line">            backword_tag = torch.gather(backword_path, <span class="number">1</span>, this_tag) <span class="comment"># backward_path size:legal_size * |Tag| </span></span><br><span class="line">            best_tag[:legal_batch_size, ] = backword_tag</span><br><span class="line">            <span class="comment"># never computing &lt;START&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># best_paths = #words</span></span><br><span class="line">        <span class="keyword">return</span> path_score.view(<span class="number">-1</span>), best_paths.view(<span class="number">-1</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BiLSTM_CRF</span><span class="params">(nn.Module)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, vocab_size, tagset, embedding_dim, hidden_dim,</span></span></span><br><span class="line"><span class="function"><span class="params">                 num_layers, bidirectional, dropout, start_tag, end_tag, device, pretrained=None)</span>:</span></span><br><span class="line">        super(BiLSTM_CRF, self).__init__()</span><br><span class="line">        self.bilstm = BiLSTM(vocab_size, tagset, embedding_dim, hidden_dim,</span><br><span class="line">                             num_layers, bidirectional, dropout, pretrained)</span><br><span class="line">        self.CRF = CRF(tagset, start_tag, end_tag, device)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">init_hidden</span><span class="params">(self, batch_size, device)</span>:</span></span><br><span class="line">        self.bilstm.hidden = self.bilstm.init_hidden(batch_size, device)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span><span class="params">(self, batch_input, batch_input_lens, batch_mask)</span>:</span></span><br><span class="line">        feats = self.bilstm(batch_input, batch_input_lens, batch_mask)</span><br><span class="line">        score, path = self.CRF.viterbi(feats, batch_input_lens)</span><br><span class="line">        <span class="keyword">return</span> path</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">neg_log_likelihood</span><span class="params">(self, batch_input, batch_input_lens, batch_mask, batch_target)</span>:</span></span><br><span class="line">        feats = self.bilstm(batch_input, batch_input_lens, batch_mask)</span><br><span class="line">        gold_score = self.CRF.score_sentence(feats, batch_target)</span><br><span class="line">        forward_score = self.CRF.score_z(feats, batch_input_lens)</span><br><span class="line">        <span class="keyword">return</span> forward_score - gold_score</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">predict</span><span class="params">(self, batch_input, batch_input_lens, batch_mask)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> self(batch_input, batch_input_lens, batch_mask)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">mydataset</span><span class="params">(Dataset)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,dataList)</span>:</span></span><br><span class="line">        self.datalst = dataList</span><br><span class="line">        self.word_to_ix = &#123;&#125;</span><br><span class="line">        self.tag_to_ix = &#123;<span class="string">"PAD"</span>:<span class="number">0</span>,<span class="string">"B"</span>:<span class="number">1</span>,<span class="string">"I"</span>:<span class="number">2</span>,<span class="string">"O"</span>:<span class="number">3</span>,START_TAG:<span class="number">4</span>,STOP_TAG:<span class="number">5</span>&#125;</span><br><span class="line">        self.data = []</span><br><span class="line">        self.label = []</span><br><span class="line">        self.input_lens = []</span><br><span class="line">        self.mask = []</span><br><span class="line">        <span class="keyword">for</span> sentence, tags <span class="keyword">in</span> self.datalst:</span><br><span class="line">            <span class="keyword">for</span> word <span class="keyword">in</span> sentence:</span><br><span class="line">                <span class="keyword">if</span> word <span class="keyword">not</span> <span class="keyword">in</span> self.word_to_ix:</span><br><span class="line">                    self.word_to_ix[word] = len(self.word_to_ix)+<span class="number">1</span></span><br><span class="line">        <span class="keyword">for</span> sentence,tags <span class="keyword">in</span> self.datalst:</span><br><span class="line"></span><br><span class="line">            self.label.append([self.tag_to_ix[ids] <span class="keyword">for</span> ids <span class="keyword">in</span> tags])</span><br><span class="line">            self.data.append([self.word_to_ix[word] <span class="keyword">for</span> word <span class="keyword">in</span> sentence])</span><br><span class="line">            lens = len(sentence)</span><br><span class="line">            self.mask.append([<span class="literal">True</span>]*lens)  </span><br><span class="line">            self.input_lens.append(lens)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__len__</span><span class="params">(self)</span> -&gt; int:</span></span><br><span class="line">        <span class="keyword">return</span> len(self.datalst)</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getitem__</span><span class="params">(self, index: int)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> &#123;<span class="string">"label"</span>:self.label[index],<span class="string">"data"</span>:self.data[index],<span class="string">"len"</span>:self.input_lens[index],<span class="string">'mask'</span>:self.mask[index]&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">    @staticmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">collate_fn</span><span class="params">(all_example)</span>:</span></span><br><span class="line"></span><br><span class="line">        data =   rnn_utils.pad_sequence(batch_first = <span class="literal">True</span>,padding_value = <span class="number">0</span>,sequences=[torch.tensor(dic[<span class="string">"data"</span>],dtype=torch.long) <span class="keyword">for</span> dic <span class="keyword">in</span> all_example]) </span><br><span class="line">        label = [torch.tensor(dic[<span class="string">"label"</span>]) <span class="keyword">for</span> dic <span class="keyword">in</span> all_example]</span><br><span class="line">        lens = torch.tensor([dic[<span class="string">"len"</span>] <span class="keyword">for</span> dic <span class="keyword">in</span> all_example],dtype=torch.long)</span><br><span class="line">        mask = rnn_utils.pad_sequence(batch_first = <span class="literal">True</span>,padding_value = <span class="literal">False</span>,sequences=[torch.tensor(dic[<span class="string">"data"</span>],dtype=torch.bool) <span class="keyword">for</span> dic <span class="keyword">in</span> all_example]).reshape(<span class="number">-1</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> data,lens,mask,label</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">START_TAG = <span class="string">"&lt;START&gt;"</span></span><br><span class="line">STOP_TAG = <span class="string">"&lt;STOP"</span></span><br><span class="line">EMBEDDING_DIM = <span class="number">5</span></span><br><span class="line">HIDDEN_DIM = <span class="number">4</span></span><br><span class="line"></span><br><span class="line">training_data = [(</span><br><span class="line">    <span class="string">"the wall street journal reported today that apple corporation made money"</span>.split(),</span><br><span class="line">    <span class="string">"B I I I O O O B I O O"</span>.split()</span><br><span class="line">), (</span><br><span class="line">    <span class="string">"georgia tech is a university in georgia"</span>.split(),</span><br><span class="line">    <span class="string">"B I O O O O B"</span>.split()</span><br><span class="line">)]</span><br><span class="line">dataset = mydataset(training_data)</span><br><span class="line">dataloader = DataLoader(dataset,batch_size=<span class="number">2</span>,collate_fn=mydataset.collate_fn)</span><br><span class="line">word_to_ix = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> sentence, tags <span class="keyword">in</span> training_data:</span><br><span class="line">    <span class="keyword">for</span> word <span class="keyword">in</span> sentence:</span><br><span class="line">        <span class="keyword">if</span> word <span class="keyword">not</span> <span class="keyword">in</span> word_to_ix:</span><br><span class="line">            word_to_ix[word] = len(word_to_ix)</span><br><span class="line"></span><br><span class="line">tag_to_ix = &#123;<span class="string">"B"</span>:<span class="number">0</span>,<span class="string">"I"</span>:<span class="number">1</span>,<span class="string">"O"</span>:<span class="number">2</span>,START_TAG:<span class="number">3</span>,STOP_TAG:<span class="number">4</span>&#125;</span><br><span class="line">batch_size = <span class="number">2</span></span><br><span class="line">device = <span class="string">'cpu'</span></span><br><span class="line">model = BiLSTM_CRF(vocab_size=len(dataset.word_to_ix)+<span class="number">1</span>,tagset=[<span class="string">"PAD"</span>,<span class="string">"B"</span>,<span class="string">"I"</span>,<span class="string">"O"</span>,START_TAG,STOP_TAG],embedding_dim=<span class="number">4</span>,hidden_dim=<span class="number">4</span>,num_layers=<span class="number">1</span>,bidirectional=<span class="literal">True</span>,dropout=<span class="number">0.01</span>,start_tag=START_TAG,end_tag=STOP_TAG,device=<span class="string">'cpu'</span>)</span><br><span class="line">optimizer = optim.Adam(model.parameters(),lr = <span class="number">0.1</span>, weight_decay= <span class="number">1e-4</span>)</span><br><span class="line">model.init_hidden(batch_size, device)</span><br><span class="line"><span class="keyword">for</span> times <span class="keyword">in</span> range(<span class="number">1</span>):</span><br><span class="line">    <span class="keyword">for</span> batch_info <span class="keyword">in</span> dataloader:</span><br><span class="line">        batch_input, batch_input_lens, batch_mask, batch_target = batch_info</span><br><span class="line">        loss_train = model.neg_log_likelihood(batch_input, batch_input_lens, batch_mask, batch_target)</span><br><span class="line">        optimizer.zero_grad()</span><br><span class="line">        loss_train.backward()</span><br><span class="line">        optimizer.step()</span><br><span class="line">        print(loss_train.item())</span><br><span class="line">model.init_hidden(batch_size, device)</span><br><span class="line"><span class="keyword">for</span> batch_info <span class="keyword">in</span> dataloader:</span><br><span class="line">    batch_input, batch_input_lens, batch_mask, batch_target = batch_info</span><br><span class="line">    batch_pred = model.predict(batch_input, batch_input_lens, batch_mask)</span><br><span class="line">    print(batch_target)</span><br><span class="line">    print(batch_pred)</span><br><span class="line">    <span class="comment">#loss_test = loss_fn(batch_input, batch_input_lens, batch_mask, batch_target)</span></span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+        <div class="reward-container">
+  <div>O(∩_∩)O哈哈~</div>
+  <button disable="enable" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="bool_tbb 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="bool_tbb 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/pytorch/" rel="tag"># pytorch</a>
+              <a href="/tags/crf/" rel="tag"># crf</a>
+              <a href="/tags/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/" rel="tag"># 自然语言处理</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+                <a href="/2022/04/15/pytorch%E7%89%88%E6%9C%AC%E7%9A%84bilstm-crf%E7%9A%84%E5%AE%9E%E7%8E%B0/" rel="next" title="pytorch版本的bilstm+crf的实现">
+                  <i class="fa fa-chevron-left"></i> pytorch版本的bilstm+crf的实现
+                </a>
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+            </div>
+          </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#batch版本的条件随机场"><span class="nav-number">1.</span> <span class="nav-text">batch版本的条件随机场</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="bool_tbb"
+      src="/images/tb.jpg">
+  <p class="site-author-name" itemprop="name">bool_tbb</p>
+  <div class="site-description" itemprop="description">十三月</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">15</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">24</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/iiot-tbb" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;iiot-tbb" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/bool_tbb@sjtu.edu.cn" title="E-Mail → bool_tbb@sjtu.edu.cn"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/5313762851" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;5313762851" rel="noopener" target="_blank"><i class="fa fa-fw fa-weibo"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://stackoverflow.com/users/16817976/bool-tbb" title="StackOverflow → https:&#x2F;&#x2F;stackoverflow.com&#x2F;users&#x2F;16817976&#x2F;bool-tbb" rel="noopener" target="_blank"><i class="fa fa-fw fa-stack-overflow"></i>StackOverflow</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      推荐阅读
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://developer.apple.com/swift/" title="https:&#x2F;&#x2F;developer.apple.com&#x2F;swift&#x2F;" rel="noopener" target="_blank">Swift 4</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="https://developer.apple.com/documentation/objectivec" title="https:&#x2F;&#x2F;developer.apple.com&#x2F;documentation&#x2F;objectivec" rel="noopener" target="_blank">Objective -C</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+      
+      <script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+      <script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+      <div class="widget-wrap">
+          <h3 class="widget-title">Tag Cloud</h3>
+          <div id="myCanvasContainer" class="widget tagcloud">
+              <canvas width="250" height="250" id="resCanvas" style="width=100%">
+                  <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI/" rel="tag">AI</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Autograd/" rel="tag">Autograd</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Deep-Learning/" rel="tag">Deep Learning</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Languaage-Model/" rel="tag">Languaage Model</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Language-Model/" rel="tag">Language Model</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Machine-Learning/" rel="tag">Machine Learning</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/NLP/" rel="tag">NLP</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PDF%E8%A7%A3%E6%9E%90/" rel="tag">PDF解析</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Pytorch/" rel="tag">Pytorch</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Syntax-Tree/" rel="tag">Syntax-Tree</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Transformer/" rel="tag">Transformer</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/crf/" rel="tag">crf</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/" rel="tag">hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/myBorn/" rel="tag">myBorn</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/numpy/" rel="tag">numpy</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/pytorch/" rel="tag">pytorch</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" rel="tag">二叉树</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%BA%E6%96%87/" rel="tag">人文</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B3%95%E5%BE%8B/" rel="tag">法律</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/" rel="tag">自然语言处理</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9A%8F%E7%AC%94/" rel="tag">随笔</a><span class="tag-list-count">1</span></li></ul>
+              </canvas>
+          </div>
+      </div>
+      
+      
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">bool_tbb</span>
+</div>
+  <div class="powered-by">由 <a href="https://github.com/iiot-tbb" class="theme-link" rel="noopener" target="_blank">Tbb</a> 强力驱动 v1.0.0
+  </div>
+  <span class="post-meta-divider">|</span>
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共32.7k字</span>
+</div>
+
+
+<span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+<script>
+    var now = new Date(); 
+    function createtime() { 
+        var grt= new Date("11/11/2019 12:49:25");//在此处修改你的建站时间
+        now.setTime(now.getTime()+250); 
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days); 
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours); 
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum); 
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;} 
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum); 
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;} 
+        document.getElementById("timeDate").innerHTML = " 运行了 "+dnum+" 天 "; 
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒"; 
+    } 
+setInterval("createtime()",250);
+</script>
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>

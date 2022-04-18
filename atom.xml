@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2022-04-15T07:28:31.310Z</updated>
+  <updated>2022-04-18T13:40:45.581Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>bilstm+crf(batch)的实现</title>
+    <link href="http://yoursite.com/2022/04/18/bilstm-crf-batch-%E7%9A%84%E5%AE%9E%E7%8E%B0/"/>
+    <id>http://yoursite.com/2022/04/18/bilstm-crf-batch-%E7%9A%84%E5%AE%9E%E7%8E%B0/</id>
+    <published>2022-04-18T13:27:11.000Z</published>
+    <updated>2022-04-18T13:40:45.581Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;batch版本的条件随机场&quot;&gt;&lt;a href=&quot;#batch版本的条件随机场&quot; class=&quot;headerlink&quot; title=&quot;batch版本的条件随机场&quot;&gt;&lt;/a&gt;batch版本的条件随机场&lt;/h2&gt;&lt;p&gt;在上一篇文章中我们按照了 pytorch的官方教程复现了 简单版本的 条件随机场。基本了解了其中的代码实现。但是我们可以看到上一篇中的 crf需要反复的条件循环，同时也没有支持批处理的操作，如果实际应用的话，速度应该会慢很多，因此，在这里，我们实现了Batch版本的条件随机场。to be honest, batch版本相比较 傻瓜版本的实现有一丢丢的复杂，尤其是需要考虑大量的矩阵并行的操作，十分伤脑筋。还好，我参考了&lt;a href=&quot;https://github.com/jtlin-sync/batch_bilstm_crf&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;batch lstm+crf&lt;/a&gt;代码并且认真的剖析其中的细节后，基本弄清了其中的实现细节。如果你对 这部分代码感兴趣，可以参考我下面的代码跑起来学一学。在这部分代码中，一些核心地方给出了注释，但是可能仍然不够清晰，希望你可以自己画画图搞清楚这些细节。&lt;br&gt;
+    
+    </summary>
+    
+    
+    
+      <category term="pytorch" scheme="http://yoursite.com/tags/pytorch/"/>
+    
+      <category term="crf" scheme="http://yoursite.com/tags/crf/"/>
+    
+      <category term="自然语言处理" scheme="http://yoursite.com/tags/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/"/>
+    
+  </entry>
   
   <entry>
     <title>pytorch版本的bilstm+crf的实现</title>
@@ -99,9 +122,9 @@ Need &amp;lt;https://arxiv.org/pdf/1706.03762.pdf&amp;gt;&lt;/code&gt;&lt;br&gt;
     
       <category term="NLP" scheme="http://yoursite.com/tags/NLP/"/>
     
-      <category term="Deep Learning" scheme="http://yoursite.com/tags/Deep-Learning/"/>
-    
       <category term="pytorch" scheme="http://yoursite.com/tags/pytorch/"/>
+    
+      <category term="Deep Learning" scheme="http://yoursite.com/tags/Deep-Learning/"/>
     
       <category term="Transformer" scheme="http://yoursite.com/tags/Transformer/"/>
     
