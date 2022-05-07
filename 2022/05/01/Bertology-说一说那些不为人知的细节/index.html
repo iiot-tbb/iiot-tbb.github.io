@@ -60,10 +60,10 @@
 <meta property="og:image" content="http://yoursite.com/2022/05/01/Bertology-%E8%AF%B4%E4%B8%80%E8%AF%B4%E9%82%A3%E4%BA%9B%E4%B8%8D%E4%B8%BA%E4%BA%BA%E7%9F%A5%E7%9A%84%E7%BB%86%E8%8A%82/fig5.jpg">
 <meta property="og:image" content="http://yoursite.com/2022/05/01/Bertology-%E8%AF%B4%E4%B8%80%E8%AF%B4%E9%82%A3%E4%BA%9B%E4%B8%8D%E4%B8%BA%E4%BA%BA%E7%9F%A5%E7%9A%84%E7%BB%86%E8%8A%82/fig6.jpg">
 <meta property="article:published_time" content="2022-05-01T08:16:22.000Z">
-<meta property="article:modified_time" content="2022-05-07T08:10:28.855Z">
+<meta property="article:modified_time" content="2022-05-07T08:11:33.547Z">
 <meta property="article:author" content="bool_tbb">
-<meta property="article:tag" content="NLP">
 <meta property="article:tag" content="BERT">
+<meta property="article:tag" content="NLP">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://yoursite.com/2022/05/01/Bertology-%E8%AF%B4%E4%B8%80%E8%AF%B4%E9%82%A3%E4%BA%9B%E4%B8%8D%E4%B8%BA%E4%BA%BA%E7%9F%A5%E7%9A%84%E7%BB%86%E8%8A%82/fig1.jpg">
 
@@ -239,7 +239,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-05-07 16:10:28" itemprop="dateModified" datetime="2022-05-07T16:10:28+08:00">2022-05-07</time>
+                <time title="修改时间：2022-05-07 16:11:33" itemprop="dateModified" datetime="2022-05-07T16:11:33+08:00">2022-05-07</time>
               </span>
 
           
@@ -263,6 +263,7 @@
         <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>自 Transformer 模型的文章《Attention is all you need》这篇经典发表的时刻，整个自然语言处理界发生了天翻地覆的变化，强大的注意力机制使得模型能够摆脱RNN模型的长时依赖的问题，且在各种NLP下游任务中，效果吊打RNN系列模型。随后经典名作GPT，BERT这些预训练模型的paper相继发表，从此NLP进入预训练时代。由于其对基础的语意句法等nlp的特征超强的捕获能力，基于Transformer系列的backbone预训练模型在下游任务微调成一种常用的方法。</p>
 <p>虽然每年有大量的前沿研究基于Bert这样的模型，但是很多文章—-表面是对模型进行了创新获得了不错的效果，究其本质，无非是扩大了模型的参数量，提高训练数据的质量和数量。因此，取得了更为理想的效果。关于为什么模型的效果好，以及每一层的神经网络到底是取得了如何的效果则没有系统的阐释。今天读到了一篇《A Primer in BERTology: What We Know About How BERTWorks》发表于Transactions of the Association for Computational Linguistics。这篇文章对于bert模型的一些细节进行了系统的论述，很全面，因此，读了一下，把它分享给大家。</p>
 <h2 id="动机"><a href="#动机" class="headerlink" title="动机"></a>动机</h2><p>众所周知，BERT已经在nlp领域大杀四方，但是对于“why it works well”相对来说没有那么多的研究。如此一来，想要更进一步做出更加solid的研究，需要对该模型有更多的了解。 相比较一些经典的backbone，比如说卷积神经网络(CNN)，在感性上的动机则没有特别明显。我们希望对其中的一些结构进行分析，使得模型中具体所做的事情更容易被人们所认识，但是，对于模型过于大的尺寸所造成的预训练不好做（大部分研究人员没有超多的显卡，以及预训练所耗费的经费十分多）且想要做消融实验并不容易。因此对于近些年来对解释bert的文章做一个综述，方便大家对于该模型的认识。</p>
+<a id="more"></a>
 <h2 id="主要内容"><a href="#主要内容" class="headerlink" title="主要内容"></a>主要内容</h2><p>这篇文章主要介绍了一些已经被人们所理解的模型其中的部分结构，并且也同样强调了一些仍旧需要探索的地方。</p>
 <p>首先，将要介绍一些对模型“linguistic”上的探索。比如说：目前关于 BERT 学习的语言和世界知识类型的证据，以及这些知识可能存储在模型中的位置和方式。<br>之后将介绍模型的技术方面，并提供当前方案的概述，改进 BERT 的架构、预训练和微调。<br>最后，讨论了过度参数化的问题、压缩 BERT 的方法以及作为模型分析技术的修剪的新生领域。</p>
 <h2 id="BERT-模型概述"><a href="#BERT-模型概述" class="headerlink" title="BERT 模型概述"></a>BERT 模型概述</h2><p>先简要说一下BERT模型的基本结构，BERT是由相同的Transformer的编码器堆叠而成，其中编码器中最重要的成分是“多头注意力机制”，对于每一个“头”来说，它由三个矩阵进行矩阵乘法完成对于注意力的计算，这三个矩阵分别称为，“key”矩阵，“query”矩阵，“value”矩阵，对于输入文本中的每一个词（这里说词是指一个文本的在输入端所能分解成的最小组成单元，对于英文来说可以是一个词组，单词，或者亚词，或者是字母）通过三个矩阵的线性变换求得每个词的表示，然后对于每一个头的输出进行组合，最后通过全连接层得到最终的文本表示，当然在输入端到多头注意力端有一个残差连接结构。并且最后的输出是经过归一化处理操作所得到(按照一定的均值和方差得到的分布)。</p>
@@ -469,8 +470,8 @@ Clark et al. (2019)尝试使用基本 BERT 对 Wikipedia 段落进行编码，�
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/NLP/" rel="tag"># NLP</a>
               <a href="/tags/BERT/" rel="tag"># BERT</a>
+              <a href="/tags/NLP/" rel="tag"># NLP</a>
           </div>
 
         
