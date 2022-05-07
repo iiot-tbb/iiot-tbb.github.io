@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2022-04-18T13:40:45.581Z</updated>
+  <updated>2022-05-07T08:10:28.855Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Bertology:说一说那些不为人知的细节</title>
+    <link href="http://yoursite.com/2022/05/01/Bertology-%E8%AF%B4%E4%B8%80%E8%AF%B4%E9%82%A3%E4%BA%9B%E4%B8%8D%E4%B8%BA%E4%BA%BA%E7%9F%A5%E7%9A%84%E7%BB%86%E8%8A%82/"/>
+    <id>http://yoursite.com/2022/05/01/Bertology-%E8%AF%B4%E4%B8%80%E8%AF%B4%E9%82%A3%E4%BA%9B%E4%B8%8D%E4%B8%BA%E4%BA%BA%E7%9F%A5%E7%9A%84%E7%BB%86%E8%8A%82/</id>
+    <published>2022-05-01T08:16:22.000Z</published>
+    <updated>2022-05-07T08:10:28.855Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h1 id=&quot;序言&quot;&gt;&lt;a href=&quot;#序言&quot; class=&quot;headerlink&quot; title=&quot;序言&quot;&gt;&lt;/a&gt;序言&lt;/h1&gt;&lt;p&gt;自 Transformer 模型的文章《Attention is all you
+        
+      
+    
+    </summary>
+    
+    
+    
+      <category term="NLP" scheme="http://yoursite.com/tags/NLP/"/>
+    
+      <category term="BERT" scheme="http://yoursite.com/tags/BERT/"/>
+    
+  </entry>
   
   <entry>
     <title>bilstm+crf(batch)的实现</title>
@@ -124,9 +151,9 @@ Need &amp;lt;https://arxiv.org/pdf/1706.03762.pdf&amp;gt;&lt;/code&gt;&lt;br&gt;
     
       <category term="pytorch" scheme="http://yoursite.com/tags/pytorch/"/>
     
-      <category term="Deep Learning" scheme="http://yoursite.com/tags/Deep-Learning/"/>
-    
       <category term="Transformer" scheme="http://yoursite.com/tags/Transformer/"/>
+    
+      <category term="Deep Learning" scheme="http://yoursite.com/tags/Deep-Learning/"/>
     
       <category term="Languaage Model" scheme="http://yoursite.com/tags/Languaage-Model/"/>
     
@@ -255,9 +282,9 @@ Need &amp;lt;https://arxiv.org/pdf/1706.03762.pdf&amp;gt;&lt;/code&gt;&lt;br&gt;
     
     
     
-      <category term="NLP" scheme="http://yoursite.com/tags/NLP/"/>
-    
       <category term="Machine Learning" scheme="http://yoursite.com/tags/Machine-Learning/"/>
+    
+      <category term="NLP" scheme="http://yoursite.com/tags/NLP/"/>
     
   </entry>
   
