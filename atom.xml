@@ -145,9 +145,9 @@ Need &amp;lt;https://arxiv.org/pdf/1706.03762.pdf&amp;gt;&lt;/code&gt;&lt;br&gt;
     
       <category term="NLP" scheme="http://yoursite.com/tags/NLP/"/>
     
-      <category term="pytorch" scheme="http://yoursite.com/tags/pytorch/"/>
-    
       <category term="Deep Learning" scheme="http://yoursite.com/tags/Deep-Learning/"/>
+    
+      <category term="pytorch" scheme="http://yoursite.com/tags/pytorch/"/>
     
       <category term="Transformer" scheme="http://yoursite.com/tags/Transformer/"/>
     
