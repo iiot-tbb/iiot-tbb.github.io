@@ -231,7 +231,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-05-07 16:46:39" itemprop="dateModified" datetime="2022-05-07T16:46:39+08:00">2022-05-07</time>
+                <time title="修改时间：2022-05-08 17:31:00" itemprop="dateModified" datetime="2022-05-08T17:31:00+08:00">2022-05-08</time>
               </span>
 
           
@@ -245,8 +245,8 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>自 Transformer 模型的文章《Attention is all you need》这篇经典发表的时刻，整个自然语言处理界发生了天翻地覆的变化，强大的注意力机制使得模型能够摆脱RNN模型的长时依赖的问题，且在各种NLP下游任务中，效果吊打RNN系列模型。随后经典名作GPT，BERT这些预训练模型的paper相继发表，从此NLP进入预训练时代。由于其对基础的语意句法等nlp的特征超强的捕获能力，基于Transformer系列的backbone预训练模型在下游任务微调成一种常用的方法。</p>
-<p>虽然每年有大量的前沿研究基于Bert这样的模型，但是很多文章—-表面是对模型进行了创新获得了不错的效果，究其本质，无非是扩大了模型的参数量，提高训练数据的质量和数量。因此，取得了更为理想的效果。关于为什么模型的效果好，以及每一层的神经网络到底是取得了如何的效果则没有系统的阐释。今天读到了一篇《A Primer in BERTology: What We Know About How BERTWorks》发表于Transactions of the Association for Computational Linguistics。这篇文章对于bert模型的一些细节进行了系统的论述，很全面，因此，读了一下，把它分享给大家。</p>
+          <h1 id="序言"><a href="#序言" class="headerlink" title="序言"></a>序言</h1><p>自 Transformer 模型的文章<a href="https://proceedings.neurips.cc/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf" target="_blank" rel="noopener">《Attention is all you need》</a>这篇经典发表的时刻，整个自然语言处理界发生了天翻地覆的变化，强大的注意力机制使得模型能够摆脱RNN模型的长时依赖的问题，且在各种NLP下游任务中，效果吊打RNN系列模型。随后经典名作GPT，BERT这些预训练模型的paper相继发表，从此NLP进入预训练时代。由于其对基础的语意句法等nlp的特征超强的捕获能力，基于Transformer系列的backbone预训练模型在下游任务微调成一种常用的方法。</p>
+<p>虽然每年有大量的前沿研究基于Bert这样的模型，但是很多文章—-表面是对模型进行了创新获得了不错的效果，究其本质，无非是扩大了模型的参数量，提高训练数据的质量和数量。因此，取得了更为理想的效果。关于为什么模型的效果好，以及每一层的神经网络到底是取得了如何的效果则没有系统的阐释。今天读到了一篇<a href="https://watermark.silverchair.com/tacl_a_00349.pdf?token=AQECAHi208BE49Ooan9kkhW_Ercy7Dm3ZL_9Cf3qfKAc485ysgAAAsowggLGBgkqhkiG9w0BBwagggK3MIICswIBADCCAqwGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQM356qe6dtueuLMY59AgEQgIICfeMIeHCgVGdSvJu8D2XfjC5ElP1yXiIVEdIbGODaHM9mO1WisSSW5owwhoZNils1hOJUETd_3bZvcHmLZBMUwDPl90BJI5W5psceyCep9D5F3qW-dy31dxzM2bWVKBUjHL7WE7vcbad4Cvrzq_AlR36jArY0mhSc5ekJJRdbTNMHtskqingzrFuLz8eR1yUpWpq8kDtceTZV1zBJCM_NVinFFwwt1eh9cn7n8PVEm4em5fj912Oo77yMTPnr_6nPORwVjl9ZuboiKWTzV0XJz3TO-PxXcUD_mg-6DdbsS9hXibOZ3oz9bVpXVGKW6XYFOs7BzHT6A6M9lDDKDtAp2R9iBqajMyhukiB1bB6VA0ePRke64wdJ17CF9xibbH8FqlDlaYhieRLmc7DTWbIFA15hsM7Aq1iwB9mYQ49eur0aCzZSZJWRrxugqSs3MuNSnjzJvClzEQwKRBToWUFfQ0FlxG0vpOfswjZz2PnDBDhOZD6VvVF0Gs1I19RJsoaMAxfI5lMNk3tSsvxcsFbRms7EOTXG6O0qlkCsMF4GfaGp6wQq9rsAmgQsGHu1wecwwRrMveNbF7dd-0crKukSCUwZOCXM0_qn5BiOOflI4LXAjJZ6T5A1kseghSFTFHLNM1no4Vxa6tdLY-njxhK50ib5Cytrunc58Kc1qwQbahB3x4UVlKm8ww14pFjnLi2e1nJJi-_YWdu1JNuI6RbhsM_GS1iSxu6KmsH49DTy0urourShCVC-23Y6KM91pry926KPk2r_gGzmoIwC0FSGZ-FCIlMzUING1XRyVlPR9P414Ifv1_hSJKldyzljyMyte-HJhKunk9uuuWOa6f8" target="_blank" rel="noopener">《A Primer in BERTology: What We Know About How BERTWorks》</a>发表于Transactions of the Association for Computational Linguistics。这篇文章对于bert模型的一些细节进行了系统的论述，很全面，因此，读了一下，把它分享给大家。</p>
 <h1 id="动机"><a href="#动机" class="headerlink" title="动机"></a>动机</h1><p>众所周知，BERT已经在nlp领域大杀四方，但是对于“why it works well”相对来说没有那么多的研究。如此一来，想要更进一步做出更加solid的研究，需要对该模型有更多的了解。 相比较一些经典的backbone，比如说卷积神经网络(CNN)，在感性上的动机则没有特别明显。我们希望对其中的一些结构进行分析，使得模型中具体所做的事情更容易被人们所认识，但是，对于模型过于大的尺寸所造成的预训练不好做（大部分研究人员没有超多的显卡，以及预训练所耗费的经费十分多）且想要做消融实验并不容易。因此对于近些年来对解释bert的文章做一个综述，方便大家对于该模型的认识。</p>
           <!--noindex-->
             <div class="post-button">

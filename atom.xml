@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2022-05-07T08:46:39.683Z</updated>
+  <updated>2022-05-08T09:31:00.301Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -21,21 +21,21 @@
     <link href="http://yoursite.com/2022/05/01/Bertology-%E8%AF%B4%E4%B8%80%E8%AF%B4%E9%82%A3%E4%BA%9B%E4%B8%8D%E4%B8%BA%E4%BA%BA%E7%9F%A5%E7%9A%84%E7%BB%86%E8%8A%82/"/>
     <id>http://yoursite.com/2022/05/01/Bertology-%E8%AF%B4%E4%B8%80%E8%AF%B4%E9%82%A3%E4%BA%9B%E4%B8%8D%E4%B8%BA%E4%BA%BA%E7%9F%A5%E7%9A%84%E7%BB%86%E8%8A%82/</id>
     <published>2022-05-01T08:16:22.000Z</published>
-    <updated>2022-05-07T08:46:39.683Z</updated>
+    <updated>2022-05-08T09:31:00.301Z</updated>
     
     <summary type="html">
     
-      &lt;h1 id=&quot;序言&quot;&gt;&lt;a href=&quot;#序言&quot; class=&quot;headerlink&quot; title=&quot;序言&quot;&gt;&lt;/a&gt;序言&lt;/h1&gt;&lt;p&gt;自 Transformer 模型的文章《Attention is all you need》这篇经典发表的时刻，整个自然语言处理界发生了天翻地覆的变化，强大的注意力机制使得模型能够摆脱RNN模型的长时依赖的问题，且在各种NLP下游任务中，效果吊打RNN系列模型。随后经典名作GPT，BERT这些预训练模型的paper相继发表，从此NLP进入预训练时代。由于其对基础的语意句法等nlp的特征超强的捕获能力，基于Transformer系列的backbone预训练模型在下游任务微调成一种常用的方法。&lt;/p&gt;
-&lt;p&gt;虽然每年有大量的前沿研究基于Bert这样的模型，但是很多文章—-表面是对模型进行了创新获得了不错的效果，究其本质，无非是扩大了模型的参数量，提高训练数据的质量和数量。因此，取得了更为理想的效果。关于为什么模型的效果好，以及每一层的神经网络到底是取得了如何的效果则没有系统的阐释。今天读到了一篇《A Primer in BERTology: What We Know About How BERTWorks》发表于Transactions of the Association for Computational Linguistics。这篇文章对于bert模型的一些细节进行了系统的论述，很全面，因此，读了一下，把它分享给大家。&lt;/p&gt;
+      &lt;h1 id=&quot;序言&quot;&gt;&lt;a href=&quot;#序言&quot; class=&quot;headerlink&quot; title=&quot;序言&quot;&gt;&lt;/a&gt;序言&lt;/h1&gt;&lt;p&gt;自 Transformer 模型的文章&lt;a href=&quot;https://proceedings.neurips.cc/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;《Attention is all you need》&lt;/a&gt;这篇经典发表的时刻，整个自然语言处理界发生了天翻地覆的变化，强大的注意力机制使得模型能够摆脱RNN模型的长时依赖的问题，且在各种NLP下游任务中，效果吊打RNN系列模型。随后经典名作GPT，BERT这些预训练模型的paper相继发表，从此NLP进入预训练时代。由于其对基础的语意句法等nlp的特征超强的捕获能力，基于Transformer系列的backbone预训练模型在下游任务微调成一种常用的方法。&lt;/p&gt;
+&lt;p&gt;虽然每年有大量的前沿研究基于Bert这样的模型，但是很多文章—-表面是对模型进行了创新获得了不错的效果，究其本质，无非是扩大了模型的参数量，提高训练数据的质量和数量。因此，取得了更为理想的效果。关于为什么模型的效果好，以及每一层的神经网络到底是取得了如何的效果则没有系统的阐释。今天读到了一篇&lt;a href=&quot;https://watermark.silverchair.com/tacl_a_00349.pdf?token=AQECAHi208BE49Ooan9kkhW_Ercy7Dm3ZL_9Cf3qfKAc485ysgAAAsowggLGBgkqhkiG9w0BBwagggK3MIICswIBADCCAqwGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQM356qe6dtueuLMY59AgEQgIICfeMIeHCgVGdSvJu8D2XfjC5ElP1yXiIVEdIbGODaHM9mO1WisSSW5owwhoZNils1hOJUETd_3bZvcHmLZBMUwDPl90BJI5W5psceyCep9D5F3qW-dy31dxzM2bWVKBUjHL7WE7vcbad4Cvrzq_AlR36jArY0mhSc5ekJJRdbTNMHtskqingzrFuLz8eR1yUpWpq8kDtceTZV1zBJCM_NVinFFwwt1eh9cn7n8PVEm4em5fj912Oo77yMTPnr_6nPORwVjl9ZuboiKWTzV0XJz3TO-PxXcUD_mg-6DdbsS9hXibOZ3oz9bVpXVGKW6XYFOs7BzHT6A6M9lDDKDtAp2R9iBqajMyhukiB1bB6VA0ePRke64wdJ17CF9xibbH8FqlDlaYhieRLmc7DTWbIFA15hsM7Aq1iwB9mYQ49eur0aCzZSZJWRrxugqSs3MuNSnjzJvClzEQwKRBToWUFfQ0FlxG0vpOfswjZz2PnDBDhOZD6VvVF0Gs1I19RJsoaMAxfI5lMNk3tSsvxcsFbRms7EOTXG6O0qlkCsMF4GfaGp6wQq9rsAmgQsGHu1wecwwRrMveNbF7dd-0crKukSCUwZOCXM0_qn5BiOOflI4LXAjJZ6T5A1kseghSFTFHLNM1no4Vxa6tdLY-njxhK50ib5Cytrunc58Kc1qwQbahB3x4UVlKm8ww14pFjnLi2e1nJJi-_YWdu1JNuI6RbhsM_GS1iSxu6KmsH49DTy0urourShCVC-23Y6KM91pry926KPk2r_gGzmoIwC0FSGZ-FCIlMzUING1XRyVlPR9P414Ifv1_hSJKldyzljyMyte-HJhKunk9uuuWOa6f8&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;《A Primer in BERTology: What We Know About How BERTWorks》&lt;/a&gt;发表于Transactions of the Association for Computational Linguistics。这篇文章对于bert模型的一些细节进行了系统的论述，很全面，因此，读了一下，把它分享给大家。&lt;/p&gt;
 &lt;h1 id=&quot;动机&quot;&gt;&lt;a href=&quot;#动机&quot; class=&quot;headerlink&quot; title=&quot;动机&quot;&gt;&lt;/a&gt;动机&lt;/h1&gt;&lt;p&gt;众所周知，BERT已经在nlp领域大杀四方，但是对于“why it works well”相对来说没有那么多的研究。如此一来，想要更进一步做出更加solid的研究，需要对该模型有更多的了解。 相比较一些经典的backbone，比如说卷积神经网络(CNN)，在感性上的动机则没有特别明显。我们希望对其中的一些结构进行分析，使得模型中具体所做的事情更容易被人们所认识，但是，对于模型过于大的尺寸所造成的预训练不好做（大部分研究人员没有超多的显卡，以及预训练所耗费的经费十分多）且想要做消融实验并不容易。因此对于近些年来对解释bert的文章做一个综述，方便大家对于该模型的认识。&lt;/p&gt;
     
     </summary>
     
     
     
-      <category term="NLP" scheme="http://yoursite.com/tags/NLP/"/>
-    
       <category term="BERT" scheme="http://yoursite.com/tags/BERT/"/>
+    
+      <category term="NLP" scheme="http://yoursite.com/tags/NLP/"/>
     
   </entry>
   
@@ -278,9 +278,9 @@ Need &amp;lt;https://arxiv.org/pdf/1706.03762.pdf&amp;gt;&lt;/code&gt;&lt;br&gt;
     
     
     
-      <category term="Machine Learning" scheme="http://yoursite.com/tags/Machine-Learning/"/>
-    
       <category term="NLP" scheme="http://yoursite.com/tags/NLP/"/>
+    
+      <category term="Machine Learning" scheme="http://yoursite.com/tags/Machine-Learning/"/>
     
   </entry>
   
