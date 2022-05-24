@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2022-05-08T09:31:00.301Z</updated>
+  <updated>2022-05-24T14:53:04.110Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Parameter Efficient Transfer Learning</title>
+    <link href="http://yoursite.com/2022/05/21/Parameter-Efficient-Transfer-Learning/"/>
+    <id>http://yoursite.com/2022/05/21/Parameter-Efficient-Transfer-Learning/</id>
+    <published>2022-05-21T11:38:07.000Z</published>
+    <updated>2022-05-24T14:53:04.110Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;这两天读了一些(两篇..)关于Parameter Efficient的文章，结构并不复杂，但是感觉还是有些内容可以分享。&lt;/p&gt;
+&lt;h3 id=&quot;什么是参数高效的迁移学习呢？&quot;&gt;&lt;a href=&quot;#什么是参数高效的迁移学习呢？&quot; class=&quot;headerlink&quot; title=&quot;什么是参数高效的迁移学习呢？&quot;&gt;&lt;/a&gt;什么是参数高效的迁移学习呢？&lt;/h3&gt;&lt;p&gt;在自然语言处理的任务中，目前各个任务中常用的方法普遍基于Transformer模型，更具体来说，基于以Transformer的backbone模型的大规模预训练模型,以此为基础在各种任务上进行fine-tuning。通常情况下，&lt;br&gt;会对所有的模型参数进行微调，当然，通过这样的方式，可以更容易使得模型达到比较好的效果。因此也是大多数工作所进行的方式。&lt;/p&gt;
+&lt;p&gt;但是呢，这就会衍生出一个问题，首先，训练和部署效率的问题，先说训练，对于全局模型进行微调势必会消耗大量算力以及有一点点费电，那当然也可以通过frozen预训练模型在下有任务微调，这就和今天的主题有些相似了。另外呢，如果有很多很多的任务，你对每一个任务都进行fine-tuning，然后部署保存模型，对于现在动辄billion级别的模型参数来说，比如说你一个模型10GB，那你有100个任务，则需要1TB的存储量。&lt;/p&gt;
+&lt;p&gt;这时候，如果我们可以插入一小部分网络结构并且只对这一小部分进行微调就能达到一个比较好的效果，岂不美哉。&lt;/p&gt;
+&lt;p&gt;因此关于这部分的内容就应运而生。&lt;br&gt;
+    
+    </summary>
+    
+    
+    
+      <category term="nlp" scheme="http://yoursite.com/tags/nlp/"/>
+    
+      <category term="Parameter Efficient" scheme="http://yoursite.com/tags/Parameter-Efficient/"/>
+    
+  </entry>
   
   <entry>
     <title>Bertology:说一说那些不为人知的细节</title>
@@ -56,9 +81,9 @@
     
       <category term="pytorch" scheme="http://yoursite.com/tags/pytorch/"/>
     
-      <category term="crf" scheme="http://yoursite.com/tags/crf/"/>
-    
       <category term="自然语言处理" scheme="http://yoursite.com/tags/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/"/>
+    
+      <category term="crf" scheme="http://yoursite.com/tags/crf/"/>
     
   </entry>
   
@@ -307,9 +332,9 @@ Need &amp;lt;https://arxiv.org/pdf/1706.03762.pdf&amp;gt;&lt;/code&gt;&lt;br&gt;
     
       <category term="NLP" scheme="http://yoursite.com/tags/NLP/"/>
     
-      <category term="Syntax-Tree" scheme="http://yoursite.com/tags/Syntax-Tree/"/>
-    
       <category term="Language Model" scheme="http://yoursite.com/tags/Language-Model/"/>
+    
+      <category term="Syntax-Tree" scheme="http://yoursite.com/tags/Syntax-Tree/"/>
     
   </entry>
   

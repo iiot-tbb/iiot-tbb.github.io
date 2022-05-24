@@ -48,23 +48,29 @@
   };
 </script>
 
-  <meta name="description" content="NLP中如何发掘模型的可解释性可解释性在AI的模型设计中十分重要。需要防止模型存在偏见和缺陷带来的伦理问题，并且帮助决策者理解如何正确地使用我们的模型。越是严苛的场景，越需要模型提供证明它们是如何运作且避免错误的证据。如实时性较强的无人驾驶领域，黑盒模型无法让人们信服其工作的安全性。 通常深度学习模型就像一个黑匣子，它能预测出很好的结果，但是你并不知道它为什么会预测出这样的结果。想知道它是如何工作">
+  <meta name="description" content="这两天读了一些(两篇..)关于Parameter Efficient的文章，结构并不复杂，但是感觉还是有些内容可以分享。 什么是参数高效的迁移学习呢？在自然语言处理的任务中，目前各个任务中常用的方法普遍基于Transformer模型，更具体来说，基于以Transformer的backbone模型的大规模预训练模型,以此为基础在各种任务上进行fine-tuning。通常情况下，会对所有的模型参数进行">
 <meta property="og:type" content="article">
-<meta property="og:title" content="NLP学习笔记">
-<meta property="og:url" content="http://yoursite.com/2020/03/22/NLP%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:title" content="Parameter Efficient Transfer Learning">
+<meta property="og:url" content="http://yoursite.com/2022/05/21/Parameter-Efficient-Transfer-Learning/index.html">
 <meta property="og:site_name" content="Bool_tbb">
-<meta property="og:description" content="NLP中如何发掘模型的可解释性可解释性在AI的模型设计中十分重要。需要防止模型存在偏见和缺陷带来的伦理问题，并且帮助决策者理解如何正确地使用我们的模型。越是严苛的场景，越需要模型提供证明它们是如何运作且避免错误的证据。如实时性较强的无人驾驶领域，黑盒模型无法让人们信服其工作的安全性。 通常深度学习模型就像一个黑匣子，它能预测出很好的结果，但是你并不知道它为什么会预测出这样的结果。想知道它是如何工作">
+<meta property="og:description" content="这两天读了一些(两篇..)关于Parameter Efficient的文章，结构并不复杂，但是感觉还是有些内容可以分享。 什么是参数高效的迁移学习呢？在自然语言处理的任务中，目前各个任务中常用的方法普遍基于Transformer模型，更具体来说，基于以Transformer的backbone模型的大规模预训练模型,以此为基础在各种任务上进行fine-tuning。通常情况下，会对所有的模型参数进行">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://yoursite.com/2020/03/22/NLP%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image1.png">
-<meta property="og:image" content="http://yoursite.com/2020/03/22/NLP%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image2.png">
-<meta property="article:published_time" content="2020-03-22T14:06:01.000Z">
-<meta property="article:modified_time" content="2022-03-28T09:04:28.980Z">
+<meta property="og:image" content="http://yoursite.com/2022/05/21/Parameter-Efficient-Transfer-Learning/first.jpg">
+<meta property="og:image" content="http://yoursite.com/2022/05/21/Parameter-Efficient-Transfer-Learning/second.jpg">
+<meta property="og:image" content="http://yoursite.com/2022/05/21/Parameter-Efficient-Transfer-Learning/third.jpg">
+<meta property="og:image" content="http://yoursite.com/2022/05/21/Parameter-Efficient-Transfer-Learning/fifth.jpg">
+<meta property="og:image" content="http://yoursite.com/2022/05/21/Parameter-Efficient-Transfer-Learning/forth.jpg">
+<meta property="og:image" content="http://yoursite.com/2022/05/21/Parameter-Efficient-Transfer-Learning/six.jpg">
+<meta property="og:image" content="http://yoursite.com/2022/05/21/Parameter-Efficient-Transfer-Learning/seven.jpg">
+<meta property="article:published_time" content="2022-05-21T11:38:07.000Z">
+<meta property="article:modified_time" content="2022-05-24T14:53:04.110Z">
 <meta property="article:author" content="bool_tbb">
-<meta property="article:tag" content="NLP">
+<meta property="article:tag" content="nlp">
+<meta property="article:tag" content="Parameter Efficient">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yoursite.com/2020/03/22/NLP%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/image1.png">
+<meta name="twitter:image" content="http://yoursite.com/2022/05/21/Parameter-Efficient-Transfer-Learning/first.jpg">
 
-<link rel="canonical" href="http://yoursite.com/2020/03/22/NLP%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
+<link rel="canonical" href="http://yoursite.com/2022/05/21/Parameter-Efficient-Transfer-Learning/">
 
 
 <script id="page-configurations">
@@ -78,7 +84,7 @@
   };
 </script>
 
-  <title>NLP学习笔记 | Bool_tbb</title>
+  <title>Parameter Efficient Transfer Learning | Bool_tbb</title>
   
 
 
@@ -206,7 +212,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/22/NLP%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2022/05/21/Parameter-Efficient-Transfer-Learning/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/tb3.jpeg">
@@ -219,7 +225,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          NLP学习笔记
+          Parameter Efficient Transfer Learning
         </h1>
 
         <div class="post-meta">
@@ -229,14 +235,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2020-03-22 22:06:01" itemprop="dateCreated datePublished" datetime="2020-03-22T22:06:01+08:00">2020-03-22</time>
+              <time title="创建时间：2022-05-21 19:38:07" itemprop="dateCreated datePublished" datetime="2022-05-21T19:38:07+08:00">2022-05-21</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-03-28 17:04:28" itemprop="dateModified" datetime="2022-03-28T17:04:28+08:00">2022-03-28</time>
+                <time title="修改时间：2022-05-24 22:53:04" itemprop="dateModified" datetime="2022-05-24T22:53:04+08:00">2022-05-24</time>
               </span>
 
           
@@ -257,31 +263,91 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="NLP中如何发掘模型的可解释性"><a href="#NLP中如何发掘模型的可解释性" class="headerlink" title="NLP中如何发掘模型的可解释性"></a>NLP中如何发掘模型的可解释性</h2><p>可解释性在AI的模型设计中十分重要。需要防止模型存在偏见和缺陷带来的伦理问题，并且帮助决策者理解如何正确地使用我们的模型。越是严苛的场景，越需要模型提供证明它们是如何运作且避免错误的证据。如实时性较强的无人驾驶领域，黑盒模型无法让人们信服其工作的安全性。</p>
-<p>通常深度学习模型就像一个黑匣子，它能预测出很好的结果，但是你并不知道它为什么会预测出这样的结果。想知道它是如何工作的，那么得尝试打开这个黑匣子，解释模型的意义十分必要。</p>
-<a id="more"></a>
-<h3 id="现有方法："><a href="#现有方法：" class="headerlink" title="现有方法："></a>现有方法：</h3><h4 id="通用性思路："><a href="#通用性思路：" class="headerlink" title="通用性思路："></a>通用性思路：</h4><p>建模前：选用可解释性模型，如：决策树模型、线性回归、逻辑回归、广义线性回归、广义加性模型、贝叶斯实例模型等<br>建模后：使用可解释性方法，主要是针对具有黑箱性质的深度学习模型而言的，主要分为以下几类的工作：隐层分析方法、 模拟/代理模型、敏感性分析方法</p>
-<p><a href="https://arxiv.org/abs/1602.04938" target="_blank" rel="noopener">LIME：通过局部线性逼近解释模型预测的方法</a></p>
-<p><a href="https://pdfs.semanticscholar.org/65d9/94fb778a8d9e0f632659fb33a082949a50d3.pdf" target="_blank" rel="noopener">激活最大化：了解哪种输入模式产生最大的模型响应</a></p>
-<p><a href="https://distill.pub/2017/feature-visualization/" target="_blank" rel="noopener">特征可视化：</a></p>
-<p><a href="http://www.interpretable-ml.org/nips2017workshop/papers/04.pdf" target="_blank" rel="noopener">将DNN层嵌入到低维可解释的空间中:</a></p>
-<p><a href="https://deepmind.com/blog/cognitive-psychology/" target="_blank" rel="noopener">采用认知心理学的方法：</a></p>
-<p>不确定性估计方法</p>
-<p>对于NLP，BERT模型的可视化</p>
-<p><a href="https://www.jianshu.com/p/df7906a2a28e" target="_blank" rel="noopener">这里是一篇详细介绍BERT可视化的文章</a></p>
-<p><a href="https://zhuanlan.zhihu.com/p/78745325" target="_blank" rel="noopener">面向可解释的NLP：北大、哈工大等提出文本分类的生成性解释框架</a></p>
-<h3 id="在Seq2Seq和注意力机制中如何可视化模型细节"><a href="#在Seq2Seq和注意力机制中如何可视化模型细节" class="headerlink" title="在Seq2Seq和注意力机制中如何可视化模型细节"></a>在Seq2Seq和注意力机制中如何可视化模型细节</h3><p><a href="https://zhuanlan.zhihu.com/p/51428657" target="_blank" rel="noopener">大致参考</a></p>
-<h3 id="对抗样本能否运用到自然语言处理模型中"><a href="#对抗样本能否运用到自然语言处理模型中" class="headerlink" title="对抗样本能否运用到自然语言处理模型中"></a>对抗样本能否运用到自然语言处理模型中</h3><p><a href="https://www.secrss.com/articles/11247" target="_blank" rel="noopener">AI最前线：清华大学开源对抗样本必读论文列表</a></p>
-<p>自然语言处理方面的研究在近几年取得了惊人的进步，深度神经网络模型已经取代了许多传统的方法。但是，当前提出的许多自然语言处理模型并不能够反映文本的多样特征。因此，许多研究者认为应该开辟新的研究方法，特别是利用近几年较为流行的对抗样本生成和防御的相关研究方法。</p>
-<p>使用对抗样本生成和防御的自然语言处理研究可以基本概括为以下三种：1. 用未察觉的扰动迷惑模型，并评价模型在这种情况下的表现；2. 有意的改变深度神经网络的输出；3. 检测深度神经网络是否过于敏感或过于稳定，并寻找防御攻击的方法。</p>
-<p>Jia 和 Liang 首先考虑在深度神经网络中采用对抗样本生成（或者「对抗攻击」，两者皆可）方法完成文本处理相关任务。他们的研究在自然语言处理社区很快获得了研究方面的关注。</p>
-<p>然而，由于图片和文本数据内在的不同，用于图像的对抗攻击方法无法直接应用与文本数据上。首先，图像数据（例如像素值）是连续的，但文本数据是离散的。其次，仅仅对像素值进行微小的改变就可以造成图像数据的扰动，而且这种扰动是很难被人眼差距的。但是对于文本的对抗攻击中，小的扰动很容易被察觉，但人类同样能「猜出」本来表达的意义。因此 NLP 模型需要对可辨识的特征鲁棒，而不像视觉只需要对「不太重要」的特征鲁棒。</p>
-<p><img src="image1.png" alt="image.png"></p>
-<p>DeepWordBug 的深度网络攻击示例。选自 arXiv：1902.07285</p>
-<p>与图像领域一样，有进攻就会有防御，目前也有很多研究尝试构建更鲁棒的自然语言处理模型。例如在 CMU 的一篇对抗性拼写错误论文（arXiv：1905.11268）中，研究者通过移除、添加或调序单词内部的字符，以构建更稳健的文本分类模型。这些增减或调序都是一种扰动，就像人类也很可能出现这些笔误一样。通过这些扰动，模型能学会如何处理错别字，从而不至于对分类结果产生影响</p>
-<p><img src="image2.png" alt="image.png"></p>
-<p>对抗性拼写错误导致的情感误分类，与通过字识别防御手段获得的更稳健模型。选自 arXiv：1905.11268</p>
-<h3 id="复现Kaggle心脏病数据集冠军kernel，理解所用的模型可解释性技巧"><a href="#复现Kaggle心脏病数据集冠军kernel，理解所用的模型可解释性技巧" class="headerlink" title="复现Kaggle心脏病数据集冠军kernel，理解所用的模型可解释性技巧"></a>复现Kaggle心脏病数据集冠军kernel，理解所用的模型可解释性技巧</h3><p><a href="https://www.kaggle.com/scratchpad/kernel4b1df8c794/edit" target="_blank" rel="noopener">kernel</a></p>
+        <p>这两天读了一些(两篇..)关于Parameter Efficient的文章，结构并不复杂，但是感觉还是有些内容可以分享。</p>
+<h3 id="什么是参数高效的迁移学习呢？"><a href="#什么是参数高效的迁移学习呢？" class="headerlink" title="什么是参数高效的迁移学习呢？"></a>什么是参数高效的迁移学习呢？</h3><p>在自然语言处理的任务中，目前各个任务中常用的方法普遍基于Transformer模型，更具体来说，基于以Transformer的backbone模型的大规模预训练模型,以此为基础在各种任务上进行fine-tuning。通常情况下，<br>会对所有的模型参数进行微调，当然，通过这样的方式，可以更容易使得模型达到比较好的效果。因此也是大多数工作所进行的方式。</p>
+<p>但是呢，这就会衍生出一个问题，首先，训练和部署效率的问题，先说训练，对于全局模型进行微调势必会消耗大量算力以及有一点点费电，那当然也可以通过frozen预训练模型在下有任务微调，这就和今天的主题有些相似了。另外呢，如果有很多很多的任务，你对每一个任务都进行fine-tuning，然后部署保存模型，对于现在动辄billion级别的模型参数来说，比如说你一个模型10GB，那你有100个任务，则需要1TB的存储量。</p>
+<p>这时候，如果我们可以插入一小部分网络结构并且只对这一小部分进行微调就能达到一个比较好的效果，岂不美哉。</p>
+<p>因此关于这部分的内容就应运而生。<br><a id="more"></a><br>关于这方面的工作，比较有代表性的是：</p>
+<p><a href="https://arxiv.org/pdf/2104.08691.pdf?ref=https://githubhelp.com" target="_blank" rel="noopener">The Power of Scale for Parameter-Efficient Prompt Tuning</a>主要是在输入端的vector前面加几个特殊的vector并且在训练的时候对其进行微调。</p>
+<p><a href="https://arxiv.org/pdf/2012.07463" target="_blank" rel="noopener">Parameter-efficient transfer learning with diff pruning</a>基于稀疏矩阵的梯度来做的，概括来说就是找到一些比较重要的参数，只对这些参数进行优化。</p>
+<p><a href="https://arxiv.org/pdf/2106.10199" target="_blank" rel="noopener"> BitFit: Simple Parameter-efficient Fine-tuning for Transformer-based Masked Language-models</a>只对模型的bias进行训练。</p>
+<p>前面三个工作实际上效果比较一般，效果比较好的工作有以下几个：</p>
+<p><a href="http://proceedings.mlr.press/v97/houlsby19a/houlsby19a.pdf" target="_blank" rel="noopener">Parameter-efficient transfer learning for NLP</a>提出了基于adapter的一个微型的插件网络（插入预训练模型的内部）</p>
+<p><a href="https://arxiv.org/pdf/2101.00190" target="_blank" rel="noopener">Prefix-tuning: Optimizing continuous prompts for generation</a>和prompt的方式类似，不同点是它在每一层的输入端都perpend了特殊的vector标记。而prompt只在第一层输入端perpend了特殊的vector。</p>
+<p><a href="https://arxiv.org/pdf/2106.09685.pdf?ref=https://githubhelp.com" target="_blank" rel="noopener">Lora: Low-rank adaptation of large language models</a>采用了低秩的矩阵。</p>
+<p>由下图所示展示了这三种方法的图例：</p>
+<p><img src="first.jpg" alt="avatar"></p>
+<p>最左面的网络结构中，我们可以看到，三种结构在Transformer模型对应位置的结构，其中adapter作用于attention结构和fnn结构的连接处。Lora是在隐状态层后计算attention之前加入低秩矩阵。而对于Prefix tuning是在得到key向量和value向量时prepend上特殊的prefix vector实现。</p>
+<p>现在思考一个问题：虽然它们在形式上是不太相同的，那么它们是否会具有一些联系？或者它们有什么本质上比较相似的共性呢？</p>
+<p>对于Prefix tuning来说：参考如下示意图：</p>
+<p><img src="second.jpg" alt="avatar"></p>
+<p>通过新增的prefix来构造hidden state。与原始的attention的计算方式相比，我们可以看到</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\boldsymbol{h}_{\text {old }} &=\frac{\exp \left(q^{\top} k_{1}\right) v_{1}+\exp \left(q^{\top} k_{2}\right) v_{2}+\exp \left(q^{\top} k_{3}\right) v_{3}}{\exp \left(q^{\top} k_{1}\right)+\exp \left(q^{\top} k_{2}\right)+\exp \left(q^{\top} k_{3}\right)} \\
+\boldsymbol{h}_{\text {new }} &=\frac{\exp \left(q^{\top} k_{1}\right) v_{1}+\exp \left(q^{\top} k_{2}\right) v_{2}+\exp \left(q^{\top} k_{3}\right) v_{3}+\exp \left(q^{\top} P_{k 1}\right) P_{v 1}+\exp \left(q^{\top} P_{k 2}\right) P_{v 2}}{\exp \left(q^{\top} k_{1}\right)+\exp \left(q^{\top} k_{2}\right)+\exp \left(q^{\top} k_{3}\right)+\exp \left(q^{\top} P_{k 1}\right)+\exp \left(q^{\top} P_{k 2}\right)}
+\end{aligned}</script><p>因此，我们可以将其化简得到如下表达式：</p>
+<script type="math/tex; mode=display">
+h_{new}=(1-\lambda) \boldsymbol{h}_{\text {old }}+\lambda \frac{\exp \left(q^{\top} P_{k 1}\right) P_{v 1}+\exp \left(q^{\top} P_{k 2}\right) P_{v 2}}{\exp \left(q^{\top} P_{k 1}\right)+\exp \left(q^{\top} P_{k 2}\right)}</script><p>其中 $\lambda$：</p>
+<script type="math/tex; mode=display">
+\lambda=\frac{\exp \left(q^{\top} P_{k 1}\right)+\exp \left(q^{\top} P_{k 2}\right)}{\exp \left(q^{\top} k_{1}\right)+\exp \left(q^{\top} k_{2}\right)+\exp \left(q^{\top} k_{3}\right)+\exp \left(q^{\top} P_{k 1}\right)+\exp \left(q^{\top} P_{k 2}\right)}</script><p>在进一步的化简，我们可以得到如下的表达式：</p>
+<script type="math/tex; mode=display">
+\boldsymbol{h} \leftarrow(1-\lambda(\boldsymbol{x})) \boldsymbol{h}+\lambda(\boldsymbol{x}) \Delta \boldsymbol{h}, \quad \Delta \boldsymbol{h}:=\operatorname{softmax}\left(\boldsymbol{x} \boldsymbol{W}_{q} \boldsymbol{P}_{k}^{\top}\right) \boldsymbol{P}_{v}</script><p>对于$\Delta h$一项，显然它就是query对于prefix的attention。</p>
+<p>我们在分析Adapter部分的内容：</p>
+<script type="math/tex; mode=display">
+\boldsymbol{h} \leftarrow \boldsymbol{h}+f\left(\boldsymbol{h} \boldsymbol{W}_{\text {down }}\right) \boldsymbol{W}_{\text {up }}</script><p>其中 $f$是激活函数(relu),在这里，我们已经感觉到了二者之间的相似性，其实都是对$h$加上了一个线性变换的矩阵。我们可以进一步将prefix部分的公式进行化简：</p>
+<script type="math/tex; mode=display">
+\boldsymbol{W}_{\text {down }}:=\boldsymbol{W}_{q} \boldsymbol{P}_{k}^{\top} \quad \boldsymbol{W}_{\text {up }}:=\boldsymbol{P}_{v} \quad f:=\operatorname{softmax}</script><p>因此化简后穿的prefix公式为：</p>
+<script type="math/tex; mode=display">
+\boldsymbol{h} \leftarrow(1-\lambda(\boldsymbol{x})) \boldsymbol{h}+\lambda(\boldsymbol{x}) f\left(\boldsymbol{x} \boldsymbol{W}_{\text {down }}\right) \boldsymbol{W}_{\text {up }}</script><p>在这种情况下，我们可以认为prefix tuning是一种特殊的adapter。</p>
+<p>同样，我们对Lora部分进行了分析。</p>
+<p>略去分析部分，三者之间的一些特性可以由下表总结得出：</p>
+<script type="math/tex; mode=display">
+\begin{array}{|c|c|c|c|c|}
+\hline & \text { Functional form } & \text { Insertion form } & \begin{array}{c}
+\text { Modified } \\
+\text { representation }
+\end{array} & \text { composition } \\
+\hline \text { Adapter } & \operatorname{ReLU}\left(\boldsymbol{h} \boldsymbol{W}_{\text {down }}\right) \boldsymbol{W}_{\text {up }} & \text { sequential } & \text { FFN/attn } & \boldsymbol{h} \leftarrow \boldsymbol{h}+\Delta \boldsymbol{h} \\
+\hline \text { Prefix Tuning } & \operatorname{softmax}\left(\boldsymbol{x} \boldsymbol{W}_{q} \boldsymbol{P}_{k}^{\top}\right) \boldsymbol{P}_{v} & \text { parallel } & \text { head attn } & \boldsymbol{h} \leftarrow(1-\lambda) \boldsymbol{h}+\lambda \Delta \boldsymbol{h} \\
+\hline \text { LoRA } & \boldsymbol{x} \boldsymbol{W}_{\text {down }} \boldsymbol{W}_{\text {up }} & \text { parallel } & \text { attn key/val } & \boldsymbol{h} \leftarrow \boldsymbol{h}+s \cdot \Delta \boldsymbol{h} \\
+\hline
+\end{array}</script><p>我们可以发现其最终在数据的流向上，Adapter的数据流向是串行的，其它两种数据的流向为并行的，总结修改到的模型的位置，三张对应的图如下所示:</p>
+<p><img src="third.jpg" alt="avatar"></p>
+<p>有了这样的总结，我们希望可以进一步去观察哪一些的设计是更有效的，因此，在三个数据集上，采用了一些通用的模型结构，进行了实验，分别是：</p>
+<ol>
+<li>XSum: abstracJve English text summarizaJon, BART-large</li>
+<li>WMT16 English -&gt; Romanian translaJon, mBART-large</li>
+<li>MNLI, SST2, RoBERTa-base (skipped in the slides)</li>
+</ol>
+<p>首先对并行和串行的插入方式进行了实验：</p>
+<p><img src="fifth.jpg" alt="avatar"></p>
+<p>由结果可知，大部分情况下，并行的插入方式要优于串行的插入方式。</p>
+<p>在这种情况下，在adapter上进行重新设计，使串行结构变为并行结构，如图所示：</p>
+<p><img src="forth.jpg" alt="avatar"></p>
+<script type="math/tex; mode=display">
+\begin{array}{|c|c|c|c|c|}
+\hline & \text { Functional form } & \text { Insertion form } & \begin{array}{c}
+\text { Modified } \\
+\text { representation }
+\end{array} & \text { composition } \\
+\hline \text { Parallel Adapter } & \operatorname{ReLU}\left(\boldsymbol{x} \boldsymbol{W}_{\text {down }}\right) \boldsymbol{W}_{\text {up }} & \text { parallel } & \text { FFN/attn } & \boldsymbol{h} \leftarrow \boldsymbol{h}+\Delta \boldsymbol{h} \\
+\hline \begin{array}{c}
+\text { Multi-head parallel } \\
+\text { adapter }
+\end{array} & \operatorname{ReLU}\left(\boldsymbol{x} \boldsymbol{W}_{\text {down }}\right) \boldsymbol{W}_{\text {up }} & \text { parallel } & \text { head attn } & \boldsymbol{h} \leftarrow \boldsymbol{h}+\Delta \boldsymbol{h} \\
+\hline \begin{array}{c}
+\text { Scaled Parallel } \\
+\text { Adapter }
+\end{array} & \operatorname{ReLU}\left(\boldsymbol{x} \boldsymbol{W}_{\text {down }}\right) \boldsymbol{W}_{\text {up }} & \text { parallel } & \text { attn key/val } & \boldsymbol{h} \leftarrow \boldsymbol{h}+s \cdot \Delta \boldsymbol{h} \\
+\hline
+\end{array}</script><p>再者，对插入位置进行了分析，在不通的插入位置采用不通数量的参数进行分析</p>
+<p><img src="six.jpg" alt="avatar"></p>
+<p>由实验结果可知，在全连接层的修改要优于在注意力层的修改。</p>
+<p>另外，对于在adapter参数量上的一些实验，只用0.1%的参数量和更对的参数量的adapter会造成多大影响？</p>
+<p><img src="seven.jpg" alt="avatar"></p>
+<p>我们可以看到，其在多头下影响较小，而单头的情况下略大。并且在FFN层的影响更为巨大，猜想是因为FFN部分的参数多，保留的信息多，因此影响大。</p>
+<p>参考文献 <a href="https://arxiv.org/pdf/2110.04366.pdf" target="_blank" rel="noopener">Towards a Unified View of Parameter-Efficient Transfer Learning</a></p>
 
     </div>
 
@@ -311,24 +377,22 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/NLP/" rel="tag"># NLP</a>
+              <a href="/tags/nlp/" rel="tag"># nlp</a>
+              <a href="/tags/Parameter-Efficient/" rel="tag"># Parameter Efficient</a>
           </div>
 
         
 
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
-                <a href="/2020/02/27/PdfMiner%E6%96%87%E6%A1%A3%E8%A7%A3%E6%9E%90/" rel="next" title="PdfMiner文档解析">
-                  <i class="fa fa-chevron-left"></i> PdfMiner文档解析
+                <a href="/2022/05/01/Bertology-%E8%AF%B4%E4%B8%80%E8%AF%B4%E9%82%A3%E4%BA%9B%E4%B8%8D%E4%B8%BA%E4%BA%BA%E7%9F%A5%E7%9A%84%E7%BB%86%E8%8A%82/" rel="next" title="Bertology:说一说那些不为人知的细节">
+                  <i class="fa fa-chevron-left"></i> Bertology:说一说那些不为人知的细节
                 </a>
             </div>
 
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
-                <a href="/2020/07/29/Transformer/" rel="prev" title="Transformer">
-                  Transformer <i class="fa fa-chevron-right"></i>
-                </a>
             </div>
           </div>
       </footer>
@@ -367,7 +431,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#NLP中如何发掘模型的可解释性"><span class="nav-number">1.</span> <span class="nav-text">NLP中如何发掘模型的可解释性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#现有方法："><span class="nav-number">1.1.</span> <span class="nav-text">现有方法：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#通用性思路："><span class="nav-number">1.1.1.</span> <span class="nav-text">通用性思路：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在Seq2Seq和注意力机制中如何可视化模型细节"><span class="nav-number">1.2.</span> <span class="nav-text">在Seq2Seq和注意力机制中如何可视化模型细节</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对抗样本能否运用到自然语言处理模型中"><span class="nav-number">1.3.</span> <span class="nav-text">对抗样本能否运用到自然语言处理模型中</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#复现Kaggle心脏病数据集冠军kernel，理解所用的模型可解释性技巧"><span class="nav-number">1.4.</span> <span class="nav-text">复现Kaggle心脏病数据集冠军kernel，理解所用的模型可解释性技巧</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是参数高效的迁移学习呢？"><span class="nav-number">1.</span> <span class="nav-text">什么是参数高效的迁移学习呢？</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
