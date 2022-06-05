@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2022-05-24T14:53:04.110Z</updated>
+  <updated>2022-06-05T03:36:31.183Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Grammar Induction for Spoken Dialogue Systems</title>
+    <link href="http://yoursite.com/2022/05/26/Grammar-Induction-for-Spoken-Dialogue-Systems/"/>
+    <id>http://yoursite.com/2022/05/26/Grammar-Induction-for-Spoken-Dialogue-Systems/</id>
+    <published>2022-05-25T16:38:31.000Z</published>
+    <updated>2022-06-05T03:36:31.183Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;之前实习的时候做过一些语法推导(Grammar Induction)方面的工作，当时用的方法主要基于N-gram的一些推导，虽然工作量大，但是基本上属于baseline的方法，最近空下来，打算对这部分内容进行深入的研究和学习。&lt;br&gt;
+    
+    </summary>
+    
+    
+    
+      <category term="NLP" scheme="http://yoursite.com/tags/NLP/"/>
+    
+      <category term="Dialog" scheme="http://yoursite.com/tags/Dialog/"/>
+    
+      <category term="Grammar Inuduction" scheme="http://yoursite.com/tags/Grammar-Inuduction/"/>
+    
+  </entry>
   
   <entry>
     <title>Parameter Efficient Transfer Learning</title>
@@ -81,9 +104,9 @@
     
       <category term="pytorch" scheme="http://yoursite.com/tags/pytorch/"/>
     
-      <category term="自然语言处理" scheme="http://yoursite.com/tags/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/"/>
-    
       <category term="crf" scheme="http://yoursite.com/tags/crf/"/>
+    
+      <category term="自然语言处理" scheme="http://yoursite.com/tags/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/"/>
     
   </entry>
   
@@ -332,9 +355,9 @@ Need &amp;lt;https://arxiv.org/pdf/1706.03762.pdf&amp;gt;&lt;/code&gt;&lt;br&gt;
     
       <category term="NLP" scheme="http://yoursite.com/tags/NLP/"/>
     
-      <category term="Language Model" scheme="http://yoursite.com/tags/Language-Model/"/>
-    
       <category term="Syntax-Tree" scheme="http://yoursite.com/tags/Syntax-Tree/"/>
+    
+      <category term="Language Model" scheme="http://yoursite.com/tags/Language-Model/"/>
     
   </entry>
   
