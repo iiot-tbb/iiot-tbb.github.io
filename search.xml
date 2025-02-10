@@ -1,6 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>knowledge-based Dialog system</title>
+    <url>/2022/06/06/knowledge-based-Dialog-system/</url>
+    <content><![CDATA[<p>在Task-oriented-Dialog任务中，[1]提到任务导向型端到端对话系统主要的面临的问题是:第一个是如何有效结合外部的知识到模型的学习框架之中，第二个是如何准确的捕获历史对话的语义信息，通过KG的方式，可以获得更充分的信息知识，比如说多跳的知识信息的查询，这相比较于传统的关系型数据库的查找有更大的优势。</p>
+<p>QA任务可以认为是一种单轮对话模式的对话系统，在QA任务中运用知识为对话提供知识的方式有多种多样，在[2]中提到了关于如何结合KG做自然流畅的QA问题，主要运用了seq-seq模型和copy机制，和对相关topic实体的retrival。[3]中将自然语言转换为相应的语义解析器，主要提出了一种结合memory network机制的RNN based的转换网络，其主要贡献为通过memory network优化了在经常遇到省略现象的交互中找到指代实体。[4]遍历符号知识图谱以学习对话中的上下文转换，并使用注意力知识图谱路径解码器预测实体从而响应用户相关信息<br>通过知识图谱结的构化知识提供了信息丰富的常识观察并充当关系归纳偏差，这促进了最近关于多跳推理的符号空间和语义空间之间的常识知识融合的研究[5],</p>
+<p>在开放域对话系统中，通过知识图谱中的知识增强，可以使得对话系统的话语中的知识符合世界知识，防止出现存储在模型参数中错误知识的生成[6].[7]进一步通过外部知识完成预训练模型的工作，通过引入知识信息增强对话的真实性。</p>
+<p>另外，通过对话系统结合知识图谱完成对话推荐也是一个十分有趣的研究方向[8]</p>
+<p>[1]GraphDialog: Integrating Graph Knowledge into End-to-End Task-Oriented Dialogue Systems</p>
+<p>[2]Generating natural answers by incorporating copying and retrieving mechanisms in sequence-to-sequence learning</p>
+<p>[3]Dialog-to-Action: Conversational Question Answering Over a Large-Scale Knowledge Base</p>
+<p>[4]OpenDialKG: Explainable Conversational Reasoning with Attention-based Walks over Knowledge Graphs</p>
+<p>[5]Commonsense for generative multi-hop question answering task</p>
+<p>[6]Neural generative question answering</p>
+<p>[7]PLATO: Pre-trained Dialogue Generation Model with Discrete Latent Variable</p>
+<p>[8]Towards Knowledge-Based Recommender Dialog System</p>
+]]></content>
+      <tags>
+        <tag>dialog system</tag>
+        <tag>open domain</tag>
+        <tag>knowledge base</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Grammar Induction for Spoken Dialogue Systems</title>
     <url>/2022/05/26/Grammar-Induction-for-Spoken-Dialogue-Systems/</url>
     <content><![CDATA[<p>之前实习的时候做过一些语法推导(Grammar Induction)方面的工作，当时用的方法主要基于N-gram的一些推导，虽然工作量大，但是基本上属于baseline的方法，最近空下来，打算对这部分内容进行深入的研究和学习。<br><a id="more"></a></p>
@@ -3557,8 +3579,8 @@ sentence: 这个女人听见这个好看的篮球 with Prb: 2.948877435423709e-4
 ]]></content>
       <tags>
         <tag>NLP</tag>
-        <tag>Syntax-Tree</tag>
         <tag>Language Model</tag>
+        <tag>Syntax-Tree</tag>
       </tags>
   </entry>
   <entry>

@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2022-06-05T03:36:31.183Z</updated>
+  <updated>2022-06-10T12:47:24.145Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,35 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>knowledge-based Dialog system</title>
+    <link href="http://yoursite.com/2022/06/06/knowledge-based-Dialog-system/"/>
+    <id>http://yoursite.com/2022/06/06/knowledge-based-Dialog-system/</id>
+    <published>2022-06-06T08:14:20.000Z</published>
+    <updated>2022-06-10T12:47:24.145Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;在Task-oriented-Dialog任务中，[1]提到任务导向型端到端对话系统主要的面临的问题是:第一个是如何有效结合外部的知识到模型的学习框架之中，第二个是如何准确的捕获历史对话的语义信息，通过KG的方式，可以获得更充分的信息知识，比如说多跳的知识信息的查询，这相比
+        
+      
+    
+    </summary>
+    
+    
+    
+      <category term="dialog system" scheme="http://yoursite.com/tags/dialog-system/"/>
+    
+      <category term="open domain" scheme="http://yoursite.com/tags/open-domain/"/>
+    
+      <category term="knowledge base" scheme="http://yoursite.com/tags/knowledge-base/"/>
+    
+  </entry>
   
   <entry>
     <title>Grammar Induction for Spoken Dialogue Systems</title>
@@ -355,9 +384,9 @@ Need &amp;lt;https://arxiv.org/pdf/1706.03762.pdf&amp;gt;&lt;/code&gt;&lt;br&gt;
     
       <category term="NLP" scheme="http://yoursite.com/tags/NLP/"/>
     
-      <category term="Syntax-Tree" scheme="http://yoursite.com/tags/Syntax-Tree/"/>
-    
       <category term="Language Model" scheme="http://yoursite.com/tags/Language-Model/"/>
+    
+      <category term="Syntax-Tree" scheme="http://yoursite.com/tags/Syntax-Tree/"/>
     
   </entry>
   
