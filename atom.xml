@@ -159,9 +159,9 @@
     
       <category term="pytorch" scheme="http://yoursite.com/tags/pytorch/"/>
     
-      <category term="自然语言处理" scheme="http://yoursite.com/tags/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/"/>
-    
       <category term="crf" scheme="http://yoursite.com/tags/crf/"/>
+    
+      <category term="自然语言处理" scheme="http://yoursite.com/tags/%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80%E5%A4%84%E7%90%86/"/>
     
   </entry>
   
@@ -335,9 +335,9 @@ Need &amp;lt;https://arxiv.org/pdf/1706.03762.pdf&amp;gt;&lt;/code&gt;&lt;br&gt;
     
     
     
-      <category term="AI" scheme="http://yoursite.com/tags/AI/"/>
-    
       <category term="Deep Learning" scheme="http://yoursite.com/tags/Deep-Learning/"/>
+    
+      <category term="AI" scheme="http://yoursite.com/tags/AI/"/>
     
   </entry>
   
@@ -410,9 +410,9 @@ Need &amp;lt;https://arxiv.org/pdf/1706.03762.pdf&amp;gt;&lt;/code&gt;&lt;br&gt;
     
       <category term="NLP" scheme="http://yoursite.com/tags/NLP/"/>
     
-      <category term="Syntax-Tree" scheme="http://yoursite.com/tags/Syntax-Tree/"/>
-    
       <category term="Language Model" scheme="http://yoursite.com/tags/Language-Model/"/>
+    
+      <category term="Syntax-Tree" scheme="http://yoursite.com/tags/Syntax-Tree/"/>
     
   </entry>
   
