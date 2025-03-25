@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2025-02-24T17:16:43.033Z</updated>
+  <updated>2025-03-25T16:51:39.222Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -17,11 +17,11 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>PPO学习笔记</title>
-    <link href="http://yoursite.com/2025/02/14/PPO%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
-    <id>http://yoursite.com/2025/02/14/PPO%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</id>
-    <published>2025-02-13T17:27:29.000Z</published>
-    <updated>2025-02-24T17:16:43.033Z</updated>
+    <title>大模型学习总结</title>
+    <link href="http://yoursite.com/2025/03/05/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/"/>
+    <id>http://yoursite.com/2025/03/05/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/</id>
+    <published>2025-03-04T16:31:38.000Z</published>
+    <updated>2025-03-25T16:51:39.222Z</updated>
     
     <summary type="html">
     
@@ -29,7 +29,37 @@
       
         
         
-          &lt;p&gt;rewards&lt;/p&gt;
+          &lt;a id=&quot;more&quot;&gt;&lt;/a&gt;
+&lt;h3 id=&quot;浅层对齐假说&quot;&gt;&lt;a href=&quot;#浅层对齐假说&quot; class=&quot;headerlink&quot; title=&quot;浅层对齐假说&quot;&gt;&lt;/a&gt;浅层对齐假说&lt;/h3&gt;&lt;p&gt;LIMA(Less Is More for Alignment)
+        
+      
+    
+    </summary>
+    
+    
+    
+      <category term="Deep Learning" scheme="http://yoursite.com/tags/Deep-Learning/"/>
+    
+      <category term="AI" scheme="http://yoursite.com/tags/AI/"/>
+    
+      <category term="LLM" scheme="http://yoursite.com/tags/LLM/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>PPO学习笔记</title>
+    <link href="http://yoursite.com/2025/02/14/PPO%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/"/>
+    <id>http://yoursite.com/2025/02/14/PPO%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</id>
+    <published>2025-02-13T17:27:29.000Z</published>
+    <updated>2025-03-25T16:32:45.967Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;p&gt;rewards:与环境一次交互环境所给的反馈奖励或惩罚。&lt;/p&gt;
 &lt;p&gt;Action space: 动作的选择空间。&lt;/p&gt;
 &lt;p&gt;Policy:根据当前的状态给出action概率分布。&lt;/p&gt;
 &lt;p&gt;Traj:轨迹，状态和动作序列。episode
@@ -248,9 +278,9 @@ Need &amp;lt;https://arxiv.org/pdf/1706.03762.pdf&amp;gt;&lt;/code&gt;&lt;br&gt;
     
       <category term="NLP" scheme="http://yoursite.com/tags/NLP/"/>
     
-      <category term="pytorch" scheme="http://yoursite.com/tags/pytorch/"/>
-    
       <category term="Deep Learning" scheme="http://yoursite.com/tags/Deep-Learning/"/>
+    
+      <category term="pytorch" scheme="http://yoursite.com/tags/pytorch/"/>
     
       <category term="Transformer" scheme="http://yoursite.com/tags/Transformer/"/>
     
@@ -458,44 +488,6 @@ Need &amp;lt;https://arxiv.org/pdf/1706.03762.pdf&amp;gt;&lt;/code&gt;&lt;br&gt;
       <category term="myBorn" scheme="http://yoursite.com/tags/myBorn/"/>
     
       <category term="hexo" scheme="http://yoursite.com/tags/hexo/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>论法的精神（节选）</title>
-    <link href="http://yoursite.com/2019/11/11/%E8%AE%BA%E6%B3%95%E7%9A%84%E7%B2%BE%E7%A5%9E%EF%BC%88%E8%8A%82%E9%80%89%EF%BC%89/"/>
-    <id>http://yoursite.com/2019/11/11/%E8%AE%BA%E6%B3%95%E7%9A%84%E7%B2%BE%E7%A5%9E%EF%BC%88%E8%8A%82%E9%80%89%EF%BC%89/</id>
-    <published>2019-11-11T08:21:35.000Z</published>
-    <updated>2022-03-28T09:04:28.990Z</updated>
-    
-    <summary type="html">
-    
-      &lt;h3 id=&quot;法与一切存在物的关系&quot;&gt;&lt;a href=&quot;#法与一切存在物的关系&quot; class=&quot;headerlink&quot; title=&quot;法与一切存在物的关系&quot;&gt;&lt;/a&gt;法与一切存在物的关系&lt;/h3&gt;&lt;p&gt;从最大限度的广义上说，法是源于客观事物性质的必然关系。从这个意义上推断，所有的&lt;/p&gt;
-&lt;p&gt;存在物都有属于自己的法；上帝有他的法；物质世界也有它的法；高于人类的“先知&lt;/p&gt;
-&lt;p&gt;圣人们”有着他们的法；畜类也有自己的法；人类拥有他们的法。&lt;/p&gt;
-&lt;p&gt;有些人说，世间我们看到的万物都是由一个盲目的命运所创造的，这种说法荒谬绝伦。因&lt;/p&gt;
-&lt;p&gt;为盲目的命运竟然创造“具有智能的创造物”，岂不是一件更为荒谬的事吗?&lt;/p&gt;
-&lt;p&gt;于是便有了一个最浅显的理性的存在。法就是这个浅显理性与各种存在物之间关系的总&lt;/p&gt;
-&lt;p&gt;和，同时也体现着所有客观存在物彼此之间的关系。&lt;/p&gt;
-&lt;p&gt;上帝与宇宙的关系体现在，它既是宇宙的创造者又是它的保管者：以此产生的规律，便是&lt;/p&gt;
-&lt;p&gt;保管时参照的规律。上帝遵循这些规律行事，因为他熟知这些规范；之所以他熟知这些规&lt;/p&gt;
-&lt;p&gt;范，因为正是他制定了这些规范；他之所以制定这些规范，因为这些规律与他的才智和能&lt;br&gt;量有着密不可分的关系。&lt;/p&gt;
-&lt;p&gt;如同我们看到的一样，我们所在的世界是由物质的运动而构成的，它在一个非智能的状态&lt;/p&gt;
-&lt;p&gt;中永恒地生存着。它的物质运动必然具有某种固定的规律。如果人们能够在自己所处的世&lt;/p&gt;
-&lt;p&gt;界之外再臆想出另一个世界的话，那个世界要么具有恒定的规律可循，要么便是毁灭。&lt;/p&gt;
-&lt;p&gt;创造本身似乎是某种随意的行为，然而其中必定蕴涵着恒定的规律，就如同无神论者的命&lt;/p&gt;
-&lt;p&gt;运一般。如果造世主没有这些规范就能统管世界的话，那么，这显然是荒谬的说法，因为&lt;/p&gt;
-&lt;p&gt;没有这些规范，世界将无法生存。&lt;br&gt;
-    
-    </summary>
-    
-    
-    
-      <category term="人文" scheme="http://yoursite.com/tags/%E4%BA%BA%E6%96%87/"/>
-    
-      <category term="法律" scheme="http://yoursite.com/tags/%E6%B3%95%E5%BE%8B/"/>
-    
-      <category term="随笔" scheme="http://yoursite.com/tags/%E9%9A%8F%E7%AC%94/"/>
     
   </entry>
   

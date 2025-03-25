@@ -1,12 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>大模型学习总结</title>
+    <url>/2025/03/05/%E5%A4%A7%E6%A8%A1%E5%9E%8B%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/</url>
+    <content><![CDATA[<a id="more"></a>
+<h3 id="浅层对齐假说"><a href="#浅层对齐假说" class="headerlink" title="浅层对齐假说"></a>浅层对齐假说</h3><p>LIMA(Less Is More for Alignment) 即浅层对齐假说，即一 个模型的知识和能力几乎完全是在预训练中学习的，而对齐则是教会它与用户交互时如何选择子分布。</p>
+<h3 id="大模型参数估计"><a href="#大模型参数估计" class="headerlink" title="大模型参数估计"></a>大模型参数估计</h3><p><img src="WechatIMG4.png" alt="avtar"></p>
+<p><img src="WechatIMG5.png" alt="avtar"></p>
+<p><img src="WechatIMG5.png" alt="avtar"></p>
+<p><img src="WechatIMG5.png" alt="avtar"></p>
+<p><img src="WechatIMG6.png" alt="avtar"></p>
+<p><img src="WechatIMG7.png" alt="avtar"></p>
+<p><img src="WechatIMG9.png" alt="avtar"></p>
+<p><img src="WechatIMG11.png" alt="avtar"></p>
+<p><img src="WechatIMG12.png" alt="avtar"></p>
+<h3 id="register-parameter"><a href="#register-parameter" class="headerlink" title="register_parameter"></a>register_parameter</h3><p>注册一个可训练的函数</p>
+<h3 id="register-buffer"><a href="#register-buffer" class="headerlink" title="register_buffer"></a>register_buffer</h3><p>模型训练：<br>数据并行（data parallel）， 模型及数据独立分发给各GPU，各自计算梯度，汇总到其中一个GPU平均后优化，梯度传播到其它GPU优化。</p>
+<p>模型并行，张量并行</p>
+<p>DDP(data distributed parallel)</p>
+]]></content>
+      <tags>
+        <tag>Deep Learning</tag>
+        <tag>AI</tag>
+        <tag>LLM</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>PPO学习笔记</title>
     <url>/2025/02/14/PPO%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</url>
-    <content><![CDATA[<p>rewards</p>
+    <content><![CDATA[<p>rewards:与环境一次交互环境所给的反馈奖励或惩罚。</p>
 <p>Action space: 动作的选择空间。</p>
 <p>Policy:根据当前的状态给出action概率分布。</p>
-<p>Traj:轨迹，状态和动作序列。episode rollout<br>{s_0,a_0,s1,a1,sn,an}</p>
+<p>Traj:轨迹，状态和动作序列。episode rollout<br>{s0,a0,s1,a1,sn,an}</p>
 <p>return: rewards累积和。</p>
 <p>期望：每个可能的结果和对应概率乘积之和。</p>
 <p>强化学习目标:</p>
@@ -567,8 +592,8 @@ Need &lt;https://arxiv.org/pdf/1706.03762.pdf&gt;</code><br>The transformer mode
 ]]></content>
       <tags>
         <tag>NLP</tag>
-        <tag>pytorch</tag>
         <tag>Deep Learning</tag>
+        <tag>pytorch</tag>
         <tag>Transformer</tag>
         <tag>Languaage Model</tag>
       </tags>
