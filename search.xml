@@ -357,8 +357,8 @@ h_{new}=(1-\lambda) \boldsymbol{h}_{\text {old }}+\lambda \frac{\exp \left(q^{\t
 <h2 id="all-in-all"><a href="#all-in-all" class="headerlink" title="all in all"></a>all in all</h2><p>在一年多一点的时间里，BERT 已经成为 NLP 实验中无处不在的基线，并激发了许多分析该模型并提出各种改进的研究。这篇论文的意义在于可以激发大家关注那些更需要解决的问题上。</p>
 ]]></content>
       <tags>
-        <tag>NLP</tag>
         <tag>BERT</tag>
+        <tag>NLP</tag>
       </tags>
   </entry>
   <entry>
@@ -592,8 +592,8 @@ Need &lt;https://arxiv.org/pdf/1706.03762.pdf&gt;</code><br>The transformer mode
 ]]></content>
       <tags>
         <tag>NLP</tag>
-        <tag>Deep Learning</tag>
         <tag>pytorch</tag>
+        <tag>Deep Learning</tag>
         <tag>Transformer</tag>
         <tag>Languaage Model</tag>
       </tags>
@@ -3663,8 +3663,8 @@ sentence: 这个女人听见这个好看的篮球 with Prb: 2.948877435423709e-4
 ]]></content>
       <tags>
         <tag>NLP</tag>
-        <tag>Language Model</tag>
         <tag>Syntax-Tree</tag>
+        <tag>Language Model</tag>
       </tags>
   </entry>
   <entry>
