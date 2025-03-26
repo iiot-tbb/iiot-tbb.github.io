@@ -166,9 +166,9 @@
     
     
     
-      <category term="BERT" scheme="http://yoursite.com/tags/BERT/"/>
-    
       <category term="NLP" scheme="http://yoursite.com/tags/NLP/"/>
+    
+      <category term="BERT" scheme="http://yoursite.com/tags/BERT/"/>
     
   </entry>
   
