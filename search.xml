@@ -592,8 +592,8 @@ Need &lt;https://arxiv.org/pdf/1706.03762.pdf&gt;</code><br>The transformer mode
 ]]></content>
       <tags>
         <tag>NLP</tag>
-        <tag>pytorch</tag>
         <tag>Deep Learning</tag>
+        <tag>pytorch</tag>
         <tag>Transformer</tag>
         <tag>Languaage Model</tag>
       </tags>
@@ -3663,8 +3663,8 @@ sentence: 这个女人听见这个好看的篮球 with Prb: 2.948877435423709e-4
 ]]></content>
       <tags>
         <tag>NLP</tag>
-        <tag>Syntax-Tree</tag>
         <tag>Language Model</tag>
+        <tag>Syntax-Tree</tag>
       </tags>
   </entry>
   <entry>
